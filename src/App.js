@@ -11,38 +11,6 @@ const USERNAME = "@test003:pdxinfosec.org";
 const ROOM_ID = "!bdQMmkTBTMqUPAOvms:pdxinfosec.org";
 
 
-export const renderContentCardItem = ({url, index}) => {
-	return (
-		<div key={index}>
-			<div className="relative p-3 col-start-1 row-start-1 flex flex-col-reverse rounded-lg bg-gradient-to-t from-black/75 via-black/0">
-				<h1 className="mt-1 text-lg font-semibold text-white sm:text-slate-900 md:text-2xl dark:sm:text-white">Garage View</h1>
-			</div>
-			<div className="grid gap-4 col-start-1 col-end-3 row-start-1">
-				<img src={url} alt="Matrix" className="w-full h-60 object-cover rounded-lg" />
-			</div>
-			<div className="mt-4 col-start-1 row-start-3 self-center">
-				<button type="button" className="bg-indigo-600 text-white text-sm leading-6 font-medium py-2 px-3 rounded-lg">Watch video!</button>
-			</div>
-	 	</div>
-	)
-}
-
-export const renderContentCard = ({listImage}) => {
-	return (
-		<div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-			{listImage.length > 0 ? (
-				listImage.map((url, index) => {
-					return <img src={url} alt="Matrix" className="w-full h-60 object-cover rounded-lg" />;
-				})
-			) : (
-				<div>AHII</div>
-			)}
-		</div>
-	)
-}
-
-
-
 
 function App() {
     const [listImageURL, setListImageURL] = useState([]);
