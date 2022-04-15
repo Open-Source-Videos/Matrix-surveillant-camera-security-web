@@ -9,6 +9,8 @@
     "axios": "^0.26.1",
     "bootstrap": "^5.1.3",
     "flowbite": "^1.4.2",
+    "ionic": "^5.4.16",
+    "ionicons": "^6.0.1",
     "react": "^18.0.0",
     "react-bootstrap": "^0.32.4",
     "react-dom": "^18.0.0",
@@ -16,8 +18,10 @@
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "5.0.1",
+    "react-user-profile": "^1.0.3",
     "redux": "^4.1.2",
     "redux-thunk": "^2.4.1",
+    "styled-components": "^5.3.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

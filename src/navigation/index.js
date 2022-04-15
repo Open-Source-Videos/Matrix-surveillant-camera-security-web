@@ -6,6 +6,7 @@ import Home from '../pages/Homepage';
 // import Confirmation from '../screens/Confirmation';
 import { AuthContext } from '../context/auth';
 import { getStore } from '../utils';
+import Profile from '../pages/Profilepage';
 
 
 function AuthenticatedRoute ({component: Component, ...rest}) {
@@ -26,6 +27,7 @@ class Navigation extends Component {
           <Switch>
             <Route exact path="/login" component={Login} />
             <Route exact path='/homepage' component={Home} />
+            <Route exact path='/profile' component={Profile} />
             {/* <Route path="/register" component={Register} />
             <Route path="/confirm" component={Confirmation} /> */}
             {/* <AuthenticatedRoute exact path='/home' component={Home} /> */}
