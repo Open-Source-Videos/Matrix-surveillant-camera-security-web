@@ -2,8 +2,8 @@ import React, {
 	useEffect, 
 	useState 
 } from 'react';
+import { Navbar } from './components/Navbar';
 const axios = require('axios');
-
 
 const BASE_URL = 'https://matrix.pdxinfosec.org';
 const PASSWORD = "G3Vsnzvr";
@@ -160,6 +160,7 @@ function App() {
     return (
         <div className="App">
             <header className="App-header">
+                <Navbar />
 				<div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4">
 						{listImageURL.length > 0 ? (
 							listImageURL.map((url, index) => {
