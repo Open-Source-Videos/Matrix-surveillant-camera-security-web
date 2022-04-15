@@ -38,19 +38,14 @@ img{
     display: inline !important;
 }
 
-form{
-    
-    
-}
-
 #helpBlock{
     color: red;
 }
 
-body {
+/*body {
     background-color: #a3e635 !important;
-    /*background-image: linear-gradient(120deg, #C2E91C 0%, #96e6a1 100%);*/
-}
+    background-image: linear-gradient(120deg, #C2E91C 0%, #96e6a1 100%);
+}*/
 
 
 

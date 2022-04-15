@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 //import { ActionCreators } from '../actions/profile'; 
 //import { getStore } from '../utils'; 
 import './style.css';
-import { Row, FormGroup, FormControl, ControlLabel, Button, HelpBlock, Label } from 'react-bootstrap'; 
+import { Row, Col, FormGroup, FormControl, ControlLabel, Button, HelpBlock, Label, Image } from 'react-bootstrap';
 // import { isEmail, isEmpty, isLength, isContainWhiteSpace, isHomeServer } from '../shared/validator';
 import { isEmail, isEmpty, isLength, isContainWhiteSpace, isHomeServer } from '../../pages/Homepage';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -106,8 +106,12 @@ export class Login extends Component {
 		const { errors, formSubmitted } = this.state;
 		
 		return (
-			<div className="Login bg-white rounded">
+			<div className="bg-white m-4 rounded">
 				<Row>
+					<Col xs={12} lg={6} className="d-none d-lg-block">
+						<Image src={"Mobile login-cuate.svg"} alt="login" />
+					</Col>
+					<Col xs={12} lg={6} className="Login my-auto">
 					<figure id="mainImg" className="my-auto">
 						<img src={"security-camera.png"} alt="MainImg" width={70} height={70}/>
 						<figcaption id="figcaption text-lg">OpenCamera</figcaption>
@@ -115,7 +119,7 @@ export class Login extends Component {
 
 					<h1 className="text-xxl fw-bold text-center py-3">Login</h1>
 
-					<form onSubmit={this.login}>
+					<form onSubmit={this.login} className="px-3 px-md-5 mx-xl-5">
 						<FormGroup 
 							controlId="homeserver" 
 							validationState={ 
@@ -202,6 +206,7 @@ export class Login extends Component {
 							</Label>
 						</FormGroup>
 					</form>
+					</Col>
 				</Row>
 			</div>
 		)
