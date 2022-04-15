@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import { withRouter} from "react-router-dom";
 import { connect } from 'react-redux';
-import { ActionCreators } from '../actions/profile'; 
-import { getStore } from '../utils'; 
+//import { ActionCreators } from '../actions/profile'; 
+//import { getStore } from '../utils'; 
 import './style.css';
 import { Row, FormGroup, FormControl, ControlLabel, Button, HelpBlock, Label } from 'react-bootstrap'; 
 // import { isEmail, isEmpty, isLength, isContainWhiteSpace, isHomeServer } from '../shared/validator';
-import { isEmail, isEmpty, isLength, isContainWhiteSpace, isHomeServer } from '../Home';
-import 'bootstrap/dist/css/bootstrap.min.css'; 
-import MainImage from '../security-camera.png';
+import { isEmail, isEmpty, isLength, isContainWhiteSpace, isHomeServer } from '../../pages/Homepage';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 export class Login extends Component {
   constructor(props) {
@@ -77,7 +76,7 @@ login = (e) => {
 
   if(errors === true){
       alert("You are successfully signed in...");
-      this.props.history.push('/home')
+      this.props.history.push('/homepage')
   } else {
       this.setState({
           errors: errors,
@@ -101,7 +100,7 @@ login = (e) => {
     //  } else {
     //    console.log('Invalid Form')
     //  }
-    this.props.history.push('/home')
+    this.props.history.push('/homepage')
   }
 
   render() {
@@ -110,7 +109,7 @@ login = (e) => {
       <div className="Login">
       <Row>
           <figure id="mainImg">
-            <img src={MainImage} alt="MainImg" width={100} height={100}/>
+            <img src={"security-camera.png"} alt="MainImg" width={100} height={100}/>
             <figcaption id= "figcaption">Open-Camera</figcaption>
           </figure>
           <h1 id="header">Sign-In</h1>

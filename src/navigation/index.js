@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
-import Login from '../Login';
-import Home from '../Home';
+import Login from '../components/Login';
+import Home from '../pages/Homepage';
 // import Register from '../screens/Register';
 // import Confirmation from '../screens/Confirmation';
 import { AuthContext } from '../context/auth';
@@ -25,7 +25,7 @@ class Navigation extends Component {
         <Router>
           <Switch>
             <Route exact path="/login" component={Login} />
-            <Route exact path='/home' component={Home} />
+            <Route exact path='/homepage' component={Home} />
             {/* <Route path="/register" component={Register} />
             <Route path="/confirm" component={Confirmation} /> */}
             {/* <AuthenticatedRoute exact path='/home' component={Home} /> */}

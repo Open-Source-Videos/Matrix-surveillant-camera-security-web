@@ -9,8 +9,8 @@
     
 }
 #button{
-    background-color: #6C63FF !important;
-    margin-top: 50px;
+    background-color: #000000 !important;
+    margin-top: 30px;
 }
 #sign_up{
     color: red;
@@ -21,9 +21,7 @@
 #header, figcaption{
     text-align: center;
     font-weight: bold;
-    font-size:xx-large;
     padding-bottom: 50px;
-    color: #6C63FF;
 }
 
 #homeserver1{
@@ -50,8 +48,8 @@ form{
 }
 
 body {
-    background-color: #fff;
-    background-image: linear-gradient(120deg, #C2E91C 0%, #96e6a1 100%);
+    background-color: #a3e635 !important;
+    /*background-image: linear-gradient(120deg, #C2E91C 0%, #96e6a1 100%);*/
 }
 
 
