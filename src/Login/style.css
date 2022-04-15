@@ -1,0 +1,62 @@
+
+
+.Login{
+    margin: 0 auto;
+    margin-top: 70px;
+    max-width: 400px;
+    padding: 40px 40px;
+    
+    
+}
+#button{
+    background-color: #6C63FF !important;
+    margin-top: 50px;
+}
+#sign_up{
+    color: red;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+#header, figcaption{
+    text-align: center;
+    font-weight: bold;
+    font-size:xx-large;
+    padding-bottom: 50px;
+    color: #6C63FF;
+}
+
+#homeserver1{
+    font-weight: bold;
+}
+
+#mainImg{
+    margin-top: -100px;
+    text-align: center !important;
+    align-items: center !important;
+}
+
+img{
+    display: inline !important;
+}
+
+form{
+    
+    
+}
+
+#helpBlock{
+    color: red;
+}
+
+body {
+    background-color: #fff;
+    background-image: linear-gradient(120deg, #C2E91C 0%, #96e6a1 100%);
+}
+
+
+
+
+
+
+
