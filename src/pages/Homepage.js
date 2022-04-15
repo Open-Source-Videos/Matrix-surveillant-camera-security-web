@@ -200,18 +200,22 @@ function Home() {
 						)}
 					</div>
                     
+                    <br />
+                    <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4">
 					{listVideoURL.length > 0 ? (
                         listVideoURL.map((videoURL, index) => {
                             return (
-								<video key={index} width="500" height="500" controls autoplay>
-									<source src={videoURL} type="video/mp4" />
-								</video>
+                                <div className="flex justify-center px-2" key={1}>
+                                    <video key={index} width="500" height="500" controls autoplay>
+                                        <source src={videoURL} type="video/mp4" />
+                                    </video>
+                                </div>
 							);
                         })
                     ) : (
                         <></>
                     )}
-
+                    </div>
 				<br/>
             </header>
         </div>
