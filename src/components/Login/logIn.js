@@ -34,7 +34,6 @@ export const Login = () => {
 	const [formData, setFormData] = useState({});
 	const [errors, setErrors] = useState({}); 
 	const [formSubmitted, setFormSubmitted] = useState(false);
-	const [checkLogIn, setCheckLogIn] = useState(false)
 	const history = useHistory();
 
 	
@@ -82,7 +81,6 @@ export const Login = () => {
         console.log('exportedDevice = ', exportedDevice);
         console.log('accessToken = ', accessToken);
 
-        setCheckLogIn(_isLogin);
         if (exportedDevice && accessToken) {
             localStorage.setItem(
 				formData.email, 

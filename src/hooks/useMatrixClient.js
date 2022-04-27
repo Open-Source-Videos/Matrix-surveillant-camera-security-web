@@ -1,25 +1,39 @@
-import { useState } from 'react';
+import React,{ useState } from 'react';
 import axios from 'axios';
 
 const features = ['LoginByUserName', 'LoginByDeviceId'];
 
 const codeName = features[0];
 
+export const initialGlobalState = {
+    client: null, 
+    didLogin: false ,
+    roomList: [],
+    update: () => {},
+};
+
+export const GlobalContext = React.createContext(initialGlobalState);
+
+
 function useMatrixClient(onHavingNewMessage, onHavingNewFile, onLogInResult) {
-    let [client, setClient] = useState(() => {
-        console.log('init client');
-        return null;
-    });
-    let [didLogin, setDidLogin] = useState(false);
+    const global = React.useContext(GlobalContext);
+    // const setClient = (c) =>{
+
+    // }
+    // let [client, setClient] = useState(() => {
+    //     console.log('init client');
+    //     return null;
+    // });
+    // let [didLogin, setDidLogin] = useState(false);
 
     const isLogin = () => {
-        return didLogin;
+        return global.didLogin;
     };
 
     const sendMessageToRoom = async (roomId, message) => {
         try {
-            if (didLogin && client ) {
-                await client.sendEvent(
+            if (global.didLogin && global.client ) {
+                await global.client.sendEvent(
                     roomId,
                     'm.room.message',
                     {
@@ -28,6 +42,7 @@ function useMatrixClient(onHavingNewMessage, onHavingNewFile, onLogInResult) {
                     },
                     '' //info.access_token
                 );
+               
             }
         } catch (e) {
             console.log('error', e);
@@ -80,7 +95,7 @@ function useMatrixClient(onHavingNewMessage, onHavingNewFile, onLogInResult) {
                 async (event, member) => {
                     if (
                         member.membership === 'invite' &&
-                        member.userId === client.getUserId()
+                        member.userId === global.client.getUserId()
                     ) {
                         await newClient.joinRoom(member.roomId);
                         // setting up of room encryption seems to be triggered automatically
@@ -135,8 +150,8 @@ function useMatrixClient(onHavingNewMessage, onHavingNewFile, onLogInResult) {
             });
 
             if (newClient) {
-                client = newClient;
-                await setClient(newClient);
+                global.client = newClient;
+                global.update({ ...global });
             }
 
             if (onLogInResult)
@@ -160,7 +175,7 @@ function useMatrixClient(onHavingNewMessage, onHavingNewFile, onLogInResult) {
     ) => {
         let newClient = null;
         await window.Olm.init();
-        if (didLogin === false) {
+        if (global.didLogin === false) {
             if (baseUrl && userId) {
                 while (true) {
                     if (codeName === features[1]) {
@@ -257,10 +272,11 @@ function useMatrixClient(onHavingNewMessage, onHavingNewFile, onLogInResult) {
                 await newClient.startClient();
 
                 clientEvent(newClient);
+                global.didLogin = true;
                 
-                await setDidLogin(true);
+                global.update({ ...global });
 
-                didLogin = true;
+               
             }
         }
     };
