@@ -6,13 +6,14 @@ import { Redirect } from 'react-router-dom';
 import '../index.css';
 import { Navbar } from '../components/Navbar';
 import useMatrixClient from '../hooks/useMatrixClient';
+import { ModalPopUp } from "../components/ModalPopUp";
 
 // const axios = require('axios');
 
 // const BASE_URL = 'https://matrix.pdxinfosec.org';
 // const PASSWORD = "G3Vsnzvr";
 // const USERNAME = "@test003:pdxinfosec.org";
-// const ROOM_ID = '!bdQMmkTBTMqUPAOvms:pdxinfosec.org';
+const ROOM_ID = '!bdQMmkTBTMqUPAOvms:pdxinfosec.org';
 
 const list_image_url = [];
 const list_video_url = [];
@@ -20,6 +21,8 @@ const list_video_url = [];
 function Home() {
     const [listImageURL, setListImageURL] = useState(list_image_url);
     const [listVideoURL, setListVideoURL] = useState(list_video_url);
+
+    const [showModal, setShowModal] = useState(false);
 
     const handleHavingNewFile = (file) => {
         
@@ -43,8 +46,13 @@ function Home() {
 
     };
 
-    const { sendMessageToRoom, saveBlobUrlToFile, isLogin, setHavingNewFile } =
-        useMatrixClient();
+    const { sendMessageToRoom, saveBlobUrlToFile, isLogin, setHavingNewFile } = useMatrixClient();
+
+    const handleWatch = () => {
+        console.log("SEND MESSAGE")
+        sendMessageToRoom(ROOM_ID, "Phuoc");
+        setShowModal(true);
+    }
 
     useEffect(() => {
         setHavingNewFile(handleHavingNewFile);
@@ -82,6 +90,7 @@ function Home() {
                                                         <button
                                                             type="button"
                                                             className="bg-yellow-300 hover:bg-amber-400 text-gray-800 text-sm leading-6 font-medium py-2 px-3 rounded-lg outline outline-amber-300 inline-flex items-center justify-center"
+                                                            onClick={handleWatch}
                                                         >
                                                             <svg
                                                                 xmlns="http://www.w3.org/2000/svg"
@@ -129,7 +138,13 @@ function Home() {
 
                         <br />
 
+                        
+                        {showModal ? (
+                            <ModalPopUp onClickPause={() => {console.log("ENTER HERE"); setShowModal(false);}}/>
+                        ) : <></>}
+
                         <br />
+
                         <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4">
                             {listVideoURL.length > 0 ? (
                                 listVideoURL.map((videoURL, index) => {
