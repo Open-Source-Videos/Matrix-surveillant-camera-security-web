@@ -8,6 +8,7 @@ const codeName = features[0];
 var client = null;
 var didLogin = false;
 var roomList = [];
+
 var onHavingNewMessage = null;
 var onHavingNewFile = null;
 var onLogInResult = null;
@@ -33,7 +34,18 @@ function useMatrixClient() {
     //     return null;
     // });
     // let [didLogin, setDidLogin] = useState(false);
+    const logoutMatrixServer = () => {
+        try {
+            if (client !== null) {
+                client.removeAllListeners();
+                client.stopClient();
 
+                client = null;
+            }
+        } catch (e) {
+            client = null;
+        }
+    };
     const isLogin = () => {
         return didLogin;
     };
@@ -279,6 +291,7 @@ function useMatrixClient() {
         setOnHavingNewMessage,
         setOnLogInResult,
         setHavingNewFile,
+        logoutMatrixServer
     };
 }
 
