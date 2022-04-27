@@ -88,6 +88,7 @@ function Home() {
                                                         <button
                                                             type="button"
                                                             className="bg-yellow-300 hover:bg-amber-400 text-gray-800 text-sm leading-6 font-medium py-2 px-3 rounded-lg outline outline-amber-300 inline-flex items-center justify-center"
+                                                            onClick={setTrigger={setButtonPopup}}
                                                         >
                                                             <svg
                                                                 xmlns="http://www.w3.org/2000/svg"
@@ -110,6 +111,11 @@ function Home() {
                                                             </svg>
                                                             <span>Watch</span>
                                                         </button>
+                                                    <Popup trigger={buttonPopup} setTrigger={setButtonPopup}  >
+                                                        <h3>My popup</h3>
+                                                        <p>button trigger popup</p>
+                                                        {sendMessageToRoom(ROOM_ID,'TTTT')}
+                                                    </Popup>
                                                         <button className="bg-white hover:bg-amber-500 text-amber-500 text-sm leading-6 font-medium py-2 px-3 rounded-lg outline outline-amber-300 inline-flex items-center justify-center">
                                                             <svg
                                                                 className="fill-current w-4 h-4 mr-2"

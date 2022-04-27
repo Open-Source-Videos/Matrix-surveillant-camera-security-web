@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { useEffect } from 'react';
 import axios from 'axios';
 
@@ -37,64 +36,6 @@ function useMatrixClient() {
 
     const isLogin = () => {
         return didLogin;
-=======
-import { useState } from 'react';
-import axios from 'axios';
-
-const features = ['LoginByUserName', 'LoginByDeviceId'];
-const codeName = features[0];
-
-const ROOM_CRYPTO_CONFIG = { algorithm: 'm.megolm.v1.aes-sha2' };
-
-function useMatrixClient(onHavingNewMessage, onHavingNewFile, onLogInResult) {
-    let [client, setClient] = useState(() => {
-        console.log('init client');
-        return null;
-    });
-    let [didLogin, setDidLogin] = useState(false);
-
-    let [roomList, setRoomList] = useState([]);
-
-    const isLogin = () => {
-        return didLogin;
-    };
-
-    const getMatrixRooms = () => {
-        return roomList;
-    };
-
-    const createMatrixRoom = async (roomID, usersToInvite) => {
-        if (roomID !== null) {
-            const { room_id: roomID } = await client.createRoom({
-                visibility: 'private',
-                invite: usersToInvite,
-            });
-
-            // await client.sendStateEvent(
-            //     roomID,
-            //     'm.room.encryption',
-            //     ROOM_CRYPTO_CONFIG
-            // );
-            // await client.setRoomEncryption(roomID, ROOM_CRYPTO_CONFIG);
-
-            // // Marking all devices as verified
-            // let room = client.getRoom(roomID);
-
-            // let members = (await room.getEncryptionTargetMembers()).map(
-            //     (x) => x['userId']
-            // );
-
-            // let memberkeys = await client.downloadKeys(members);
-
-            // for (const userId in memberkeys) {
-
-            //     for (const deviceId in memberkeys[userId]) {
-            //         await this.setDeviceVerified(userId, deviceId);
-            //     }
-            // }
-        }
-        return roomID;
->>>>>>> thiep
     };
 
     const sendMessageToRoom = async (roomId, message) => {
@@ -129,7 +70,6 @@ function useMatrixClient(onHavingNewMessage, onHavingNewFile, onLogInResult) {
 
     const clientEvent = async (newClient) => {
         try {
-<<<<<<< HEAD
             // newClient.on('Room.timeline', function(
             //     event,
             //     room,
@@ -155,39 +95,6 @@ function useMatrixClient(onHavingNewMessage, onHavingNewFile, onLogInResult) {
             //         console.log('');
             //     }
             // });
-=======
-            newClient.on(
-                'Room.timeline',
-                function (event, room, toStartOfTimeline) {
-                    // we know we only want to respond to messages
-                    if (event.getType() !== 'm.room.message') {
-                        return;
-                    }
-
-                    // we are only intested in messages from the test room, which start with "!"
-                    // if (
-                    //     event.getRoomId() === roomID &&
-                    //     event.getContent().body[0] === '!'
-                    // ) {
-                    //     console.log('');
-                    //     console.log('');
-                    //     console.log(
-                    //         'timeline, m.room.message = ',
-                    //         event.event.content.body
-                    //     );
-                    //     console.log('');
-                    //     console.log('');
-                    // }
-
-                    console.log(
-                        'timeline, m.room.message = ',
-                        event.event.content
-                    );
-                }
-            );
-
-
->>>>>>> thiep
 
             // automatic accept an joining room invitation
             newClient.on('RoomMember.membership', async (event, member) => {
@@ -230,7 +137,6 @@ function useMatrixClient(onHavingNewMessage, onHavingNewFile, onLogInResult) {
                             { type: content.info.mimetype }
                         );
 
-<<<<<<< HEAD
                         if (onHavingNewFile) {
                             const file = {
                                 fileType: content.info.mimetype,
@@ -240,21 +146,12 @@ function useMatrixClient(onHavingNewMessage, onHavingNewFile, onLogInResult) {
 
                             onHavingNewFile(file);
                         }
-=======
-                        if (onHavingNewFile)
-                            onHavingNewFile({
-                                fileType: content.info.mimetype,
-                                fileUrl: blobURL,
-                                fileName: content.body,
-                            });
->>>>>>> thiep
                     }
                 }
             });
 
             if (newClient) {
                 client = newClient;
-<<<<<<< HEAD
             }
 
             if (onLogInResult) {
@@ -264,9 +161,6 @@ function useMatrixClient(onHavingNewMessage, onHavingNewFile, onLogInResult) {
                     await newClient.exportDevice(),
                     newClient.accessToken
                 );
-=======
-                await setClient(newClient);
->>>>>>> thiep
             }
         } catch (e) {
             throw e;
@@ -287,10 +181,6 @@ function useMatrixClient(onHavingNewMessage, onHavingNewFile, onLogInResult) {
                 while (true) {
                     if (codeName === features[1]) {
                         if (exportedDevice && accessToken) {
-<<<<<<< HEAD
-=======
-                            console.log('use accessToken');
->>>>>>> thiep
                             try {
                                 newClient =
                                     await new window.matrixClient.createClient({
@@ -372,46 +262,11 @@ function useMatrixClient(onHavingNewMessage, onHavingNewFile, onLogInResult) {
 
                 await newClient.initCrypto();
                 await newClient.setGlobalErrorOnUnknownDevices(false);
-<<<<<<< HEAD
 
                 await newClient.startClient();
 
                 clientEvent(newClient);
                 didLogin = true;
-=======
-                await newClient.startClient();
-
-                newClient.once('sync', async function (state, prevState, res) {
-                    if (state === 'PREPARED') {
-                        // state will be 'PREPARED' when the client is ready to use
-
-                        clientEvent(newClient);
-                        didLogin = true;
-                        await setDidLogin(true);
-                        let rooms = await newClient.getRooms()
-                        console.log('Room list ', rooms);
-                        await setRoomList(rooms);
-
-                        
-                        if (onLogInResult)
-                            onLogInResult(
-                                true,
-                                null,
-                                await newClient.exportDevice(),
-                                newClient.accessToken
-                            );
-
-                        console.log('\n Login successfully! \n'); 
-                    }
-                });
-
-                // newClient.on('Room', async function (room) {
-                //     console.log('Having new room!');
-                    
-                //     roomList.push(room);
-                //     setRoomList([...roomList]);
-                // });
->>>>>>> thiep
             }
         }
     };
@@ -421,14 +276,9 @@ function useMatrixClient(onHavingNewMessage, onHavingNewFile, onLogInResult) {
         saveBlobUrlToFile,
         sendMessageToRoom,
         isLogin,
-<<<<<<< HEAD
         setOnHavingNewMessage,
         setOnLogInResult,
         setHavingNewFile,
-=======
-        getMatrixRooms,
-        createMatrixRoom,
->>>>>>> thiep
     };
 }
 
@@ -482,8 +332,4 @@ function decodeBase64(base64) {
     return uint8Array;
 }
 
-<<<<<<< HEAD
 export default useMatrixClient;
-=======
-export default useMatrixClient;
->>>>>>> thiep
