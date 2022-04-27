@@ -1,5 +1,6 @@
 import React, { 
-	useState ,useEffect
+	useState,
+	useEffect
 } from 'react';
 import { useHistory } from "react-router-dom";
 import { withRouter} from "react-router-dom";
@@ -23,12 +24,6 @@ import {
 } from '../../pages/Homepage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import useMatrixClient from '../../hooks/useMatrixClient';
-
-
-// const BASE_URL = 'https://matrix.pdxinfosec.org';
-// const PASSWORD = '66CeWrVm';
-// const USERNAME = '@test008:pdxinfosec.org';
-// const ROOM_ID = '!RNeodVfHGpDgUnjvYy:pdxinfosec.org';
 
 export const Login = () => {
 	const [formData, setFormData] = useState({
@@ -99,13 +94,6 @@ export const Login = () => {
 		} else {
 			alert("Failed to sign in...");
 		}
-        // setCheckLogIn(_isLogin);
-        /*if (exportedDevice && accessToken) {
-            localStorage.setItem(
-				formData.email, 
-				JSON.stringify({exportedDevice,accessToken})
-			);
-        }*/
     };
 	
 	const login = async(e) => {

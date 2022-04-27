@@ -1,4 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { 
+    useEffect,
+    useState 
+} from 'react';
+import { Redirect } from 'react-router-dom';
 import '../index.css';
 import { Navbar } from '../components/Navbar';
 import useMatrixClient from '../hooks/useMatrixClient';
@@ -8,22 +12,29 @@ import useMatrixClient from '../hooks/useMatrixClient';
 // const BASE_URL = 'https://matrix.pdxinfosec.org';
 // const PASSWORD = "G3Vsnzvr";
 // const USERNAME = "@test003:pdxinfosec.org";
-const ROOM_ID = '!bdQMmkTBTMqUPAOvms:pdxinfosec.org';
+// const ROOM_ID = '!bdQMmkTBTMqUPAOvms:pdxinfosec.org';
+
+const list_image_url = [];
+const list_video_url = [];
 
 function Home() {
-    const [listImageURL, setListImageURL] = useState([]);
-    const [listVideoURL, setListVideoURL] = useState([]);
+    const [listImageURL, setListImageURL] = useState(list_image_url);
+    const [listVideoURL, setListVideoURL] = useState(list_video_url);
 
     const handleHavingNewFile = (file) => {
         
         switch (file.fileType) {
             case 'image/png':
             case 'image/jpeg':
-                listImageURL.push(file.fileUrl);
-                setListImageURL([...listImageURL]);
+                // listImageURL.push(file.fileUrl);
+                // setListImageURL([...listImageURL]);
+                list_image_url.push(file.fileUrl);
+                setListImageURL([...list_image_url]);
                 break;
             case 'video/mp4':
-                setListVideoURL(file.fileUrl);
+                list_video_url.push(file.fileUrl);
+                setListVideoURL([...list_video_url]);
+                // setListVideoURL(file.fileUrl);
                 break;
             default:
                 saveBlobUrlToFile(file.fileUrl, file.fileName);
@@ -38,150 +49,6 @@ function Home() {
     useEffect(() => {
         setHavingNewFile(handleHavingNewFile);
     }, []);
-
-    /* useEffect(() => {
-        (async () => {
-            console.log('Start Matrix Client!');
-            await window.Olm.init();
-            const client = window.matrixClient.createClient(BASE_URL);
-            client.sessionStore = new window.matrixClient.WebStorageSessionStore(
-            	window.localStorage
-            );
-
-            client.cryptoStore = new window.matrixClient.MemoryCryptoStore();
-            client.roomList.cryptoStore = new window.matrixClient.MemoryCryptoStore(
-                window.localStorage
-            );
-
-            const info = await client.login('m.login.password', {
-                user: USERNAME,
-                password: PASSWORD,
-            });
-
-            client.accessToken = info.access_token;
-            client.deviceId = info.device_id;
-
-            await client.initCrypto();
-            client.setGlobalErrorOnUnknownDevices(false);
-            await client.startClient();
-
-            client.on('event', (e) => {
-                console.log('event = ', e);
-            });
-
-            client.on('Room.timeline', function(
-                event,
-                room,
-                toStartOfTimeline
-            ) {
-                // we know we only want to respond to messages
-                if (event.getType() !== 'm.room.message') {
-                    return;
-                }
-
-                // we are only intested in messages from the test room, which start with "!"
-                if (
-                    event.getRoomId() === ROOM_ID &&
-                    event.getContent().body[0] === '!'
-                ) {
-                    console.log('');
-                    console.log('');
-                    console.log(
-                        'timeline, m.room.message = ',
-                        event.event.content.body
-                    );
-                    console.log('');
-                    console.log('');
-                }
-            });
-
-            // automatic accept an joining room invitation
-            client.on('RoomMember.membership', async (event, member) => {
-                if (
-                    member.membership === 'invite' &&
-                    member.userId === client.getUserId()
-                ) {
-                    await client.joinRoom(member.roomId);
-                    // setting up of room encryption seems to be triggered automatically
-                    // but if we don't wait for it the first messages we send are unencrypted
-                    await client.setRoomEncryption(member.roomId, {
-                        algorithm: 'm.megolm.v1.aes-sha2',
-                    });
-                    console.log('');
-                    console.log('>> Has join room = ', member.roomId);
-                    console.log('');
-                }
-            });
-
-            client.on('Event.decrypted', async (e) => {
-                console.log(e);
-                const { content } = e.clearEvent;
-
-                if (content !== undefined) {
-                    console.log('');
-                    console.log('');
-                    console.log('>>>>>receive message = ', content.body);
-                    console.log('');
-                    console.log('');
-
-                    if (typeof content.file !== 'undefined') {
-                        console.log(content.info);
-                        console.log(content.file);
-                        console.log(client.mxcUrlToHttp(content.file.url));
-
-                        const response = await axios.get(
-                            client.mxcUrlToHttp(content.file.url),
-                            { responseType: 'arraybuffer' }
-                        );
-
-                        const decryptData = await decryptAttachment(
-                            response.data,
-                            content.file
-                        );
-
-                        const blobURL = await window.URL.createObjectURL(
-                            new Blob([decryptData]),
-                            { type: content.info.mimetype }
-                        );
-
-                        switch (content.info.mimetype) {
-                            case 'image/jpeg':
-                                listImageURL.push(blobURL);
-                                setListImageURL([...listImageURL]);
-                                break;
-                            case 'video/mp4':
-								listVideoURL.push(blobURL);
-                                setListVideoURL([...listVideoURL]);
-                                break;
-                            default: {
-                                saveByteArray(blobURL, content.body);
-                            }
-                        }
-                    }
-                }
-            });
-            console.log(client.getRoom());
-
-            // await setTimeOut(
-            //     setInterval(function() {
-            //         client.sendEvent(
-            //             ROOM_ID,
-            //             'm.room.message',
-            //             {
-            //                 body: 'Test send and receive matrix from React.Js!',
-            //                 msgtype: 'm.text',
-            //             },
-            //             '' //info.access_token
-            //         );
-            //     }, 5000)
-            // );
-        })();
-
-        // setTimeout(() => {
-        //     clearTimeout(timeOut);
-        // }, 300000);
-    }, [listImageURL, listVideoURL]);
-    */
 
     return (
         <>
@@ -261,7 +128,6 @@ function Home() {
                         </div>
 
                         <br />
-                        <div>Listening ...</div>
 
                         <br />
                         <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4">
@@ -295,7 +161,7 @@ function Home() {
                     </header>
                 </div>
             ) : (
-                <p>404 </p>
+                <Redirect to="/403" />
             )}
         </>
     );
