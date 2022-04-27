@@ -33,7 +33,7 @@ function Home() {
     };
 
     const { sendMessageToRoom, saveBlobUrlToFile, isLogin, setHavingNewFile } =
-        useMatrixClient(null, null);
+        useMatrixClient();
 
     useEffect(() => {
         setHavingNewFile(handleHavingNewFile);
