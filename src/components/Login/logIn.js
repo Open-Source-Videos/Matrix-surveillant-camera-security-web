@@ -82,13 +82,19 @@ export const Login = () => {
         console.log('exportedDevice = ', exportedDevice);
         console.log('accessToken = ', accessToken);
 
-        setCheckLogIn(_isLogin);
-        if (exportedDevice && accessToken) {
+		if (_isLogin) {
+			alert("You are successfully signed in...");
+			history.push('/homepage');
+		} else {
+			alert("Failed to sign in...");
+		}
+        // setCheckLogIn(_isLogin);
+        /*if (exportedDevice && accessToken) {
             localStorage.setItem(
 				formData.email, 
 				JSON.stringify({exportedDevice,accessToken})
 			);
-        }
+        }*/
     };
 
 
@@ -103,20 +109,13 @@ export const Login = () => {
 	const login = async(e) => {
 		e.preventDefault();
 
-		await loginMatrixServer(
-			formData.homeserver, 
-			formData.email, 
-			formData.password
-		);
-
-		console.log("#################");
-		console.log(loginMatrixServer);
-		console.log("#################");
-
 		let valid = validateLoginForm();
 		if(valid === true) {
-			alert("You are successfully signed in...");
-			history.push('/homepage');
+			await loginMatrixServer(
+				formData.homeserver, 
+				formData.email, 
+				formData.password
+			);
 		} else {
 			setErrors(errors);
 			setFormSubmitted(true);
