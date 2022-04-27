@@ -4,21 +4,47 @@ import React, {
 } from 'react';
 import '../index.css';
 import {Navbar} from "../components/Navbar"
-const axios = require('axios');
+import useMatrixClient from '../hooks/useMatrixClient';
 
 
-const BASE_URL = 'https://matrix.pdxinfosec.org';
-const PASSWORD = "G3Vsnzvr";
-const USERNAME = "@test003:pdxinfosec.org";
+// const axios = require('axios');
+
+
+
+// const BASE_URL = 'https://matrix.pdxinfosec.org';
+// const PASSWORD = "G3Vsnzvr";
+// const USERNAME = "@test003:pdxinfosec.org";
 const ROOM_ID = "!bdQMmkTBTMqUPAOvms:pdxinfosec.org";
 
 
-console.log();
 function Home() {
     const [listImageURL, setListImageURL] = useState([]);
     const [listVideoURL, setListVideoURL] = useState([]);
 
-    useEffect(() => {
+    const handleHavingNewFile = (file) => {
+        switch (file.fileType) {
+            case 'image/jpeg':
+                listImageURL.push(file.fileUrl);
+                setListImageURL([...listImageURL]);
+                break;
+            case 'video/mp4':
+                setListVideoURL(file.fileUrl);
+                break;
+            default:
+                saveBlobUrlToFile(file.fileUrl, file.fileName);
+                break;
+        }
+        console.log("Send Thank you", isLogin());
+        if (isLogin()) sendMessageToRoom(ROOM_ID, 'Thank you');
+    };
+
+    const { sendMessageToRoom, saveBlobUrlToFile, isLogin } = useMatrixClient(
+        null,
+        handleHavingNewFile,
+        null
+    );
+
+    /* useEffect(() => {
         (async () => {
             console.log('Start Matrix Client!');
             await window.Olm.init();
@@ -160,9 +186,13 @@ function Home() {
         //     clearTimeout(timeOut);
         // }, 300000);
     }, [listImageURL, listVideoURL]);
+    */
 
     return (
-        <div>
+        <>
+            {
+            //isLogin() && (
+            <div>
             <Navbar />
             <header className="App-header" >
 				<div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4">
@@ -201,157 +231,7 @@ function Home() {
 					</div>
 
                     <br/>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4">
-                        <div className="flex justify-center px-2" key={1}>
-                            <div className="flex flex-col md:flex-row md:max-w-xl rounded-lg bg-white shadow-lg lg:items-center">
-                                <img className="w-full h-full object-cover md:w-72 rounded-t-lg md:rounded-none md:rounded-l-lg" src={"tes1.jpg"} alt="" />
-                                <div className="p-6 flex flex-col justify-start">
-                                    <h5 className="text-gray-900 text-lg font-medium mb-2">Garage View</h5>
-                                    <p className="text-gray-700 text-base mb-4">Tue, Apr 12 2022 21:48:12</p>
-                                    <div className="grid grid-cols-2 gap-3 md:grid-cols-1">
-                                        <button type="button" className="bg-yellow-300 hover:bg-amber-400 text-gray-800 text-sm leading-6 font-medium py-2 px-3 rounded-lg outline outline-amber-300 inline-flex items-center justify-center">
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 mr-2" fill="none" viewBox="0 0 22 22" stroke="currentColor" strokeWidth="2">
-                                                <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                            </svg>
-                                            <span>Watch</span>
-                                        </button>
-                                        <button className="bg-white hover:bg-amber-500 text-amber-500 text-sm leading-6 font-medium py-2 px-3 rounded-lg outline outline-amber-300 inline-flex items-center justify-center">
-                                            <svg className="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                                <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/>
-                                            </svg>
-                                            <span>Download</span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="flex justify-center px-2" key={2}>
-                            <div className="flex flex-col md:flex-row md:max-w-xl rounded-lg bg-white shadow-lg lg:items-center">
-                                <img className="w-full h-full object-cover md:w-72 rounded-t-lg md:rounded-none md:rounded-l-lg" src={"Minh.jpg"} alt="" />
-                                <div className="p-6 flex flex-col justify-start">
-                                    <h5 className="text-gray-900 text-lg font-medium mb-2">Garage View</h5>
-                                    <p className="text-gray-700 text-base mb-4">Tue, Apr 12 2022 21:48:12</p>
-                                    <div className="grid grid-cols-2 gap-3 md:grid-cols-1">
-                                        <button type="button" className="bg-yellow-300 hover:bg-amber-400 text-gray-800 text-sm leading-6 font-medium py-2 px-3 rounded-lg outline outline-amber-300 inline-flex items-center justify-center">
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 mr-2" fill="none" viewBox="0 0 22 22" stroke="currentColor" strokeWidth="2">
-                                                <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                            </svg>
-                                            <span>Watch</span>
-                                        </button>
-                                        <button className="bg-white hover:bg-amber-500 text-amber-500 text-sm leading-6 font-medium py-2 px-3 rounded-lg outline outline-amber-300 inline-flex items-center justify-center">
-                                            <svg className="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                                <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/>
-                                            </svg>
-                                            <span>Download</span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="flex justify-center px-2" key={3}>
-                            <div className="flex flex-col md:flex-row md:max-w-xl rounded-lg bg-white shadow-lg lg:items-center">
-                                <img className="w-full h-full object-cover md:w-72 rounded-t-lg md:rounded-none md:rounded-l-lg" src={"test3.jpg"} alt="" />
-                                <div className="p-6 flex flex-col justify-start">
-                                    <h5 className="text-gray-900 text-lg font-medium mb-2">Garage View</h5>
-                                    <p className="text-gray-700 text-base mb-4">Tue, Apr 12 2022 21:48:12</p>
-                                    <div className="grid grid-cols-2 gap-3 md:grid-cols-1">
-                                        <button type="button" className="bg-yellow-300 hover:bg-amber-400 text-gray-800 text-sm leading-6 font-medium py-2 px-3 rounded-lg outline outline-amber-300 inline-flex items-center justify-center">
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 mr-2" fill="none" viewBox="0 0 22 22" stroke="currentColor" strokeWidth="2">
-                                                <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                            </svg>
-                                            <span>Watch</span>
-                                        </button>
-                                        <button className="bg-white hover:bg-amber-500 text-amber-500 text-sm leading-6 font-medium py-2 px-3 rounded-lg outline outline-amber-300 inline-flex items-center justify-center">
-                                            <svg className="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                                <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/>
-                                            </svg>
-                                            <span>Download</span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="flex justify-center px-2" key={4}>
-                            <div className="flex flex-col md:flex-row md:max-w-xl rounded-lg bg-white shadow-lg lg:items-center">
-                                <img className="w-full h-full object-cover md:w-72 rounded-t-lg md:rounded-none md:rounded-l-lg" src={"test4.jpg"} alt="" />
-                                <div className="p-6 flex flex-col justify-start">
-                                    <h5 className="text-gray-900 text-lg font-medium mb-2">Garage View</h5>
-                                    <p className="text-gray-700 text-base mb-4">Tue, Apr 12 2022 21:48:12</p>
-                                    <div className="grid grid-cols-2 gap-3 md:grid-cols-1">
-                                        <button type="button" className="bg-yellow-300 hover:bg-amber-400 text-gray-800 text-sm leading-6 font-medium py-2 px-3 rounded-lg outline outline-amber-300 inline-flex items-center justify-center">
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 mr-2" fill="none" viewBox="0 0 22 22" stroke="currentColor" strokeWidth="2">
-                                                <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                            </svg>
-                                            <span>Watch</span>
-                                        </button>
-                                        <button className="bg-white hover:bg-amber-500 text-amber-500 text-sm leading-6 font-medium py-2 px-3 rounded-lg outline outline-amber-300 inline-flex items-center justify-center">
-                                            <svg className="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                                <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/>
-                                            </svg>
-                                            <span>Download</span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="flex justify-center px-2" key={5}>
-                            <div className="flex flex-col md:flex-row md:max-w-xl rounded-lg bg-white shadow-lg lg:items-center">
-                                <img className="w-full h-full object-cover md:w-72 rounded-t-lg md:rounded-none md:rounded-l-lg" src={"test5.jpg"} alt="" />
-                                <div className="p-6 flex flex-col justify-start">
-                                    <h5 className="text-gray-900 text-lg font-medium mb-2">Garage View</h5>
-                                    <p className="text-gray-700 text-base mb-4">Tue, Apr 12 2022 21:48:12</p>
-                                    <div className="grid grid-cols-2 gap-3 md:grid-cols-1">
-                                        <button type="button" className="bg-yellow-300 hover:bg-amber-400 text-gray-800 text-sm leading-6 font-medium py-2 px-3 rounded-lg outline outline-amber-300 inline-flex items-center justify-center">
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 mr-2" fill="none" viewBox="0 0 22 22" stroke="currentColor" strokeWidth="2">
-                                                <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                            </svg>
-                                            <span>Watch</span>
-                                        </button>
-                                        <button className="bg-white hover:bg-amber-500 text-amber-500 text-sm leading-6 font-medium py-2 px-3 rounded-lg outline outline-amber-300 inline-flex items-center justify-center">
-                                            <svg className="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                                <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/>
-                                            </svg>
-                                            <span>Download</span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="flex justify-center px-2" key={6}>
-                            <div className="flex flex-col md:flex-row md:max-w-xl rounded-lg bg-white shadow-lg lg:items-center">
-                                <img className="w-full h-full object-cover md:w-72 rounded-t-lg md:rounded-none md:rounded-l-lg" src={"testimage.jpg"} alt="" />
-                                <div className="p-6 flex flex-col justify-start">
-                                    <h5 className="text-gray-900 text-lg font-medium mb-2">Garage View</h5>
-                                    <p className="text-gray-700 text-base mb-4">Tue, Apr 12 2022 21:48:12</p>
-                                    <div className="grid grid-cols-2 gap-3 md:grid-cols-1">
-                                        <button type="button" className="bg-yellow-300 hover:bg-amber-400 text-gray-800 text-sm leading-6 font-medium py-2 px-3 rounded-lg outline outline-amber-300 inline-flex items-center justify-center">
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 mr-2" fill="none" viewBox="0 0 22 22" stroke="currentColor" strokeWidth="2">
-                                                <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                            </svg>
-                                            <span>Watch</span>
-                                        </button>
-                                        <button className="bg-white hover:bg-amber-500 text-amber-500 text-sm leading-6 font-medium py-2 px-3 rounded-lg outline outline-amber-300 inline-flex items-center justify-center">
-                                            <svg className="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                                <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/>
-                                            </svg>
-                                            <span>Download</span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-					</div>
+                    <div>Listening ...</div>
                     
                     <br />
                     <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4">
@@ -372,7 +252,9 @@ function Home() {
 				<br/>
             </header>
         </div>
-    
+        //)
+        }
+        </>
     );
 }
 
