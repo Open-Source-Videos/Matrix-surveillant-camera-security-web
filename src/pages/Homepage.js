@@ -26,6 +26,9 @@ function Home() {
     const [listVideoURL, setListVideoURL] = useState([]);
     const [buttonPopup, setButtonPopup] = useState(false);
 
+    const handleHavingNewMessage = (message) => {
+        console.log(' NEW MESSSAGE = ', message);
+    };
 
     //Having a new file
     const handleHavingNewFile = (file) => {
@@ -46,12 +49,14 @@ function Home() {
         if (isLogin()) sendMessageToRoom(ROOM_ID, 'Thank you');
     };
 
-    const {sendMessageToRoom, saveBlobUrlToFile,isLogin } =
+    const { sendMessageToRoom, saveBlobUrlToFile,isLogin } =
     useMatrixClient(
-        null,
+        handleHavingNewMessage,
         handleHavingNewFile,
         null
     );
+
+
 
     useEffect(() => {
         (async () => {
@@ -175,7 +180,7 @@ function Home() {
                 }
             });
             console.log(client.getRoom());
-
+ 
             // await setTimeOut(
             //     setInterval(function() {
             //         client.sendEvent(
@@ -251,9 +256,12 @@ function Home() {
                                             </svg>
                                             <span>Watch</span>
                                         </button>
-                                        <Popup trigger={buttonPopup} setTrigger={setButtonPopup} >
+                                        <Popup trigger={buttonPopup} setTrigger={setButtonPopup}  >
+
+                                            
                                                 <h3>My popup</h3>
                                                 <p>button trigger popup</p>
+                                                {sendMessageToRoom(ROOM_ID,'TTTT')}
                                         </Popup>
                                         <button className="bg-white hover:bg-amber-500 text-amber-500 text-sm leading-6 font-medium py-2 px-3 rounded-lg outline outline-amber-300 inline-flex items-center justify-center">
                                             <svg className="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -483,7 +491,7 @@ const saveByteArray = (function() {
  * Chek if email is valid
  * @prop String email
  * @returns Boolean
- */git 
+ */
  export const isEmail = (email) => {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email);
