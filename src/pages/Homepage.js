@@ -88,7 +88,7 @@ function Home() {
                                                         <button
                                                             type="button"
                                                             className="bg-yellow-300 hover:bg-amber-400 text-gray-800 text-sm leading-6 font-medium py-2 px-3 rounded-lg outline outline-amber-300 inline-flex items-center justify-center"
-                                                            onClick={setTrigger={setButtonPopup}}
+                                                            onClick={() => setButtonPopup(true)}
                                                         >
                                                             <svg
                                                                 xmlns="http://www.w3.org/2000/svg"
