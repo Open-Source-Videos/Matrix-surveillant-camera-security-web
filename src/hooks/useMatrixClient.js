@@ -1,22 +1,30 @@
-import React,{ useState } from 'react';
+import { useEffect } from 'react';
 import axios from 'axios';
 
 const features = ['LoginByUserName', 'LoginByDeviceId'];
 
 const codeName = features[0];
 
-export const initialGlobalState = {
-    client: null, 
-    didLogin: false ,
-    roomList: [],
-    update: () => {},
-};
+var client = null;
+var didLogin = false;
+var roomList = [];
+var onHavingNewMessage = null;
+var onHavingNewFile = null;
+var onLogInResult = null;
 
-export const GlobalContext = React.createContext(initialGlobalState);
+function useMatrixClient() {
+    const setOnLogInResult = (_onLogInResult) => {
+        onLogInResult = _onLogInResult;
+    };
 
+    const setHavingNewFile = (_onHavingNewFile) => {
+        onHavingNewFile = _onHavingNewFile;
+    };
 
-function useMatrixClient(onHavingNewMessage, onHavingNewFile, onLogInResult) {
-    const global = React.useContext(GlobalContext);
+    const setOnHavingNewMessage = (_onHavingNewMessage) => {
+        onHavingNewMessage = _onHavingNewMessage;
+    };
+
     // const setClient = (c) =>{
 
     // }
@@ -27,13 +35,13 @@ function useMatrixClient(onHavingNewMessage, onHavingNewFile, onLogInResult) {
     // let [didLogin, setDidLogin] = useState(false);
 
     const isLogin = () => {
-        return global.didLogin;
+        return didLogin;
     };
 
     const sendMessageToRoom = async (roomId, message) => {
         try {
-            if (global.didLogin && global.client ) {
-                await global.client.sendEvent(
+            if (didLogin && client) {
+                await client.sendEvent(
                     roomId,
                     'm.room.message',
                     {
@@ -42,7 +50,6 @@ function useMatrixClient(onHavingNewMessage, onHavingNewFile, onLogInResult) {
                     },
                     '' //info.access_token
                 );
-               
             }
         } catch (e) {
             console.log('error', e);
@@ -90,31 +97,22 @@ function useMatrixClient(onHavingNewMessage, onHavingNewFile, onLogInResult) {
             // });
 
             // automatic accept an joining room invitation
-            newClient.on(
-                'RoomMember.membership',
-                async (event, member) => {
-                    if (
-                        member.membership === 'invite' &&
-                        member.userId === global.client.getUserId()
-                    ) {
-                        await newClient.joinRoom(member.roomId);
-                        // setting up of room encryption seems to be triggered automatically
-                        // but if we don't wait for it the first messages we send are unencrypted
-                        await newClient.setRoomEncryption(
-                            member.roomId,
-                            {
-                                algorithm: 'm.megolm.v1.aes-sha2',
-                            }
-                        );
-                        console.log('');
-                        console.log(
-                            '>> Has join room = ',
-                            member.roomId
-                        );
-                        console.log('');
-                    }
+            newClient.on('RoomMember.membership', async (event, member) => {
+                if (
+                    member.membership === 'invite' &&
+                    member.userId === client.getUserId()
+                ) {
+                    await newClient.joinRoom(member.roomId);
+                    // setting up of room encryption seems to be triggered automatically
+                    // but if we don't wait for it the first messages we send are unencrypted
+                    await newClient.setRoomEncryption(member.roomId, {
+                        algorithm: 'm.megolm.v1.aes-sha2',
+                    });
+                    console.log('');
+                    console.log('>> Has join room = ', member.roomId);
+                    console.log('');
                 }
-            );
+            });
 
             newClient.on('Event.decrypted', async (e) => {
                 const { content } = e.clearEvent;
@@ -139,28 +137,31 @@ function useMatrixClient(onHavingNewMessage, onHavingNewFile, onLogInResult) {
                             { type: content.info.mimetype }
                         );
 
-                        if (onHavingNewFile)
-                            onHavingNewFile({
+                        if (onHavingNewFile) {
+                            const file = {
                                 fileType: content.info.mimetype,
                                 fileUrl: blobURL,
                                 fileName: content.body,
-                            });
+                            };
+
+                            onHavingNewFile(file);
+                        }
                     }
                 }
             });
 
             if (newClient) {
-                global.client = newClient;
-                global.update({ ...global });
+                client = newClient;
             }
 
-            if (onLogInResult)
+            if (onLogInResult) {
                 onLogInResult(
                     true,
                     null,
                     await newClient.exportDevice(),
                     newClient.accessToken
                 );
+            }
         } catch (e) {
             throw e;
         }
@@ -175,14 +176,12 @@ function useMatrixClient(onHavingNewMessage, onHavingNewFile, onLogInResult) {
     ) => {
         let newClient = null;
         await window.Olm.init();
-        if (global.didLogin === false) {
+        if (didLogin === false) {
             if (baseUrl && userId) {
                 while (true) {
                     if (codeName === features[1]) {
                         if (exportedDevice && accessToken) {
-                            console.log('use accessToken');
                             try {
-
                                 newClient =
                                     await new window.matrixClient.createClient({
                                         baseUrl,
@@ -251,8 +250,6 @@ function useMatrixClient(onHavingNewMessage, onHavingNewFile, onLogInResult) {
                             );
                             newClient.accessToken = info.access_token;
                             newClient.deviceId = info.device_id;
-            
-                            
                         } catch (e) {
                             if (onLogInResult)
                                 onLogInResult(false, e, null, null);
@@ -263,20 +260,13 @@ function useMatrixClient(onHavingNewMessage, onHavingNewFile, onLogInResult) {
                     break;
                 }
 
-               
                 await newClient.initCrypto();
-                await newClient.setGlobalErrorOnUnknownDevices(
-                    false
-                );
+                await newClient.setGlobalErrorOnUnknownDevices(false);
 
                 await newClient.startClient();
 
                 clientEvent(newClient);
-                global.didLogin = true;
-                
-                global.update({ ...global });
-
-               
+                didLogin = true;
             }
         }
     };
@@ -286,6 +276,9 @@ function useMatrixClient(onHavingNewMessage, onHavingNewFile, onLogInResult) {
         saveBlobUrlToFile,
         sendMessageToRoom,
         isLogin,
+        setOnHavingNewMessage,
+        setOnLogInResult,
+        setHavingNewFile,
     };
 }
 

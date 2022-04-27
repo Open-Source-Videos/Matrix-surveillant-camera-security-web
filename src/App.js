@@ -1,23 +1,23 @@
 import React,{useEffect,useState} from 'react';
 import { connect } from 'react-redux';
-import Header from './components/Header/Header';
-import Footer from './components/Footer';
+// import Header from './components/Header/Header';
+// import Footer from './components/Footer';
 import Navigation from './navigation';
 import { getStore } from './utils';
 import { ActionCreators } from './actions/profile';
 
-import { GlobalContext, initialGlobalState} from './hooks/useMatrixClient'
+// import { GlobalContext, initialGlobalState} from './hooks/useMatrixClient'
 import './styles';
 
 function App() {
-  const [state, setState] = useState({
-    ...initialGlobalState,
-    update,
-});
+//   const [state, setState] = useState({
+//     ...initialGlobalState,
+//     update,
+// });
 
-function update(data) {
-  setState(Object.assign({}, state, data));
-}
+// function update(data) {
+//   setState(Object.assign({}, state, data));
+// }
 
   useEffect(() => {
       const user = getStore('user');
@@ -26,14 +26,16 @@ function update(data) {
       }
   }, []);
   return (
-    <GlobalContext.Provider value={state}>
-      <div>
-          <Navigation />
-      </div>
-    </GlobalContext.Provider>
+    <div>
+    <Navigation />
+</div>
+    
 
   );
 }
+
+//<GlobalContext.Provider value={state}>
+//</GlobalContext.Provider>
 
 // class App extends React.Component {
 //   componentDidMount() {

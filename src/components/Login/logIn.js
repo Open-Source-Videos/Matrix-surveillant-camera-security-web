@@ -1,5 +1,5 @@
 import React, { 
-	useState 
+	useState ,useEffect
 } from 'react';
 import { useHistory } from "react-router-dom";
 import { withRouter} from "react-router-dom";
@@ -31,11 +31,22 @@ import useMatrixClient from '../../hooks/useMatrixClient';
 // const ROOM_ID = '!RNeodVfHGpDgUnjvYy:pdxinfosec.org';
 
 export const Login = () => {
-	const [formData, setFormData] = useState({});
+	const [formData, setFormData] = useState({
+		homeserver:"https://matrix.pdxinfosec.org",
+		email:'@test003:pdxinfosec.org',
+		password:'G3Vsnzvr'
+
+	});
 	const [errors, setErrors] = useState({}); 
 	const [formSubmitted, setFormSubmitted] = useState(false);
 	const history = useHistory();
+	const {loginMatrixServer,setOnLogInResult} = useMatrixClient();
 
+	useEffect(()=>{
+		console.log('Set handleLoginResult');
+		setOnLogInResult(handleLoginResult);
+		
+	},[]);
 	
 	const handleInputChange = (event) => {
 		const target = event.target;
@@ -47,14 +58,15 @@ export const Login = () => {
 	}
 
 	const validateLoginForm = (e) => {
+		
 		if (isEmpty(formData.homeserver)) {
 			errors.homeserver = "Homeserver can't be blank";
 		}
-
+		
 		if (isEmpty(formData.email)) {
 			errors.email = "Email can't be blank";
 		}
-
+	
 		if (isEmpty(formData.password)) {
 			errors.password = "Password can't be blank";
 		}  else if (isContainWhiteSpace(formData.password)) {
@@ -95,21 +107,14 @@ export const Login = () => {
 			);
         }*/
     };
-
-
-	const {loginMatrixServer} =
-	useMatrixClient(
-		null,
-		null,
-		handleLoginResult
-	);
-
 	
 	const login = async(e) => {
 		e.preventDefault();
 
 		let valid = validateLoginForm();
+	
 		if(valid === true) {
+			console.log('Here',valid)
 			await loginMatrixServer(
 				formData.homeserver, 
 				formData.email, 
@@ -150,6 +155,7 @@ export const Login = () => {
 							name="homeserver" 
 							placeholder="Enter your homeserver" 
 							onChange={handleInputChange} 
+							defaultValue = {"https://matrix.pdxinfosec.org"}
 						/>
 
 						{ errors.homeserver &&
@@ -162,6 +168,7 @@ export const Login = () => {
 							validationState={ 
 								formSubmitted ? (errors.email ? 'error' : 'success') : null 
 							}
+							
 						>
 
 						<ControlLabel id="homeserver1">Username</ControlLabel>
@@ -171,6 +178,7 @@ export const Login = () => {
 							name="email" 
 							placeholder="Enter your username" 
 							onChange={handleInputChange} 
+							defaultValue = {"@test003:pdxinfosec.org"}
 						/>
 
 						{ errors.email &&
@@ -184,6 +192,7 @@ export const Login = () => {
 							formSubmitted ? (errors.password ? 'error' : 'success') : null 
 						}
 						className="my-2"
+						
 					>
 						<ControlLabel id="homeserver1">Password</ControlLabel>
 
@@ -192,6 +201,7 @@ export const Login = () => {
 							name="password" 
 							placeholder="Enter your password" 
 							onChange={handleInputChange} 
+							defaultValue={"G3Vsnzvr"}
 						/>
 						{ errors.password &&
 							<HelpBlock id="helpBlock">{errors.password}</HelpBlock>

@@ -1,28 +1,23 @@
-import React, { 
-	useEffect, 
-	useState 
-} from 'react';
+import React, { useEffect, useState } from 'react';
 import '../index.css';
-import {Navbar} from "../components/Navbar"
+import { Navbar } from '../components/Navbar';
 import useMatrixClient from '../hooks/useMatrixClient';
 
-
 // const axios = require('axios');
-
-
 
 // const BASE_URL = 'https://matrix.pdxinfosec.org';
 // const PASSWORD = "G3Vsnzvr";
 // const USERNAME = "@test003:pdxinfosec.org";
-const ROOM_ID = "!bdQMmkTBTMqUPAOvms:pdxinfosec.org";
-
+const ROOM_ID = '!bdQMmkTBTMqUPAOvms:pdxinfosec.org';
 
 function Home() {
     const [listImageURL, setListImageURL] = useState([]);
     const [listVideoURL, setListVideoURL] = useState([]);
 
     const handleHavingNewFile = (file) => {
+        
         switch (file.fileType) {
+            case 'image/png':
             case 'image/jpeg':
                 listImageURL.push(file.fileUrl);
                 setListImageURL([...listImageURL]);
@@ -34,15 +29,15 @@ function Home() {
                 saveBlobUrlToFile(file.fileUrl, file.fileName);
                 break;
         }
-        console.log("Send Thank you", isLogin());
-        if (isLogin()) sendMessageToRoom(ROOM_ID, 'Thank you');
+
     };
 
-    const { sendMessageToRoom, saveBlobUrlToFile, isLogin } = useMatrixClient(
-        null,
-        handleHavingNewFile,
-        null
-    );
+    const { sendMessageToRoom, saveBlobUrlToFile, isLogin, setHavingNewFile } =
+        useMatrixClient(null, null);
+
+    useEffect(() => {
+        setHavingNewFile(handleHavingNewFile);
+    }, []);
 
     /* useEffect(() => {
         (async () => {
@@ -190,70 +185,118 @@ function Home() {
 
     return (
         <>
-            {
-            //isLogin() && (
-            <div>
-            <Navbar />
-            <header className="App-header" >
-				<div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4">
-						{listImageURL.length > 0 ? (
-							listImageURL.map((url, index) => {
-								return (
-                                    <div className="flex justify-center px-2" key={index}>
-                                        <div className="flex flex-col md:flex-row md:max-w-xl rounded-lg bg-white shadow-lg lg:items-center">
-                                            <img className="w-full h-full object-cover md:w-72 rounded-t-lg md:rounded-none md:rounded-l-lg" src={url} alt="" />
-                                            <div className="p-6 flex flex-col justify-start">
-                                                <h5 className="text-gray-900 text-lg font-medium mb-2">Garage View</h5>
-                                                <p className="text-gray-700 text-base mb-4">Tue, Apr 12 2022 21:48:12</p>
-                                                <div className="grid grid-cols-2 gap-3 md:grid-cols-1">
-                                                    <button type="button" className="bg-yellow-300 hover:bg-amber-400 text-gray-800 text-sm leading-6 font-medium py-2 px-3 rounded-lg outline outline-amber-300 inline-flex items-center justify-center">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 mr-2" fill="none" viewBox="0 0 22 22" stroke="currentColor" strokeWidth="2">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                                        </svg>
-                                                        <span>Watch</span>
-                                                    </button>
-                                                    <button className="bg-white hover:bg-amber-500 text-amber-500 text-sm leading-6 font-medium py-2 px-3 rounded-lg outline outline-amber-300 inline-flex items-center justify-center">
-                                                        <svg className="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                                            <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/>
-                                                        </svg>
-                                                        <span>Download</span>
-                                                    </button>
+            {isLogin() ? (
+                <div>
+                    <Navbar />
+                    <header className="App-header">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4">
+                            {listImageURL.length > 0 ? (
+                                listImageURL.map((url, index) => {
+                                    return (
+                                        <div
+                                            className="flex justify-center px-2"
+                                            key={index}
+                                        >
+                                            <div className="flex flex-col md:flex-row md:max-w-xl rounded-lg bg-white shadow-lg lg:items-center">
+                                                <img
+                                                    className="w-full h-full object-cover md:w-72 rounded-t-lg md:rounded-none md:rounded-l-lg"
+                                                    src={url}
+                                                    alt=""
+                                                />
+                                                <div className="p-6 flex flex-col justify-start">
+                                                    <h5 className="text-gray-900 text-lg font-medium mb-2">
+                                                        Garage View
+                                                    </h5>
+                                                    <p className="text-gray-700 text-base mb-4">
+                                                        Tue, Apr 12 2022
+                                                        21:48:12
+                                                    </p>
+                                                    <div className="grid grid-cols-2 gap-3 md:grid-cols-1">
+                                                        <button
+                                                            type="button"
+                                                            className="bg-yellow-300 hover:bg-amber-400 text-gray-800 text-sm leading-6 font-medium py-2 px-3 rounded-lg outline outline-amber-300 inline-flex items-center justify-center"
+                                                        >
+                                                            <svg
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                className="w-4 h-4 mr-2"
+                                                                fill="none"
+                                                                viewBox="0 0 22 22"
+                                                                stroke="currentColor"
+                                                                strokeWidth="2"
+                                                            >
+                                                                <path
+                                                                    strokeLinecap="round"
+                                                                    strokeLinejoin="round"
+                                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                                                />
+                                                                <path
+                                                                    strokeLinecap="round"
+                                                                    strokeLinejoin="round"
+                                                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                                                />
+                                                            </svg>
+                                                            <span>Watch</span>
+                                                        </button>
+                                                        <button className="bg-white hover:bg-amber-500 text-amber-500 text-sm leading-6 font-medium py-2 px-3 rounded-lg outline outline-amber-300 inline-flex items-center justify-center">
+                                                            <svg
+                                                                className="fill-current w-4 h-4 mr-2"
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                viewBox="0 0 20 20"
+                                                            >
+                                                                <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z" />
+                                                            </svg>
+                                                            <span>
+                                                                Download
+                                                            </span>
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-								);
-							})
-						) : (
-							<></>
-						)}
-					</div>
+                                    );
+                                })
+                            ) : (
+                                <></>
+                            )}
+                        </div>
 
-                    <br/>
-                    <div>Listening ...</div>
-                    
-                    <br />
-                    <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4">
-					{listVideoURL.length > 0 ? (
-                        listVideoURL.map((videoURL, index) => {
-                            return (
-                                <div className="flex justify-center px-2" key={1}>
-                                    <video key={index} width="500" height="500" controls autoplay>
-                                        <source src={videoURL} type="video/mp4" />
-                                    </video>
-                                </div>
-							);
-                        })
-                    ) : (
-                        <></>
-                    )}
-                    </div>
-				<br/>
-            </header>
-        </div>
-        //)
-        }
+                        <br />
+                        <div>Listening ...</div>
+
+                        <br />
+                        <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4">
+                            {listVideoURL.length > 0 ? (
+                                listVideoURL.map((videoURL, index) => {
+                                    return (
+                                        <div
+                                            className="flex justify-center px-2"
+                                            key={1}
+                                        >
+                                            <video
+                                                key={index}
+                                                width="500"
+                                                height="500"
+                                                controls
+                                                autoplay
+                                            >
+                                                <source
+                                                    src={videoURL}
+                                                    type="video/mp4"
+                                                />
+                                            </video>
+                                        </div>
+                                    );
+                                })
+                            ) : (
+                                <></>
+                            )}
+                        </div>
+                        <br />
+                    </header>
+                </div>
+            ) : (
+                <p>404 </p>
+            )}
         </>
     );
 }
@@ -285,10 +328,10 @@ function decryptAttachment(data, info) {
                     key, //from generateKey or importKey above
                     data //ArrayBuffer of the data
                 )
-                .then(function(decrypted) {
+                .then(function (decrypted) {
                     return decrypted;
                 })
-                .catch(function(err) {
+                .catch(function (err) {
                     console.error(err);
                 });
         });
@@ -308,11 +351,11 @@ function decodeBase64(base64) {
     return uint8Array;
 }
 
-const saveByteArray = (function() {
+const saveByteArray = (function () {
     var a = document.createElement('a');
     document.body.appendChild(a);
     a.style = 'display: none';
-    return function(url, name) {
+    return function (url, name) {
         a.href = url;
         a.download = name;
         a.click();
@@ -327,15 +370,16 @@ const saveByteArray = (function() {
  * @prop String email
  * @returns Boolean
  */
- export const isEmail = (email) => {
-    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+export const isEmail = (email) => {
+    const re =
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email);
-}
+};
 
 export const isHomeServer = (homeserver) => {
-    const re = "https://matrix.pdxinfosec.org";
+    const re = 'https://matrix.pdxinfosec.org';
     return re.test(homeserver);
-}
+};
 
 /**
  * Chek if vatiable is empty
@@ -366,7 +410,7 @@ export const isEmpty = (thing) => {
     }
 
     return empty;
-}
+};
 
 /**
  * Check length of the string greater than
@@ -379,9 +423,8 @@ export const isEmpty = (thing) => {
  * @returns Boolean
  */
 export const isLength = (str, options) => {
-
     if (isEmpty(options)) {
-        throw new Error("Who will provide the options you?")
+        throw new Error('Who will provide the options you?');
     }
 
     let isValid = true;
@@ -392,7 +435,7 @@ export const isLength = (str, options) => {
         // Convert to string incase it's number
         let len = 0;
 
-        if(options.trim){
+        if (options.trim) {
             len = str.toString().trim().length;
         } else {
             len = str.toString().length;
@@ -410,7 +453,7 @@ export const isLength = (str, options) => {
     }
 
     return isValid;
-}
+};
 
 /**
  * Check if string contains whitespaces
@@ -418,13 +461,12 @@ export const isLength = (str, options) => {
  * @returns Boolean
  */
 export const isContainWhiteSpace = (str) => {
-
-    if(typeof str === 'string' || typeof str === 'number'){
+    if (typeof str === 'string' || typeof str === 'number') {
         return str.toString().trim().indexOf(' ') !== -1;
     } else {
         return false;
     }
-}
+};
 
 //Check valid sign-in
 export default Home;
