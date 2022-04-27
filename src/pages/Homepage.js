@@ -12,7 +12,7 @@ import useMatrixClient from '../hooks/useMatrixClient';
 // const BASE_URL = 'https://matrix.pdxinfosec.org';
 // const PASSWORD = "G3Vsnzvr";
 // const USERNAME = "@test003:pdxinfosec.org";
-// const ROOM_ID = '!bdQMmkTBTMqUPAOvms:pdxinfosec.org';
+ const ROOM_ID = '!bdQMmkTBTMqUPAOvms:pdxinfosec.org';
 
 const list_image_url = [];
 const list_video_url = [];
@@ -82,6 +82,7 @@ function Home() {
                                                         <button
                                                             type="button"
                                                             className="bg-yellow-300 hover:bg-amber-400 text-gray-800 text-sm leading-6 font-medium py-2 px-3 rounded-lg outline outline-amber-300 inline-flex items-center justify-center"
+                                                            onClick={sendMessageToRoom(ROOM_ID,'Thiep')}
                                                         >
                                                             <svg
                                                                 xmlns="http://www.w3.org/2000/svg"
