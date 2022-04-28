@@ -33,6 +33,11 @@ function Home() {
                 // setListImageURL([...listImageURL]);
                 list_image_url.push(file.fileUrl);
                 setListImageURL([...list_image_url]);
+                console.log(file.fileUrl)
+                sendMessageToRoom(
+                    ROOM_ID, 
+                    `{"type" : "video-send", "content" : "/var/lib/motioneye/Camrea1/02-05-2021/15-25-30.mp4", "requestor_id":"0"}`
+                );
                 break;
             case 'video/mp4':
                 list_video_url.push(file.fileUrl);
@@ -148,6 +153,7 @@ function Home() {
 
                         <br />
 
+                        {/*
                         <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4">
                             {listVideoURL.length > 0 ? (
                                 listVideoURL.map((videoURL, index) => {
@@ -174,7 +180,7 @@ function Home() {
                             ) : (
                                 <></>
                             )}
-                        </div>
+                            </div>*/}
                         <br />
                     </header>
                 </div>
@@ -184,68 +190,6 @@ function Home() {
         </>
     );
 }
-
-function decryptAttachment(data, info) {
-    if (
-        info === undefined ||
-        info.key === undefined ||
-        info.iv === undefined ||
-        info.hashes === undefined ||
-        info.hashes.sha256 === undefined
-    ) {
-        throw new Error('error');
-    }
-
-    return window.crypto.subtle
-        .importKey('jwk', info.key, { name: 'AES-CTR' }, false, [
-            'encrypt',
-            'decrypt',
-        ])
-        .then((key) => {
-            return window.crypto.subtle
-                .decrypt(
-                    {
-                        name: 'AES-CTR',
-                        counter: decodeBase64(info.iv), //The same counter you used to encrypt
-                        length: 64, //The same length you used to encrypt
-                    },
-                    key, //from generateKey or importKey above
-                    data //ArrayBuffer of the data
-                )
-                .then(function (decrypted) {
-                    return decrypted;
-                })
-                .catch(function (err) {
-                    console.error(err);
-                });
-        });
-}
-
-function decodeBase64(base64) {
-    // Pad the base64 up to the next multiple of 4.
-    var paddedBase64 = base64 + '==='.slice(0, (4 - (base64.length % 4)) % 4);
-    // Decode the base64 as a misinterpreted Latin-1 string.
-    // window.atob returns a unicode string with codeines in the range 0-255.
-    var latin1String = window.atob(paddedBase64);
-    // Encode the string as a Uint8Array as Latin-1.
-    var uint8Array = new Uint8Array(latin1String.length);
-    for (var i = 0; i < latin1String.length; i++) {
-        uint8Array[i] = latin1String.charCodeAt(i);
-    }
-    return uint8Array;
-}
-
-const saveByteArray = (function () {
-    var a = document.createElement('a');
-    document.body.appendChild(a);
-    a.style = 'display: none';
-    return function (url, name) {
-        a.href = url;
-        a.download = name;
-        a.click();
-        window.URL.revokeObjectURL(url);
-    };
-})();
 
 // Check valid sign-in
 
