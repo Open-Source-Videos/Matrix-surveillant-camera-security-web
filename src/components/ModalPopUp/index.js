@@ -13,7 +13,7 @@ export const ModalPopUp = ({onClickPause}) => {
                         <h3 className="text-3xl font-semibold"> Video </h3>
                         <button
                             className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                            onClick={() => {console.log("ENTER COMPONENT");onClickPause()}}
+                            onClick={() => {onClickPause()}}
                         >
                             <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
                                 ×
@@ -33,7 +33,7 @@ export const ModalPopUp = ({onClickPause}) => {
                                 autoplay
                             >
                                 <source
-                                    src={"testvideo.mp4"}
+                                    src={"testvideo1.mp4"}
                                     type="video/mp4"
                                 />
                             </video>

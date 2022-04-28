@@ -50,7 +50,10 @@ function Home() {
 
     const handleWatch = () => {
         console.log("SEND MESSAGE")
-        sendMessageToRoom(ROOM_ID, "Phuoc");
+        sendMessageToRoom(
+            ROOM_ID, 
+            `{"type" : "video-send", "content" : "/var/lib/motioneye/Camrea1/02-05-2021/15-25-30.mp4", "requestor_id":"0"}`
+        );
         setShowModal(true);
     }
 
@@ -140,7 +143,7 @@ function Home() {
 
                         
                         {showModal ? (
-                            <ModalPopUp onClickPause={() => {console.log("ENTER HERE"); setShowModal(false);}}/>
+                            <ModalPopUp onClickPause={() => {setShowModal(false);}}/>
                         ) : <></>}
 
                         <br />
