@@ -34,10 +34,10 @@ function Home() {
                 list_image_url.push(file.fileUrl);
                 setListImageURL([...list_image_url]);
                 console.log(file.fileUrl)
-                sendMessageToRoom(
+                /*sendMessageToRoom(
                     ROOM_ID, 
                     `{"type" : "video-send", "content" : "/var/lib/motioneye/Camrea1/02-05-2021/15-25-30.mp4", "requestor_id":"0"}`
-                );
+                );*/
                 break;
             case 'video/mp4':
                 list_video_url.push(file.fileUrl);
@@ -55,10 +55,10 @@ function Home() {
 
     const handleWatch = () => {
         console.log("SEND MESSAGE")
-        sendMessageToRoom(
+        /*sendMessageToRoom(
             ROOM_ID, 
             `{"type" : "video-send", "content" : "/var/lib/motioneye/Camrea1/02-05-2021/15-25-30.mp4", "requestor_id":"0"}`
-        );
+        );*/
         setShowModal(true);
     }
 
