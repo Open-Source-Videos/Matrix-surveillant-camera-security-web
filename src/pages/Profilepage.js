@@ -1,6 +1,6 @@
 import "./styles.css";
 import { Redirect } from 'react-router-dom';
-import UserProfile from "react-user-profile";
+import ProfileView from "../profileView/profile";
 import {Navbar} from "../components/Navbar"
 import useMatrixClient from '../hooks/useMatrixClient';
 
@@ -47,7 +47,8 @@ const Profile = () => {
       {isLogin() ? (
         <div className="App">
           <Navbar/>
-        <div style={{ margin: "0 auto", width: "100%" }}>
+          <ProfileView/>
+        {/* <div style={{ margin: "0 auto", width: "100%" }}>
           <UserProfile
             photo={photo}
             userName={userName}
@@ -57,7 +58,8 @@ const Profile = () => {
             initialFollowersCount={4433}
             initialComments={comments}
           />
-        </div>
+        </div> */}
+        
       </div>
       ) : (
           <Redirect to="/403" />
