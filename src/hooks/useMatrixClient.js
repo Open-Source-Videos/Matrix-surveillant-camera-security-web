@@ -9,6 +9,7 @@ const ROOM_CRYPTO_CONFIG = { algorithm: 'm.megolm.v1.aes-sha2' };
 var client = null;
 var didLogin = false;
 var roomList = [];
+var avatar = null;
 
 var onHavingNewMessage = null;
 var onHavingNewFile = null;
@@ -98,6 +99,20 @@ function useMatrixClient() {
         }
         return roomID;
     };
+    
+    const getAvatar = async (userId) => {
+
+        try {
+            if (didLogin && client) {
+                var profile = await client.getProfileInfo(userId, 'avatar_url');
+                avatar = client.mxcUrlToHttp(profile.avatar_url)
+                console.log("Avatar:::", avatar)
+            }
+        } catch (e) {
+            console.log('error', e);
+        }
+        return avatar;
+    }
 
     const sendMessageToRoom = async (roomId, message) => {
         try {
@@ -410,7 +425,8 @@ function useMatrixClient() {
         setHavingNewFile,
         getMatrixRooms,
         getHistory,
-        reloginMatrixServer
+        reloginMatrixServer,
+        getAvatar
     };
 }
 

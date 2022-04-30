@@ -39,7 +39,7 @@ export const Login = () => {
 
 	const [formSubmitted, setFormSubmitted] = useState(false);
 	const history = useHistory();
-    const {reloginMatrixServer, getHistory, loginMatrixServer, sendMessageToRoom, saveBlobUrlToFile,isLogin, getMatrixRooms,createMatrixRoom,setHavingNewFile,setOnHavingNewMessage,setOnLogInResult } =
+    const {getAvatar, reloginMatrixServer, getHistory, loginMatrixServer, sendMessageToRoom, saveBlobUrlToFile,isLogin, getMatrixRooms,createMatrixRoom,setHavingNewFile,setOnHavingNewMessage,setOnLogInResult } =
 		useMatrixClient();
 		
 	useEffect(()=>{
@@ -55,8 +55,6 @@ export const Login = () => {
 			})();
 		} else {
 			console.log('Set handleLoginResult');
-
-
 		}
 		
 		
@@ -111,6 +109,12 @@ export const Login = () => {
 		if (_isLogin) {
 			if (exportedDevice && accessToken) {
 				localStorage.setItem("matrix_account", JSON.stringify({exportedDevice,accessToken, homeServer: formData.homeserver}));
+				(async()=>{
+
+					//@test007:pdxinfosec.org To Test
+					let profileAvatar = await getAvatar(exportedDevice.userId)
+					console.log("profileAvatar", profileAvatar)
+				})();
 
 			}
 			history.push('/homepage');
