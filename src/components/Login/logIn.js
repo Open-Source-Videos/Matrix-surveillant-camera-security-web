@@ -52,7 +52,6 @@ export const Login = () => {
 				let info = JSON.parse(saved);
 				console.log("My Info", info);
 				await reloginMatrixServer(info.homeServer, info.exportedDevice, info.accessToken );
-				history.push('/homepage');
 			})();
 		} else {
 			console.log('Set handleLoginResult');
