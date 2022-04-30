@@ -26,14 +26,6 @@ function useMatrixClient() {
         onHavingNewMessage = _onHavingNewMessage;
     };
 
-    // const setClient = (c) =>{
-
-    // }
-    // let [client, setClient] = useState(() => {
-    //     console.log('init client');
-    //     return null;
-    // });
-    // let [didLogin, setDidLogin] = useState(false);
     const logoutMatrixServer = () => {
         try {
             if (client !== null) {
@@ -107,6 +99,7 @@ function useMatrixClient() {
             //         console.log('');
             //     }
             // });
+
 
             // automatic accept an joining room invitation
             newClient.on('RoomMember.membership', async (event, member) => {
@@ -193,6 +186,7 @@ function useMatrixClient() {
                 while (true) {
                     if (codeName === features[1]) {
                         if (exportedDevice && accessToken) {
+                            console.log('use accessToken');
                             try {
                                 newClient =
                                     await new window.matrixClient.createClient({
@@ -200,13 +194,14 @@ function useMatrixClient() {
                                         deviceToImport: exportedDevice,
                                         accessToken,
                                         sessionStore:
-                                            // await new window.matrixClient.WebStorageSessionStore(
-                                            //     window.localStorage
-                                            // )
-                                            {
-                                                getLocalTrustedBackupPubKey:
-                                                    () => null,
-                                            },
+                                            await new window.matrixClient.WebStorageSessionStore(
+                                                window.localStorage
+                                            )
+                                            // {
+                                            //     getLocalTrustedBackupPubKey:
+                                            //         () => null,
+                                            // }
+                                            ,
                                         cryptoStore:
                                             await new window.matrixClient.MemoryCryptoStore(),
                                     });
@@ -237,6 +232,7 @@ function useMatrixClient() {
 
                     if (password) {
                         try {
+                            
                             newClient = await window.matrixClient.createClient(
                                 baseUrl
                             );
@@ -248,6 +244,7 @@ function useMatrixClient() {
                                 );
                             newClient.cryptoStore =
                                 new window.matrixClient.MemoryCryptoStore();
+
                             newClient.roomList.cryptoStore =
                                 new window.matrixClient.MemoryCryptoStore(
                                     window.localStorage
@@ -260,8 +257,10 @@ function useMatrixClient() {
                                     password: password,
                                 }
                             );
+
                             newClient.accessToken = info.access_token;
                             newClient.deviceId = info.device_id;
+
                         } catch (e) {
                             if (onLogInResult)
                                 onLogInResult(false, e, null, null);
@@ -274,11 +273,34 @@ function useMatrixClient() {
 
                 await newClient.initCrypto();
                 await newClient.setGlobalErrorOnUnknownDevices(false);
-
                 await newClient.startClient();
 
-                clientEvent(newClient);
-                didLogin = true;
+                newClient.once('sync', async function (state, prevState, res) {
+                    if (state === 'PREPARED') {
+                        // state will be 'PREPARED' when the client is ready to use
+
+                        clientEvent(newClient);
+                        didLogin = true;
+                        roomList = await newClient.getRooms();
+
+                        if (onLogInResult !== null)
+                            onLogInResult(
+                                true,
+                                null,
+                                await newClient.exportDevice(),
+                                newClient.accessToken
+                            );
+                        
+                        for (let i = 0 ; i < roomList.length; i++)
+                            await client.scrollback(roomList[i], 100);
+                        
+                    }
+                });
+
+                newClient.on('Room' ,  function(room) {
+                    roomList.push(room);
+                });
+
             }
         }
     };
