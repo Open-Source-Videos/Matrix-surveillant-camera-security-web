@@ -1,46 +1,118 @@
 import "./styles.css";
 import { Redirect } from 'react-router-dom';
-import ProfileView from "../profileView/profile";
 import {Navbar} from "../components/Navbar"
 import useMatrixClient from '../hooks/useMatrixClient';
 
+
+const ProfileView = () => {
+    return (
+      <>
+        <main className="profile-page">
+          <section className="relative block" style={{ height: "500px" }}>
+            <div
+              className="absolute top-0 w-full h-full bg-center bg-cover bg-amber-200"
+              style={{
+                backgroundImage:
+                  "url('/circle-scatter-haikei.svg')"
+              }}
+            >
+
+            </div>
+            <div
+              className="top-auto bottom-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden"
+              style={{ height: "70px" }}
+            >
+              <svg
+                className="absolute bottom-0 overflow-hidden"
+                xmlns="http://www.w3.org/2000/svg"
+                preserveAspectRatio="none"
+                version="1.1"
+                viewBox="0 0 2560 100"
+                x="0"
+                y="0"
+              >
+                <polygon
+                  className="text-white fill-current"
+                  points="2560 0 2560 100 0 100"
+                ></polygon>
+              </svg>
+            </div>
+          </section>
+          <section className="relative py-16 bg-white">
+            <div className="container mx-auto px-4">
+              <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg -mt-64">
+                <div className="px-6">
+                  <div className="flex flex-wrap justify-center">
+                    <div className="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center">
+                      <div className="relative">
+                        <img
+                          alt="..."
+                          src={"Minh.jpg"}
+                          className="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16"
+                          style={{ maxWidth: "150px" }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="text-center mt-12">
+                    <h3 className="text-4xl font-semibold leading-normal mb-2 text-gray-800 pt-5">
+                      Minh Nguyen
+                    </h3>
+                    <div className="text-sm leading-normal mt-0 mb-2 text-gray-500 font-bold uppercase">
+                      <i className="fas fa-map-marker-alt mr-2 text-lg text-gray-500"></i>{" "}
+                      Portland, Oregon
+                    </div>
+                    <div className="mb-2 text-gray-700 mt-10">
+                      <i className="fas fa-briefcase mr-2 text-lg text-gray-500"></i>
+                      Fond-end Lead - Golden Tiger Team
+                    </div>
+                    <div className="mb-2 text-gray-700">
+                      <i className="fas fa-university mr-2 text-lg text-gray-500"></i>
+                      @minh25:matrix.org
+                    </div>
+                  </div>
+                  <div className="mt-10 py-10 border-t border-gray-300 text-center">
+                    <div className="flex flex-wrap justify-center">
+                      <div className="w-full lg:w-9/12 px-4">
+                        <p className="mb-4 text-lg leading-relaxed text-gray-800">
+                          An artist of considerable range, Jenna the name taken by
+                          Melbourne-raised, Brooklyn-based Nick Murphy writes,
+                          performs and records all of his own music, giving it a
+                          warm, intimate feel with a solid groove structure. An
+                          artist of considerable range.
+                        </p>
+                        <a
+                          href="#pablo"
+                          className="font-normal text-pink-500"
+                          onClick={e => e.preventDefault()}
+                        >
+                          Show more
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+		  <img src={'/wave-haikei.svg'} alt="footer" width={"100%"} />
+		  <footer className="relative pb-4 bg-amber-300">
+          <div className="flex flex-wrap items-center md:justify-between justify-center ">
+            <div className="w-full md:w-4/12 px-4 mx-auto text-center">
+              <div className="text-sm text-black font-semibold py-1">
+                Open Source Security Camera App - 2022
+              </div>
+            </div>
+          </div>
+          </footer>
+        </main>
+       
+      </>
+    );
+  }
+
 const Profile = () => {
   const { isLogin } = useMatrixClient();
-
-  const photo =
-    "https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-6/272188985_4740394449341148_1137162891876592970_n.jpg?_nc_cat=109&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=UtjMQXEeX7cAX9wTGUq&_nc_ht=scontent-sea1-1.xx&oh=00_AT-GwOW26liDh-7ph3qK3hUqLVS6vOZAkm5qUl6gdGr_Eg&oe=625FA44C";
-  const userName = "Minh Nguyen";
-  const location = "Portland, OR";
-
-  const comments = [
-    {
-      id: "1",
-      photo:
-        "https://api-cdn.spott.tv/rest/v004/image/images/e91f9cad-a70c-4f75-9db4-6508c37cd3c0?width=587&height=599",
-      userName: "Phuoc Nguyen",
-      content:
-        "Lorem ipsum dolor sit amet enim. Etiam ullamcorper. Suspendisse a pellentesque dui, non felis. Maecenas malesuada elit lectus felis, malesuada ultricies. Curabitur et ligula. ",
-      createdAt: 1543858000000
-    },
-    {
-        id: "1",
-        photo:
-          "https://api-cdn.spott.tv/rest/v004/image/images/e91f9cad-a70c-4f75-9db4-6508c37cd3c0?width=587&height=599",
-        userName: "Tuan Dinh",
-        content:
-          "Lorem ipsum dolor sit amet enim. Etiam ullamcorper. Suspendisse a pellentesque dui, non felis. Maecenas malesuada elit lectus felis, malesuada ultricies. Curabitur et ligula. ",
-        createdAt: 1543858000000
-      },
-      {
-        id: "1",
-        photo:
-          "https://api-cdn.spott.tv/rest/v004/image/images/e91f9cad-a70c-4f75-9db4-6508c37cd3c0?width=587&height=599",
-        userName: "Tri Le",
-        content:
-          "Lorem ipsum dolor sit amet enim. Etiam ullamcorper. Suspendisse a pellentesque dui, non felis. Maecenas malesuada elit lectus felis, malesuada ultricies. Curabitur et ligula. ",
-        createdAt: 1543858000000
-      }
-  ];
 
   return (
     <>
@@ -48,18 +120,6 @@ const Profile = () => {
         <div className="App">
           <Navbar/>
           <ProfileView/>
-        {/* <div style={{ margin: "0 auto", width: "100%" }}>
-          <UserProfile
-            photo={photo}
-            userName={userName}
-            location={location}
-            initialLikesCount={121}
-            initialFollowingCount={723}
-            initialFollowersCount={4433}
-            initialComments={comments}
-          />
-        </div> */}
-        
       </div>
       ) : (
           <Redirect to="/403" />
