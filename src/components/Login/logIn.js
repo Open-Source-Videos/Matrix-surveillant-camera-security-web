@@ -5,6 +5,8 @@ import React, {
 import { useHistory } from "react-router-dom";
 import { withRouter} from "react-router-dom";
 import { connect } from 'react-redux';
+
+
 import './style.css';
 import { 
 	Row, 
@@ -33,13 +35,28 @@ export const Login = () => {
 
 	});
 	const [errors, setErrors] = useState({}); 
+	const [homeServer, setHomeServer] = useState({}); 
+
 	const [formSubmitted, setFormSubmitted] = useState(false);
 	const history = useHistory();
-	const {loginMatrixServer,setOnLogInResult} = useMatrixClient();
-
+    const {getAvatar, reloginMatrixServer, getHistory, loginMatrixServer, sendMessageToRoom, saveBlobUrlToFile,isLogin, getMatrixRooms,createMatrixRoom,setHavingNewFile,setOnHavingNewMessage,setOnLogInResult } =
+		useMatrixClient();
+		
 	useEffect(()=>{
-		console.log('Set handleLoginResult');
 		setOnLogInResult(handleLoginResult);
+
+		const saved = localStorage.getItem("matrix_account");
+		if (saved)
+		{
+			(async() => {
+				let info = JSON.parse(saved);
+				console.log("My Info", info);
+				await reloginMatrixServer(info.homeServer, info.exportedDevice, info.accessToken );
+			})();
+		} else {
+			console.log('Set handleLoginResult');
+		}
+		
 		
 	},[]);
 	
@@ -71,6 +88,7 @@ export const Login = () => {
 		}
 
 		if (isEmpty(errors)) {
+			//setHomeServer(formData.homeserver);
 			return true;
 		} else {
 			return errors;
@@ -89,8 +107,18 @@ export const Login = () => {
         console.log('accessToken = ', accessToken);
 
 		if (_isLogin) {
-			alert("You are successfully signed in...");
+			if (exportedDevice && accessToken) {
+				localStorage.setItem("matrix_account", JSON.stringify({exportedDevice,accessToken, homeServer: formData.homeserver}));
+				(async()=>{
+
+					//@test007:pdxinfosec.org To Test
+					let profileAvatar = await getAvatar(exportedDevice.userId)
+					console.log("profileAvatar", profileAvatar)
+				})();
+
+			}
 			history.push('/homepage');
+
 		} else {
 			alert("Failed to sign in...");
 		}

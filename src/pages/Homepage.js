@@ -6,13 +6,14 @@ import { Redirect } from 'react-router-dom';
 import '../index.css';
 import { Navbar } from '../components/Navbar';
 import useMatrixClient from '../hooks/useMatrixClient';
+import { ModalPopUp } from "../components/ModalPopUp";
 
 // const axios = require('axios');
 
 // const BASE_URL = 'https://matrix.pdxinfosec.org';
 // const PASSWORD = "G3Vsnzvr";
 // const USERNAME = "@test003:pdxinfosec.org";
-// const ROOM_ID = '!bdQMmkTBTMqUPAOvms:pdxinfosec.org';
+const ROOM_ID = '!bdQMmkTBTMqUPAOvms:pdxinfosec.org';
 
 const list_image_url = [];
 const list_video_url = [];
@@ -20,6 +21,8 @@ const list_video_url = [];
 function Home() {
     const [listImageURL, setListImageURL] = useState(list_image_url);
     const [listVideoURL, setListVideoURL] = useState(list_video_url);
+
+    const [showModal, setShowModal] = useState(false);
 
     const handleHavingNewFile = (file) => {
         
@@ -30,6 +33,11 @@ function Home() {
                 // setListImageURL([...listImageURL]);
                 list_image_url.push(file.fileUrl);
                 setListImageURL([...list_image_url]);
+                console.log(file.fileUrl)
+                /*sendMessageToRoom(
+                    ROOM_ID, 
+                    `{"type" : "video-send", "content" : "/var/lib/motioneye/Camrea1/02-05-2021/15-25-30.mp4", "requestor_id":"0"}`
+                );*/
                 break;
             case 'video/mp4':
                 list_video_url.push(file.fileUrl);
@@ -43,8 +51,16 @@ function Home() {
 
     };
 
-    const { sendMessageToRoom, saveBlobUrlToFile, isLogin, setHavingNewFile } =
-        useMatrixClient();
+    const { sendMessageToRoom, saveBlobUrlToFile, isLogin, setHavingNewFile } = useMatrixClient();
+
+    const handleWatch = () => {
+        console.log("SEND MESSAGE")
+        /*sendMessageToRoom(
+            ROOM_ID, 
+            `{"type" : "video-send", "content" : "/var/lib/motioneye/Camrea1/02-05-2021/15-25-30.mp4", "requestor_id":"0"}`
+        );*/
+        setShowModal(true);
+    }
 
     useEffect(() => {
         setHavingNewFile(handleHavingNewFile);
@@ -82,6 +98,7 @@ function Home() {
                                                         <button
                                                             type="button"
                                                             className="bg-yellow-300 hover:bg-amber-400 text-gray-800 text-sm leading-6 font-medium py-2 px-3 rounded-lg outline outline-amber-300 inline-flex items-center justify-center"
+                                                            onClick={handleWatch}
                                                         >
                                                             <svg
                                                                 xmlns="http://www.w3.org/2000/svg"
@@ -129,7 +146,14 @@ function Home() {
 
                         <br />
 
+                        
+                        {showModal ? (
+                            <ModalPopUp onClickPause={() => {setShowModal(false);}}/>
+                        ) : <></>}
+
                         <br />
+
+                        {/*
                         <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4">
                             {listVideoURL.length > 0 ? (
                                 listVideoURL.map((videoURL, index) => {
@@ -156,7 +180,7 @@ function Home() {
                             ) : (
                                 <></>
                             )}
-                        </div>
+                            </div>*/}
                         <br />
                     </header>
                 </div>
@@ -166,68 +190,6 @@ function Home() {
         </>
     );
 }
-
-function decryptAttachment(data, info) {
-    if (
-        info === undefined ||
-        info.key === undefined ||
-        info.iv === undefined ||
-        info.hashes === undefined ||
-        info.hashes.sha256 === undefined
-    ) {
-        throw new Error('error');
-    }
-
-    return window.crypto.subtle
-        .importKey('jwk', info.key, { name: 'AES-CTR' }, false, [
-            'encrypt',
-            'decrypt',
-        ])
-        .then((key) => {
-            return window.crypto.subtle
-                .decrypt(
-                    {
-                        name: 'AES-CTR',
-                        counter: decodeBase64(info.iv), //The same counter you used to encrypt
-                        length: 64, //The same length you used to encrypt
-                    },
-                    key, //from generateKey or importKey above
-                    data //ArrayBuffer of the data
-                )
-                .then(function (decrypted) {
-                    return decrypted;
-                })
-                .catch(function (err) {
-                    console.error(err);
-                });
-        });
-}
-
-function decodeBase64(base64) {
-    // Pad the base64 up to the next multiple of 4.
-    var paddedBase64 = base64 + '==='.slice(0, (4 - (base64.length % 4)) % 4);
-    // Decode the base64 as a misinterpreted Latin-1 string.
-    // window.atob returns a unicode string with codeines in the range 0-255.
-    var latin1String = window.atob(paddedBase64);
-    // Encode the string as a Uint8Array as Latin-1.
-    var uint8Array = new Uint8Array(latin1String.length);
-    for (var i = 0; i < latin1String.length; i++) {
-        uint8Array[i] = latin1String.charCodeAt(i);
-    }
-    return uint8Array;
-}
-
-const saveByteArray = (function () {
-    var a = document.createElement('a');
-    document.body.appendChild(a);
-    a.style = 'display: none';
-    return function (url, name) {
-        a.href = url;
-        a.download = name;
-        a.click();
-        window.URL.revokeObjectURL(url);
-    };
-})();
 
 // Check valid sign-in
 
