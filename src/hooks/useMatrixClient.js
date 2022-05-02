@@ -62,7 +62,7 @@ function useMatrixClient() {
 
     const setMatrixClientEvents = (newClient) => {
         const processContent = async (sender, room, content) => {
-            if (onHavingNewMessage !== handleHavingNewMessage && content.body) {
+            if (onHavingNewMessage  && content.body) {
                 onHavingNewMessage(sender, room, content.body);
             }
 
@@ -82,7 +82,7 @@ function useMatrixClient() {
                     { type: content.info.mimetype }
                 );
 
-                if (onHavingNewFile !== handleHavingNewFile)
+                if (onHavingNewFile)
                     onHavingNewFile(sender, room, {
                         fileType: content.info.mimetype,
                         fileUrl: blobURL,
@@ -107,8 +107,9 @@ function useMatrixClient() {
                         homeServer: newClient.baseUrl,
                     })
                 );
-
-                if (onLogInResult !== handleLoginResult) {
+                console.log('have login')
+                if (onLogInResult) {
+                    console.log('return result');
                     //Return result
                     onLogInResult(
                         true,
