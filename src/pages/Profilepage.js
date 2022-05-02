@@ -1,9 +1,13 @@
 import { Redirect } from 'react-router-dom';
 import useMatrixClient from '../hooks/useMatrixClient';
 import TopNavBar from '../components/TopNavBar';
+import { 
+	useState,
+	useEffect
+} from 'react';
 
 
-const ProfileView = () => {
+const ProfileView = ({ avatar }) => {
     return (
 		<>
 			<main className="profile-page">
@@ -45,7 +49,7 @@ const ProfileView = () => {
 										<div className="relative">
 											<img
 												alt="..."
-												src={"Minh.jpg"}
+												src={avatar}
 												className="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16"
 												style={{ maxWidth: "150px" }}
 											/>
@@ -113,14 +117,45 @@ const ProfileView = () => {
 }
 
 const Profile = () => {
-	const { isLogin } = useMatrixClient();
+	const { isLogin, getAvatar } = useMatrixClient();
+	const [avatar, setAvatar] = useState(null);
+
+	useEffect(() => {
+		const get_avatar = () => {
+			const local_storage_item = JSON.parse(window.localStorage.getItem('matrix_account'));
+			const exported_device = local_storage_item.exportedDevice;
+			const user_id = exported_device.userId;
+	
+			(async()=>{
+				try {
+					let profileAvatar = await getAvatar(user_id);
+					if (profileAvatar === null || profileAvatar === "") {
+						setAvatar(null)
+					} else {
+						setAvatar(profileAvatar);
+					}
+				} catch (e) {
+					console.log('error', e);
+					setAvatar(null);
+				}
+			})();
+		}
+
+		get_avatar();
+	}, [avatar, getAvatar]);
 
 	return (
 		<>
 			{isLogin() ? (
 				<div className="App">
 					<TopNavBar />
-					<ProfileView/>
+					{
+						avatar ? (
+							<ProfileView avatar={avatar} />
+						) : (
+							<ProfileView avatar={"logo_profile_static_avatar.svg"} />
+						)
+					}
 				</div>
 			) : (
 				<Redirect to="/403" />

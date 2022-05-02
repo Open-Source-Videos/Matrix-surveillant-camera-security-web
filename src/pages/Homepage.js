@@ -11,7 +11,7 @@ import TopNavBar from '../components/TopNavBar';
 // const BASE_URL = 'https://matrix.pdxinfosec.org';
 // const PASSWORD = "G3Vsnzvr";
 // const USERNAME = "@test003:pdxinfosec.org";
-const ROOM_ID = '!bdQMmkTBTMqUPAOvms:pdxinfosec.org';
+// const ROOM_ID = '!bdQMmkTBTMqUPAOvms:pdxinfosec.org';
 
 const list_image_url = [];
 const list_video_url = [];
@@ -72,7 +72,7 @@ function Home() {
                     {/*<header className="App-header">*/}
                     <header className="bg-white shadow">
                         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                            <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+                            <h1 className="text-3xl font-bold text-gray-900">Homepage</h1>
                         </div>
                     </header>
                     <main>
