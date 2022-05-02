@@ -151,7 +151,7 @@ const TopNavBar = () => {
                             <a
                                 href="/homepage"
                                 onClick={handleRouter}
-                                className={splitLocation[1] === "setting" ? tabItemMobile.concat(" bg-gray-700 text-white") : tabItemMobile}
+                                className={splitLocation[1] === "homepage" ? tabItemMobile.concat(" bg-gray-700 text-white") : tabItemMobile}
                             >
                                 Homepage
                             </a>
@@ -159,7 +159,7 @@ const TopNavBar = () => {
                             <a
                                 href="/profile"
                                 onClick={handleRouter}
-                                className={splitLocation[1] === "setting" ? tabItemMobile.concat(" bg-gray-700 text-white") : tabItemMobile}
+                                className={splitLocation[1] === "profile" ? tabItemMobile.concat(" bg-gray-700 text-white") : tabItemMobile}
                             >
                                 Profile
                             </a>

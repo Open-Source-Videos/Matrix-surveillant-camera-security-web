@@ -76,17 +76,6 @@ function Home() {
 
     useEffect(() => {
         setHavingNewFile(handleHavingNewFile);
-        // (async () => {
-        //     // if (login === false) {
-        //     //     let checklogin =;
-        //     //     console.log('\n\n checklogi', checklogin);
-        //     //     setLogin(checklogin);
-        //     // }
-        //     console.log('\n\n Run test',await isLogin());
-        //     if (isLogin()===false ) 
-        //         await testLogin();
-        //     setHavingNewFile(handleHavingNewFile);
-        // })();
         (async()=>{
             if (isLogin()===false) {
                 console.log('Run test login')
@@ -103,14 +92,6 @@ function Home() {
             {yesLogin ? (
                 <div>
                     <TopNavBar />
-                    {/*<header className="App-header">*/}
-                    <header className="bg-white shadow">
-                        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                            <h1 className="text-3xl font-bold text-gray-900">
-                                Homepage
-                            </h1>
-                        </div>
-                    </header>
                     <main>
                         <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4 my-5">
                             {listImageURL.length > 0 ? (
