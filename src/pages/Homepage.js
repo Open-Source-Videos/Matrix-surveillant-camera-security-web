@@ -20,8 +20,9 @@ function Home() {
     const [listImageURL, setListImageURL] = useState(list_image_url);
     const [listVideoURL, setListVideoURL] = useState(list_video_url);
     
-    const { sendMessageToRoom, saveBlobUrlToFile, isLogin, testLogin, setHavingNewFile } = useMatrixClient();
-    let [is_login, setLogIn] = useState(false);
+    const { isLogin,sendMessageToRoom, saveBlobUrlToFile, testLogin, setHavingNewFile } = useMatrixClient();
+
+    const [yesLogin,setYesLogin] = useState(false);
 
     const [showModal, setShowModal] = useState(false);
 
@@ -60,27 +61,35 @@ function Home() {
         setShowModal(true);
     };
 
+   // const handleLoginResult =;
+
     useEffect(() => {
-        (async () => {
-            // if (login === false) {
-            //     let checklogin =;
-            //     console.log('\n\n checklogi', checklogin);
-            //     setLogin(checklogin);
-            // }
-            console.log('\n\n Run test',await isLogin());
-            if (isLogin()===false ) {
-                setLogIn(await testLogin());
-                console.log("RUN AFTER:" , is_login)
-            } else {
-                setLogIn(isLogin())
+        setHavingNewFile(handleHavingNewFile);
+        // (async () => {
+        //     // if (login === false) {
+        //     //     let checklogin =;
+        //     //     console.log('\n\n checklogi', checklogin);
+        //     //     setLogin(checklogin);
+        //     // }
+        //     console.log('\n\n Run test',await isLogin());
+        //     if (isLogin()===false ) 
+        //         await testLogin();
+        //     setHavingNewFile(handleHavingNewFile);
+        // })();
+        (async()=>{
+            if (isLogin()===false) {
+                console.log('Run test login')
+                setYesLogin(await testLogin());
             }
-            setHavingNewFile(handleHavingNewFile);
+            setTimeout(()=>{
+                setYesLogin(isLogin()); 
+            },500);
         })();
     }, []);
 
     return (
         <>
-            {is_login ? (
+            {yesLogin ? (
                 <div>
                     <TopNavBar />
                     {/*<header className="App-header">*/}
