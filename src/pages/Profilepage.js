@@ -121,32 +121,39 @@ const ProfileView = ({ avatar }) => {
 }
 
 const Profile = () => {
-	const { isLogin, getAvatar } = useMatrixClient();
+	const { isLogin, getAvatar, testLogin } = useMatrixClient();
 	const [avatar, setAvatar] = useState(null);
 
 	useEffect(() => {
-		const get_avatar = () => {
-			const local_storage_item = JSON.parse(window.localStorage.getItem('open_source_video'));
-			const exported_device = local_storage_item.exportedDevice;
-			const user_id = exported_device.userId;
-	
-			(async()=>{
-				try {
-					let profileAvatar = await getAvatar(user_id);
-					if (profileAvatar === null || profileAvatar === "") {
-						setAvatar(null)
-					} else {
-						setAvatar(profileAvatar);
+		(async () => {
+            console.log('\n\n Run test',await isLogin());
+            if (isLogin()===false ) 
+                await testLogin();
+			
+			const get_avatar = () => {
+				const local_storage_item = JSON.parse(window.localStorage.getItem('open_source_video'));
+				const exported_device = local_storage_item.exportedDevice;
+				const user_id = exported_device.userId;
+		
+				(async()=>{
+					try {
+						let profileAvatar = await getAvatar(user_id);
+						if (profileAvatar === null || profileAvatar === "") {
+							setAvatar(null)
+						} else {
+							setAvatar(profileAvatar);
+						}
+					} catch (e) {
+						console.log('error', e);
+						setAvatar(null);
 					}
-				} catch (e) {
-					console.log('error', e);
-					setAvatar(null);
-				}
-			})();
-		}
+				})();
+			}
+	
+			get_avatar();
+        })();
 
-		get_avatar();
-	}, [avatar, getAvatar]);
+	}, [avatar, getAvatar, isLogin, testLogin]);
 
 	return (
 		<>

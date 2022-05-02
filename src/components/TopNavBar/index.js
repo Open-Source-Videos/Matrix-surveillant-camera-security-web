@@ -1,14 +1,18 @@
 import React, { 
     useState 
 } from "react";
-import { Transition } from "@headlessui/react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import useMatrixClient from "../../hooks/useMatrixClient";
+import { Transition } from "@headlessui/react";
+
 
 const TopNavBar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const history = useHistory();
     const { isLogin, logoutMatrixServer } = useMatrixClient();
+    const location = useLocation();
+    const { pathname } = location;
+    const splitLocation = pathname.split("/");
 
     const handleRouter = (e) => {
         e.preventDefault();
@@ -26,12 +30,14 @@ const TopNavBar = () => {
         history.push("/login");
     }
 
+    
+
     const tabItem = "text-gray-800 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium text-decoration-none"
     const tabItemMobile = "hover:bg-gray-700 text-gray-800 hover:text-white block px-3 py-2 rounded-md text-base font-medium text-decoration-none"
 
     return (
         <div>
-            <nav className="bg-amber-200">
+            <nav className={splitLocation[1] === "/homepage" ? "bg-white" : "bg-amber-200"}>
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
                     <div className="flex items-center">
