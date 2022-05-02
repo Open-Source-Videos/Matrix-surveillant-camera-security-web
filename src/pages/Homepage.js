@@ -1,12 +1,9 @@
-import React, { 
-    useEffect,
-    useState 
-} from 'react';
+import React, { useEffect, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import '../index.css';
 import { Navbar } from '../components/Navbar';
 import useMatrixClient from '../hooks/useMatrixClient';
-import { ModalPopUp } from "../components/ModalPopUp";
+import { ModalPopUp } from '../components/ModalPopUp';
 
 // const axios = require('axios');
 
@@ -24,8 +21,7 @@ function Home() {
 
     const [showModal, setShowModal] = useState(false);
 
-    const handleHavingNewFile = (file) => {
-        
+    const handleHavingNewFile = (sender, room, file) => {
         switch (file.fileType) {
             case 'image/png':
             case 'image/jpeg':
@@ -33,7 +29,7 @@ function Home() {
                 // setListImageURL([...listImageURL]);
                 list_image_url.push(file.fileUrl);
                 setListImageURL([...list_image_url]);
-                console.log(file.fileUrl)
+                console.log(file.fileUrl);
                 /*sendMessageToRoom(
                     ROOM_ID, 
                     `{"type" : "video-send", "content" : "/var/lib/motioneye/Camrea1/02-05-2021/15-25-30.mp4", "requestor_id":"0"}`
@@ -48,19 +44,19 @@ function Home() {
                 saveBlobUrlToFile(file.fileUrl, file.fileName);
                 break;
         }
-
     };
 
-    const { sendMessageToRoom, saveBlobUrlToFile, isLogin, setHavingNewFile } = useMatrixClient();
+    const { sendMessageToRoom, saveBlobUrlToFile, isLogin, setHavingNewFile } =
+        useMatrixClient();
 
     const handleWatch = () => {
-        console.log("SEND MESSAGE")
+        console.log('SEND MESSAGE');
         /*sendMessageToRoom(
             ROOM_ID, 
             `{"type" : "video-send", "content" : "/var/lib/motioneye/Camrea1/02-05-2021/15-25-30.mp4", "requestor_id":"0"}`
         );*/
         setShowModal(true);
-    }
+    };
 
     useEffect(() => {
         setHavingNewFile(handleHavingNewFile);
@@ -68,7 +64,7 @@ function Home() {
 
     return (
         <>
-            {isLogin() ? (
+            {(async () => await isLogin())() ? (
                 <div>
                     <Navbar />
                     <header className="App-header">
@@ -98,7 +94,9 @@ function Home() {
                                                         <button
                                                             type="button"
                                                             className="bg-yellow-300 hover:bg-amber-400 text-gray-800 text-sm leading-6 font-medium py-2 px-3 rounded-lg outline outline-amber-300 inline-flex items-center justify-center"
-                                                            onClick={handleWatch}
+                                                            onClick={
+                                                                handleWatch
+                                                            }
                                                         >
                                                             <svg
                                                                 xmlns="http://www.w3.org/2000/svg"
@@ -146,10 +144,15 @@ function Home() {
 
                         <br />
 
-                        
                         {showModal ? (
-                            <ModalPopUp onClickPause={() => {setShowModal(false);}}/>
-                        ) : <></>}
+                            <ModalPopUp
+                                onClickPause={() => {
+                                    setShowModal(false);
+                                }}
+                            />
+                        ) : (
+                            <></>
+                        )}
 
                         <br />
 

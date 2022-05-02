@@ -26,6 +26,7 @@ import {
 } from '../../pages/Homepage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import useMatrixClient from '../../hooks/useMatrixClient';
+import { isLogin } from 'ionic';
 
 export const Login = () => {
 	const [formData, setFormData] = useState({
@@ -39,23 +40,29 @@ export const Login = () => {
 
 	const [formSubmitted, setFormSubmitted] = useState(false);
 	const history = useHistory();
-    const {getAvatar, reloginMatrixServer, getHistory, loginMatrixServer, sendMessageToRoom, saveBlobUrlToFile,isLogin, getMatrixRooms,createMatrixRoom,setHavingNewFile,setOnHavingNewMessage,setOnLogInResult } =
+    const {getAvatar,setOnLogInResult,loginMatrixServer } =
 		useMatrixClient();
 		
 	useEffect(()=>{
 		setOnLogInResult(handleLoginResult);
+		
+		
+		(async () => {
+			await isLogin();
+		})();
+		
 
-		const saved = localStorage.getItem("matrix_account");
-		if (saved)
-		{
-			(async() => {
-				let info = JSON.parse(saved);
-				console.log("My Info", info);
-				await reloginMatrixServer(info.homeServer, info.exportedDevice, info.accessToken );
-			})();
-		} else {
-			console.log('Set handleLoginResult');
-		}
+		// const saved = localStorage.getItem("matrix_account");
+		// if (saved)
+		// {
+		// 	(async() => {
+		// 		let info = JSON.parse(saved);
+		// 		console.log("My Info", info);
+		// 		await reloginMatrixServer(info.homeServer, info.exportedDevice, info.accessToken );
+		// 	})();
+		// } else {
+		// 	console.log('Set handleLoginResult');
+		// }
 		
 		
 	},[]);
@@ -107,16 +114,16 @@ export const Login = () => {
         console.log('accessToken = ', accessToken);
 
 		if (_isLogin) {
-			if (exportedDevice && accessToken) {
-				localStorage.setItem("matrix_account", JSON.stringify({exportedDevice,accessToken, homeServer: formData.homeserver}));
-				(async()=>{
+			// if (exportedDevice && accessToken) {
+			// 	localStorage.setItem("matrix_account", JSON.stringify({exportedDevice,accessToken, homeServer: formData.homeserver}));
+			// 	(async()=>{
 
-					//@test007:pdxinfosec.org To Test
-					let profileAvatar = await getAvatar(exportedDevice.userId)
-					console.log("profileAvatar", profileAvatar)
-				})();
+			// 		//@test007:pdxinfosec.org To Test
+			// 		let profileAvatar = await getAvatar(exportedDevice.userId)
+			// 		console.log("profileAvatar", profileAvatar)
+			// 	})();
 
-			}
+			// }
 			history.push('/homepage');
 
 		} else {

@@ -116,7 +116,7 @@ const Profile = () => {
 
   return (
     <>
-      {isLogin() ? (
+      { (async()=> await isLogin())() ? (
         <div className="App">
           <Navbar/>
           <ProfileView/>
