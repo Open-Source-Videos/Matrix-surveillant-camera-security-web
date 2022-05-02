@@ -1,5 +1,5 @@
 import React, { 
-    useState 
+    useState
 } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import useMatrixClient from "../../hooks/useMatrixClient";
@@ -31,14 +31,12 @@ const TopNavBar = () => {
         clearState();
     }
 
-    
-
     const tabItem = "text-gray-800 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium text-decoration-none"
     const tabItemMobile = "hover:bg-gray-700 text-gray-800 hover:text-white block px-3 py-2 rounded-md text-base font-medium text-decoration-none"
 
     return (
         <div>
-            <nav className={splitLocation[1] === "/homepage" ? "bg-white" : "bg-amber-200"}>
+            <nav className={splitLocation[1] === "homepage" ? "bg-white" : "bg-amber-200"}>
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
                     <div className="flex items-center">
@@ -55,7 +53,7 @@ const TopNavBar = () => {
                                 <a
                                     href="/homepage"
                                     onClick={handleRouter}
-                                    className={tabItem}
+                                    className={splitLocation[1] === "homepage" ? tabItem.concat(" bg-gray-700 text-white") : tabItem}
                                 >
                                     Homepage
                                 </a>
@@ -63,7 +61,7 @@ const TopNavBar = () => {
                                 <a
                                     href="/profile"
                                     onClick={handleRouter}
-                                    className={tabItem}
+                                    className={splitLocation[1] === "profile" ? tabItem.concat(" bg-gray-700 text-white") : tabItem}
                                 >
                                     Profile
                                 </a>
@@ -71,7 +69,7 @@ const TopNavBar = () => {
                                 <a
                                     href="/setting"
                                     onClick={handleRouter}
-                                    className={tabItem}
+                                    className={splitLocation[1] === "setting" ? tabItem.concat(" bg-gray-700 text-white") : tabItem}
                                 >
                                     Settings
                                 </a>
@@ -149,11 +147,11 @@ const TopNavBar = () => {
                 >
                 {(ref) => (
                     <div className="md:hidden" id="mobile-menu">
-                        <div ref={ref} className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                             <a
                                 href="/homepage"
                                 onClick={handleRouter}
-                                className={tabItemMobile}
+                                className={splitLocation[1] === "setting" ? tabItemMobile.concat(" bg-gray-700 text-white") : tabItemMobile}
                             >
                                 Homepage
                             </a>
@@ -161,7 +159,7 @@ const TopNavBar = () => {
                             <a
                                 href="/profile"
                                 onClick={handleRouter}
-                                className={tabItemMobile}
+                                className={splitLocation[1] === "setting" ? tabItemMobile.concat(" bg-gray-700 text-white") : tabItemMobile}
                             >
                                 Profile
                             </a>
@@ -169,7 +167,7 @@ const TopNavBar = () => {
                             <a
                                 href="/setting"
                                 onClick={handleRouter}
-                                className={tabItemMobile}
+                                className={splitLocation[1] === "setting" ? tabItemMobile.concat(" bg-gray-700 text-white") : tabItemMobile}
                             >
                                 Settings
                             </a>

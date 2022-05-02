@@ -1,19 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { Redirect } from 'react-router-dom';
+import React, { 
+    useEffect, 
+    useState 
+} from 'react';
 import '../index.css';
 import useMatrixClient from '../hooks/useMatrixClient';
 import { ModalPopUp } from '../components/ModalPopUp';
 import TopNavBar from '../components/TopNavBar';
 import Page403 from './Page403';
 
-// const BASE_URL = 'https://matrix.pdxinfosec.org';
-// const PASSWORD = "G3Vsnzvr";
-// const USERNAME = "@test003:pdxinfosec.org";
 // const ROOM_ID = '!bdQMmkTBTMqUPAOvms:pdxinfosec.org';
 
+// Global list
 let list_image_url = [];
 let list_video_url = [];
 
+
+// Clear state when logging out
 export const clearState = () => {
     list_image_url = [];
     list_video_url = [];
@@ -24,10 +26,15 @@ function Home() {
     const [listImageURL, setListImageURL] = useState(list_image_url);
     const [listVideoURL, setListVideoURL] = useState(list_video_url);
     
-    const { isLogin,sendMessageToRoom, saveBlobUrlToFile, testLogin, setHavingNewFile } = useMatrixClient();
+    const { 
+        isLogin, 
+        sendMessageToRoom, 
+        saveBlobUrlToFile, 
+        testLogin, 
+        setHavingNewFile 
+    } = useMatrixClient();
 
     const [yesLogin,setYesLogin] = useState(false);
-
     const [showModal, setShowModal] = useState(false);
 
     const handleHavingNewFile = (sender, room, file) => {
