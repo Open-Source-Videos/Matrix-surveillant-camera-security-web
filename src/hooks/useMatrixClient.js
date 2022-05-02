@@ -60,6 +60,8 @@ function useMatrixClient() {
         return savedData ? true : false;
     };
 
+    
+
     const setMatrixClientEvents = (newClient) => {
         const processContent = async (sender, room, content) => {
             if (onHavingNewMessage !== handleHavingNewMessage && content.body) {
@@ -232,23 +234,24 @@ function useMatrixClient() {
         return keyList;
     };
 
-    const isLogin = async () => {
+    const isLogin = () => {
         if (didLogin === false && savedData) {
-
-            let info = JSON.parse(savedData);
-            const loginResult = await loginByAccessToken(
-                info.homeServer,
-                info.exportedDevice,
-                info.accessToken
-            );
-
-            if (loginResult) return;
-            else {
-                console.log('remove localstorage', loginKey);
-                localStorage.removeItem(loginKey);
-            }
-
-            return loginResult;
+            (async () =>{
+                let info = JSON.parse(savedData);
+                const loginResult = await loginByAccessToken(
+                    info.homeServer,
+                    info.exportedDevice,
+                    info.accessToken
+                );
+    
+                if (loginResult) return;
+                else {
+                    console.log('remove localstorage', loginKey);
+                    localStorage.removeItem(loginKey);
+                }
+            })();
+            
+            return true;
         }
         return didLogin;
     };

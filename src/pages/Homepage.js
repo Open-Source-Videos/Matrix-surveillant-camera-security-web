@@ -62,7 +62,7 @@ function Home() {
 
     return (
         <>
-            {(async () => await isLogin())() ? (
+            { isLogin() ? (
                 <div>
                     <TopNavBar />
                     {/*<header className="App-header">*/}
