@@ -11,11 +11,14 @@ const ProfileView = ({ avatar }) => {
     return (
 		<>
 			<main className="profile-page">
-				<section className="relative block" style={{ height: "500px" }}>
+				<section className="relative block" style={{ height: "530px" }}>
 					<div
 						className="absolute top-0 w-full h-full bg-center bg-cover bg-amber-200"
 						style={{
-							backgroundImage: "url('/circle-scatter-haikei.svg')"
+							backgroundImage: "url('/profile_page.svg')",
+							backgroundPosition: "center",
+							backgroundSize: "contain",
+							backgroundRepeat: "no-repeat"
 						}}
 					>
 					</div>
