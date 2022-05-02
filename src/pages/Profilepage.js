@@ -5,6 +5,7 @@ import {
 	useState,
 	useEffect
 } from 'react';
+import Page403 from './Page403';
 
 
 const ProfileView = ({ avatar }) => {
@@ -149,7 +150,7 @@ const Profile = () => {
 
 	return (
 		<>
-			{(async () => await isLogin())() ? (
+			{ isLogin() ? (
 				<div className="App">
 					<TopNavBar />
 					{
@@ -161,7 +162,7 @@ const Profile = () => {
 					}
 				</div>
 			) : (
-				<Redirect to="/403" />
+				<Page403 />
 			)}
 		</>
 	);

@@ -4,6 +4,7 @@ import '../index.css';
 import useMatrixClient from '../hooks/useMatrixClient';
 import { ModalPopUp } from "../components/ModalPopUp";
 import TopNavBar from '../components/TopNavBar';
+import Page403 from './Page403';
 
 // const BASE_URL = 'https://matrix.pdxinfosec.org';
 // const PASSWORD = "G3Vsnzvr";
@@ -192,7 +193,7 @@ function Home() {
                     </main>
                 </div>
             ) : (
-                <Redirect to="/403" />
+                <Page403 />
             )}
         </>
     );
