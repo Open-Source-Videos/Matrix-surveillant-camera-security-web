@@ -60,8 +60,6 @@ function useMatrixClient() {
         return savedData ? true : false;
     };
 
-    
-
     const setMatrixClientEvents = (newClient) => {
         const processContent = async (sender, room, content) => {
             if (onHavingNewMessage !== handleHavingNewMessage && content.body) {
@@ -235,26 +233,27 @@ function useMatrixClient() {
     };
 
     const isLogin = () => {
-        if (didLogin === false && savedData) {
-            (async () =>{
-                let info = JSON.parse(savedData);
-                const loginResult = await loginByAccessToken(
-                    info.homeServer,
-                    info.exportedDevice,
-                    info.accessToken
-                );
-    
-                if (loginResult) return;
-                else {
-                    console.log('remove localstorage', loginKey);
-                    localStorage.removeItem(loginKey);
-                }
-            })();
-            
-            return true;
-        }
         return didLogin;
     };
+
+    const testLogin = async() => {
+        if (didLogin === false && savedData) {
+            let info = JSON.parse(savedData);
+            const loginResult = await loginByAccessToken(
+                info.homeServer,
+                info.exportedDevice,
+                info.accessToken
+            );
+
+            if (loginResult) return true;
+            else {
+                console.log('remove localstorage', loginKey);
+                localStorage.removeItem(loginKey);
+
+                return loginResult;
+            }
+        }
+    }
 
     const logoutMatrixServer = () => {
         try {
@@ -486,7 +485,6 @@ function useMatrixClient() {
 
             setMatrixClientEvents(newClient);
             return true;
-
         } catch (e) {
             if (onLogInResult) onLogInResult(false, e, null, null);
             return false;
@@ -515,6 +513,7 @@ function useMatrixClient() {
         createRoom,
 
         isHavingAuthentication,
+        testLogin
     };
 }
 

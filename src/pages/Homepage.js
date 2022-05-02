@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import '../index.css';
 import useMatrixClient from '../hooks/useMatrixClient';
-import { ModalPopUp } from "../components/ModalPopUp";
+import { ModalPopUp } from '../components/ModalPopUp';
 import TopNavBar from '../components/TopNavBar';
 import Page403 from './Page403';
 
@@ -14,9 +14,14 @@ import Page403 from './Page403';
 const list_image_url = [];
 const list_video_url = [];
 
+
+
 function Home() {
     const [listImageURL, setListImageURL] = useState(list_image_url);
     const [listVideoURL, setListVideoURL] = useState(list_video_url);
+    
+    const { sendMessageToRoom, saveBlobUrlToFile, isLogin, testLogin, setHavingNewFile } =
+        useMatrixClient();
 
     const [showModal, setShowModal] = useState(false);
 
@@ -45,8 +50,6 @@ function Home() {
         }
     };
 
-    const { sendMessageToRoom, saveBlobUrlToFile, isLogin, setHavingNewFile } =
-        useMatrixClient();
 
     const handleWatch = () => {
         console.log('SEND MESSAGE');
@@ -58,18 +61,30 @@ function Home() {
     };
 
     useEffect(() => {
-        setHavingNewFile(handleHavingNewFile);
+        (async () => {
+            // if (login === false) {
+            //     let checklogin =;
+            //     console.log('\n\n checklogi', checklogin);
+            //     setLogin(checklogin);
+            // }
+            console.log('\n\n Run test',await isLogin());
+            if (isLogin()===false ) 
+                await testLogin();
+            setHavingNewFile(handleHavingNewFile);
+        })();
     }, []);
 
     return (
         <>
-            { isLogin() ? (
+            {isLogin() ? (
                 <div>
                     <TopNavBar />
                     {/*<header className="App-header">*/}
                     <header className="bg-white shadow">
                         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                            <h1 className="text-3xl font-bold text-gray-900">Homepage</h1>
+                            <h1 className="text-3xl font-bold text-gray-900">
+                                Homepage
+                            </h1>
                         </div>
                     </header>
                     <main>
