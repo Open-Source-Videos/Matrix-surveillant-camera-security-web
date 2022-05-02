@@ -1,11 +1,11 @@
 import React from "react";
-import {Navbar} from "../components/Navbar"
+import TopNavBar from '../components/TopNavBar';
 import { PaperClipIcon } from '@heroicons/react/solid'
 
 export default function ProfileView() {
     return (
       <>
-        <Navbar></Navbar>
+        <TopNavBar />
         <main className="profile-page">
           <section className="relative block" style={{ height: "500px" }}>
             <div

@@ -417,6 +417,7 @@ function useMatrixClient() {
 
     return {
         loginMatrixServer,
+        logoutMatrixServer,
         saveBlobUrlToFile,
         sendMessageToRoom,
         isLogin,

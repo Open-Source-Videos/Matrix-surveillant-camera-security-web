@@ -4,11 +4,9 @@ import React, {
 } from 'react';
 import { Redirect } from 'react-router-dom';
 import '../index.css';
-import { Navbar } from '../components/Navbar';
 import useMatrixClient from '../hooks/useMatrixClient';
 import { ModalPopUp } from "../components/ModalPopUp";
-
-// const axios = require('axios');
+import TopNavBar from '../components/TopNavBar';
 
 // const BASE_URL = 'https://matrix.pdxinfosec.org';
 // const PASSWORD = "G3Vsnzvr";
@@ -70,9 +68,15 @@ function Home() {
         <>
             {isLogin() ? (
                 <div>
-                    <Navbar />
-                    <header className="App-header">
-                        <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4">
+                    <TopNavBar />
+                    {/*<header className="App-header">*/}
+                    <header className="bg-white shadow">
+                        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                            <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+                        </div>
+                    </header>
+                    <main>
+                        <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4 my-5">
                             {listImageURL.length > 0 ? (
                                 listImageURL.map((url, index) => {
                                     return (
@@ -182,7 +186,7 @@ function Home() {
                             )}
                             </div>*/}
                         <br />
-                    </header>
+                    </main>
                 </div>
             ) : (
                 <Redirect to="/403" />
