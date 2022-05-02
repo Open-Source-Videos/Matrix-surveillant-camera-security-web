@@ -26,7 +26,6 @@ import {
 } from '../../pages/Homepage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import useMatrixClient from '../../hooks/useMatrixClient';
-import { isLogin } from 'ionic';
 
 export const Login = () => {
 	const [formData, setFormData] = useState({
@@ -40,7 +39,7 @@ export const Login = () => {
 
 	const [formSubmitted, setFormSubmitted] = useState(false);
 	const history = useHistory();
-    const {getAvatar,setOnLogInResult,loginMatrixServer } =
+    const {getAvatar,setOnLogInResult,loginMatrixServer, isLogin } =
 		useMatrixClient();
 		
 	useEffect(()=>{

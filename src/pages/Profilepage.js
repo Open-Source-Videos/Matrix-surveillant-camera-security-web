@@ -125,7 +125,7 @@ const Profile = () => {
 
 	useEffect(() => {
 		const get_avatar = () => {
-			const local_storage_item = JSON.parse(window.localStorage.getItem('matrix_account'));
+			const local_storage_item = JSON.parse(window.localStorage.getItem('open_source_video'));
 			const exported_device = local_storage_item.exportedDevice;
 			const user_id = exported_device.userId;
 	
@@ -149,7 +149,7 @@ const Profile = () => {
 
 	return (
 		<>
-			{isLogin() ? (
+			{(async () => await isLogin())() ? (
 				<div className="App">
 					<TopNavBar />
 					{
