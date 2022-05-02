@@ -4,7 +4,7 @@ import React, {
 import { useHistory, useLocation } from "react-router-dom";
 import useMatrixClient from "../../hooks/useMatrixClient";
 import { Transition } from "@headlessui/react";
-
+import {clearState } from '../../pages/Homepage';
 
 const TopNavBar = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -28,6 +28,7 @@ const TopNavBar = () => {
         console.log("IS LOGIN: ", isLogin());
         console.log("=======================")
         history.push("/login");
+        clearState();
     }
 
     

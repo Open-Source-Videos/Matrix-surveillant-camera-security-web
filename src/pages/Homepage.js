@@ -11,9 +11,13 @@ import Page403 from './Page403';
 // const USERNAME = "@test003:pdxinfosec.org";
 // const ROOM_ID = '!bdQMmkTBTMqUPAOvms:pdxinfosec.org';
 
-const list_image_url = [];
-const list_video_url = [];
+let list_image_url = [];
+let list_video_url = [];
 
+export const clearState = () => {
+    list_image_url = [];
+    list_video_url = [];
+}
 
 
 function Home() {
