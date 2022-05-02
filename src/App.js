@@ -1,4 +1,4 @@
-import React,{useEffect,useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 // import Header from './components/Header/Header';
 // import Footer from './components/Footer';
@@ -10,28 +10,26 @@ import { ActionCreators } from './actions/profile';
 import './styles';
 
 function App() {
-//   const [state, setState] = useState({
-//     ...initialGlobalState,
-//     update,
-// });
+    //   const [state, setState] = useState({
+    //     ...initialGlobalState,
+    //     update,
+    // });
 
-// function update(data) {
-//   setState(Object.assign({}, state, data));
-// }
+    // function update(data) {
+    //   setState(Object.assign({}, state, data));
+    // }
 
-  useEffect(() => {
-      const user = getStore('user');
-      if (user) {
-          this.props.dispatch(ActionCreators.login(user));
-      }
-  }, []);
-  return (
-    <div>
-    <Navigation />
-</div>
-    
-
-  );
+    useEffect(() => {
+        const user = getStore('user');
+        if (user) {
+            this.props.dispatch(ActionCreators.login(user));
+        }
+    }, []);
+    return (
+        <div>
+            <Navigation />
+        </div>
+    );
 }
 
 //<GlobalContext.Provider value={state}>
@@ -54,9 +52,9 @@ function App() {
 // }
 
 const mapStateToProps = (state) => {
-  return {
-    profile: state.user.profile
-  }
-}
+    return {
+        profile: state.user.profile,
+    };
+};
 
 export default connect(mapStateToProps)(App);

@@ -1,31 +1,46 @@
-import React, { useState } from 'react';
 import axios from 'axios';
-import { tab } from '@testing-library/user-event/dist/tab';
 
-const features = ['LoginByUserName', 'LoginByDeviceId'];
-const codeName = features[0];
+const handleLoginResult = async (
+    _isLogin,
+    error,
+    exportedDevice,
+    accessToken
+) => {};
 
-const ROOM_CRYPTO_CONFIG = { algorithm: 'm.megolm.v1.aes-sha2' };
+const handleHavingNewFile = (sender, room, file) => {};
+
+const handleHavingNewMessage = (sender, room, message) => {};
+
 var client = null;
 var didLogin = false;
 var roomList = [];
-var avatar = null;
 
-var onHavingNewMessage = null;
-var onHavingNewFile = null;
-var onLogInResult = null;
+var onHavingNewMessage = handleHavingNewMessage;
+var onHavingNewFile = handleHavingNewFile;
+var onLogInResult = handleLoginResult;
+
+var numberHistoricMessages = 20;
+var avatar = null;
+const loginKey = 'open_source_video';
+
+var savedData = localStorage.getItem(loginKey);
 
 function useMatrixClient() {
-    // let [client, setClient] = useState(() => {
-    //     console.log('init client');
-    //     return null;
-    // });
-    // let [didLogin, setDidLogin] = useState(false);
+    const resetValues = () => {
+        client = null;
+        didLogin = false;
+        roomList = [];
+        savedData = null;
 
-    // let [roomList, setRoomList] = useState([]);
+        onHavingNewMessage = handleHavingNewMessage;
+        onHavingNewFile = handleHavingNewFile;
+        onLogInResult = handleLoginResult;
+
+        numberHistoricMessages = 5;
+        avatar = null;
+    };
 
     const setOnLogInResult = (_onLogInResult) => {
-        console.log('\n\n Log \n\n', _onLogInResult);
         onLogInResult = _onLogInResult;
     };
 
@@ -37,7 +52,204 @@ function useMatrixClient() {
         onHavingNewMessage = _onHavingNewMessage;
     };
 
-    const isLogin = () => {
+    const setNumberHistoricMessages = (num) => {
+        numberHistoricMessages = num;
+    };
+
+    const isHavingAuthentication = () => {
+        return savedData ? true : false;
+    };
+
+    const setMatrixClientEvents = (newClient) => {
+        const processContent = async (sender, room, content) => {
+            if (onHavingNewMessage !== handleHavingNewMessage && content.body) {
+                onHavingNewMessage(sender, room, content.body);
+            }
+
+            if (typeof content.file !== 'undefined') {
+                const response = await axios.get(
+                    newClient.mxcUrlToHttp(content.file.url),
+                    { responseType: 'arraybuffer' }
+                );
+
+                const decryptData = await decryptAttachment(
+                    response.data,
+                    content.file
+                );
+
+                const blobURL = await window.URL.createObjectURL(
+                    new Blob([decryptData]),
+                    { type: content.info.mimetype }
+                );
+
+                if (onHavingNewFile !== handleHavingNewFile)
+                    onHavingNewFile(sender, room, {
+                        fileType: content.info.mimetype,
+                        fileUrl: blobURL,
+                        fileName: content.body,
+                    });
+            }
+        };
+
+        newClient.once('sync', async (state, prevState, res) => {
+            if (state === 'PREPARED') {
+                didLogin = true;
+                roomList = await newClient.getRooms();
+                client = newClient;
+
+                const exportedDevice = await newClient.exportDevice();
+
+                localStorage.setItem(
+                    loginKey,
+                    JSON.stringify({
+                        exportedDevice,
+                        accessToken: newClient.accessToken,
+                        homeServer: newClient.baseUrl,
+                    })
+                );
+
+                if (onLogInResult !== handleLoginResult) {
+                    //Return result
+                    onLogInResult(
+                        true,
+                        null,
+                        exportedDevice,
+                        newClient.accessToken
+                    );
+                }
+
+                getHistory(numberHistoricMessages);
+            }
+        });
+
+        newClient.on('Room', async (room) => {
+            roomList.push(room);
+            //verifyAllDevicesInRoom(room);
+        });
+
+        newClient.on(
+            'Room.timeline',
+            async (event, room, toStartOfTimeline) => {
+                try {
+                    if (event.event.type === 'm.room.encrypted') {
+                        const decryptMessage =
+                            await newClient.crypto.decryptEvent(event);
+                        //console.log(decryptMessage);
+                        if (
+                            decryptMessage &&
+                            decryptMessage.clearEvent &&
+                            decryptMessage.clearEvent.content &&
+                            event.sender
+                        ) {
+                            processContent(
+                                event.sender.userId,
+                                event.sender.room,
+                                decryptMessage.clearEvent.content
+                            );
+                        }
+                        return;
+                    }
+
+                    if (event.getType() === 'm.room.message' && event.sender) {
+                        processContent(
+                            event.sender.userId,
+                            event.sender.room,
+                            event.event.content
+                        );
+                        return;
+                    }
+                } catch {
+                    //console.error('#### ', error);
+                }
+            }
+        );
+
+        // automatic accept an joining room invitation
+        newClient.on('RoomMember.membership', async (event, member) => {
+            if (
+                member.membership === 'invite' &&
+                member.userId === newClient.getUserId()
+            ) {
+                await newClient.joinRoom(member.roomId);
+                // setting up of room encryption seems to be triggered automatically
+                // but if we don't wait for it the first messages we send are unencrypted
+                await newClient.setRoomEncryption(member.roomId, {
+                    algorithm: 'm.megolm.v1.aes-sha2',
+                });
+                console.log('');
+                console.log('>> Has join room = ', member.roomId);
+                console.log('');
+            }
+        });
+
+        newClient.on('Room.receipt', async (event, room) => {});
+
+        newClient.on('Event.decrypted', (e) => {});
+    };
+
+    const verifyAllDevicesInRoom = async (room) => {
+        let members = (await room.getEncryptionTargetMembers()).map(
+            (x) => x['userId']
+        );
+
+        if (members !== null) {
+            console.log('members =', members);
+            let memberkeys = await client.downloadKeys(members);
+
+            if (memberkeys) {
+                for (const userId in memberkeys) {
+                    for (const deviceId in memberkeys[userId]) {
+                        await client.setDeviceVerified(userId, deviceId);
+                    }
+                }
+            }
+        }
+    };
+
+    const getHistory = async (numOfHistory) => {
+        for (let i = 0; i < roomList.length; i++)
+            await client.scrollback(roomList[i], numOfHistory);
+    };
+
+    const getKeyByEvent = (e) => {
+        const allDeviceIDs = Object.keys(
+            client.crypto.deviceList.devices[e.sender.userId]
+        );
+        const keyList = [];
+
+        for (let i = 0; i < allDeviceIDs.length; i++) {
+            const deviceId = allDeviceIDs[i];
+            const ed25519 =
+                client.crypto.deviceList.devices[e.sender.userId][deviceId]
+                    .keys['ed25519:' + deviceId];
+            const curve25519 =
+                client.crypto.deviceList.devices[e.sender.userId][deviceId]
+                    .keys['curve25519:' + deviceId];
+
+            keyList.push({ deviceId, ed25519, curve25519 });
+        }
+
+        return keyList;
+    };
+
+    const isLogin = async () => {
+        if (didLogin === false && savedData) {
+
+            let info = JSON.parse(savedData);
+            const loginResult = await loginByAccessToken(
+                info.homeServer,
+                info.exportedDevice,
+                info.accessToken
+            );
+
+            if (loginResult) return;
+            else {
+                console.log('remove localstorage', loginKey);
+                localStorage.removeItem(loginKey);
+            }
+
+            return loginResult;
+        }
         return didLogin;
     };
 
@@ -47,72 +259,110 @@ function useMatrixClient() {
                 client.removeAllListeners();
                 client.stopClient();
 
-                client = null;
+                localStorage.removeItem(loginKey);
+                resetValues();
             }
         } catch (e) {
-            client = null;
+            localStorage.removeItem(loginKey);
+            resetValues();
         }
+    };
+
+    const loginMatrixServer = async (baseUrl, username, password) => {
+        savedData = localStorage.getItem(loginKey);
+        if (savedData) {
+            let info = JSON.parse(savedData);
+            const loginResult = await loginByAccessToken(
+                info.homeServer,
+                info.exportedDevice,
+                info.accessToken
+            );
+
+            if (loginResult) return;
+            else {
+                console.log('remove localstorage', loginKey);
+                localStorage.removeItem(loginKey);
+            }
+        }
+
+        loginByPassword(baseUrl, username, password);
     };
 
     const getMatrixRooms = () => {
-        // console.log('+++++++++++++++++++');
-        // console.log('haha', roomList);
-        // for (let i = 0; i < roomList.length; i++) {
-        //     for (let j = 0; j < roomList[i].timeline.length; j++) {
-        //         console.log(roomList[i].timeline[j].event.type);
-        //     }
-        // }
-        // console.log('+++++++++++++++++++');
-
         return roomList;
     };
 
-    const createMatrixRoom = async (roomID, usersToInvite) => {
-        if (roomID !== null) {
-            const { room_id: roomID } = await client.createRoom({
-                visibility: 'private',
-                invite: usersToInvite,
-            });
-
-            // await client.sendStateEvent(
-            //     roomID,
-            //     'm.room.encryption',
-            //     ROOM_CRYPTO_CONFIG
-            // );
-            // await client.setRoomEncryption(roomID, ROOM_CRYPTO_CONFIG);
-
-            // // Marking all devices as verified
-            // let room = client.getRoom(roomID);
-
-            // let members = (await room.getEncryptionTargetMembers()).map(
-            //     (x) => x['userId']
-            // );
-
-            // let memberkeys = await client.downloadKeys(members);
-
-            // for (const userId in memberkeys) {
-
-            //     for (const deviceId in memberkeys[userId]) {
-            //         await this.setDeviceVerified(userId, deviceId);
-            //     }
-            // }
-        }
-        return roomID;
-    };
-    
     const getAvatar = async (userId) => {
-
         try {
             if (didLogin && client) {
                 var profile = await client.getProfileInfo(userId, 'avatar_url');
-                avatar = client.mxcUrlToHttp(profile.avatar_url)
-                console.log("Avatar:::", avatar)
+                avatar = client.mxcUrlToHttp(profile.avatar_url);
+                console.log('Avatar:::', avatar);
             }
         } catch (e) {
             console.log('error', e);
         }
         return avatar;
-    }
+    };
+
+    // const getHistory = async (roomID, limit = 30) => {
+    //     try {
+    //         if (didLogin && client) {
+    //             for (let i = 0; i < roomList.length; i++) {
+    //                 console.log('roomList[i].roomId', roomList[i]);
+
+    //                 if (roomList[i].roomId === roomID) {
+    //                     var messageEvent = await client.scrollback(
+    //                         roomList[i],
+    //                         limit
+    //                     );
+    //                     if (messageEvent !== null) {
+    //                         return messageEvent.timeline
+    //                             .filter(
+    //                                 (e) =>
+    //                                     e.clearEvent !== null &&
+    //                                     e.clearEvent.content !== null
+    //                             )
+    //                             .map((e) => e.clearEvent);
+    //                     }
+    //                 }
+
+    //                 //for (let j = 0; j < rooms[i].timeline.length; j++) {
+    //                 //    console.log(rooms[i].timeline[j].getContent());
+    //                 //}
+    //             }
+    //         }
+    //     } catch (e) {
+    //         console.log('error', e);
+    //     }
+    // };
+
+    const createRoom = async (roomID, usersToInvite) => {
+        // if (roomID !== null) {
+        //     // const {  roomID } = await client.createRoom({
+        //     //     visibility: 'private',
+        //     //     invite: usersToInvite,
+        //     // });
+        //     // await client.sendStateEvent(
+        //     //     roomID,
+        //     //     'm.room.encryption',
+        //     //     ROOM_CRYPTO_CONFIG
+        //     // );
+        //     // await client.setRoomEncryption(roomID, ROOM_CRYPTO_CONFIG);
+        //     // // Marking all devices as verified
+        //     // let room = client.getRoom(roomID);
+        //     // let members = (await room.getEncryptionTargetMembers()).map(
+        //     //     (x) => x['userId']
+        //     // );
+        //     // let memberkeys = await client.downloadKeys(members);
+        //     // for (const userId in memberkeys) {
+        //     //     for (const deviceId in memberkeys[userId]) {
+        //     //         await this.setDeviceVerified(userId, deviceId);
+        //     //     }
+        //     // }
+        // }
+        // return roomID;
+    };
 
     const sendMessageToRoom = async (roomId, message) => {
         try {
@@ -144,290 +394,124 @@ function useMatrixClient() {
         };
     })();
 
-    const getHistory = async (roomID, limit = 30) => {
-        try {
-            if (didLogin && client) {
-                for (let i = 0; i < roomList.length; i++) {
-                    console.log('roomList[i].roomId', roomList[i]);
-
-                    if (roomList[i].roomId === roomID) {
-                        var messageEvent = await client.scrollback(
-                            roomList[i],
-                            limit
-                        );
-                        if (messageEvent !== null) {
-                            return messageEvent.timeline
-                                .filter(
-                                    (e) =>
-                                        e.clearEvent !== null &&
-                                        e.clearEvent.content !== null
-                                )
-                                .map((e) => e.clearEvent);
-                        }
-                    }
-
-                    //for (let j = 0; j < rooms[i].timeline.length; j++) {
-                    //    console.log(rooms[i].timeline[j].getContent());
-                    //}
-                }
-            }
-        } catch (e) {
-            console.log('error', e);
-        }
-    };
-
-    const reloginMatrixServer = async (
-        baseUrl,
-        exportedDevice,
-        accessToken
-    ) => {
-        console.log('\n\n\n\nlogging by access token\n\n\n\n')
+    const loginByAccessToken = async (baseUrl, exportedDevice, accessToken) => {
+        console.log('\n\n\nLogging by access token\n\n\n');
         let newClient = null;
-        //await window.Olm.init();    
-        console.log('use accessToken');
-
 
         try {
-            newClient = await new window.matrixClient.createClient({
+            newClient = new window.matrixClient.createClient({
                 baseUrl,
                 deviceToImport: exportedDevice,
-                accessToken,
-                sessionStore:
-                    await new window.matrixClient.WebStorageSessionStore(
-                        window.localStorage
-                    ),
-                cryptoStore: await new window.matrixClient.MemoryCryptoStore(),
-            });
-            
-            newClient.sessionStore =
-                new window.matrixClient.WebStorageSessionStore(
+                accessToken: accessToken,
+                sessionStore: new window.matrixClient.WebStorageSessionStore(
                     window.localStorage
-                );
-
-            newClient.cryptoStore = new window.matrixClient.MemoryCryptoStore();
-
-            newClient.roomList.cryptoStore =
-                new window.matrixClient.MemoryCryptoStore();
+                ),
+                cryptoStore: new window.matrixClient.IndexedDBCryptoStore(),
+                // cryptoStore: new window.matrixClient.MemoryCryptoStore(),
+            });
 
             newClient.accessToken = accessToken;
             newClient.deviceId = exportedDevice.deviceId;
 
+            // newClient.sessionStore =
+            //     await new window.matrixClient.WebStorageSessionStore(
+            //         window.localStorage
+            //     );
+
+            // newClient.cryptoStore =
+            //      new window.matrixClient.MemoryCryptoStore();
+
+            // newClient.roomList.cryptoStore =
+            //      new window.matrixClient.MemoryCryptoStore();
+
+            // newClient.accessToken = accessToken;
+            // newClient.deviceId = exportedDevice.deviceId;
+
             await newClient.initCrypto();
-
-            newClient.roomList.cryptoStore =
-            new window.matrixClient.MemoryCryptoStore();
-
+            // newClient.cryptoStore =
+            //     await new window.matrixClient.MemoryCryptoStore();
+            await newClient.setGlobalErrorOnUnknownDevices(false);
             await newClient.startClient();
+            setMatrixClientEvents(newClient);
 
-
-            
-
-            // await newClient.stopClient();
-            
-            // await newClient.initCrypto();
-            // await newClient.setGlobalErrorOnUnknownDevices(false);
-            // await newClient.startClient();
-
-            matrixClientEvents(newClient); 
-            //await newClient.startClient();
-
+            console.log('Login successfully by token');
+            return true;
         } catch (e) {
-            if (onLogInResult) onLogInResult(false, e, null, null);
-            return;
+            console.log('Login by token fail', e);
+            console.log('remove localstorage', loginKey);
+            localStorage.removeItem(loginKey);
+
+            resetValues();
+
+            return false;
         }
     };
 
-    const loginMatrixServer = async (baseUrl, userId, password) => {
-        console.log('Logging by password')
+    const loginByPassword = async (baseUrl, userId, password) => {
+        console.log('\n\nLogging by password\n\n');
+
         let newClient = null;
         await window.Olm.init();
 
         try {
-            newClient = await window.matrixClient.createClient(baseUrl);
+            newClient = window.matrixClient.createClient(baseUrl);
 
             //Create stores
             newClient.sessionStore =
                 new window.matrixClient.WebStorageSessionStore(
                     window.localStorage
                 );
-            newClient.cryptoStore = new window.matrixClient.MemoryCryptoStore();
+            newClient.cryptoStore =
+                new window.matrixClient.IndexedDBCryptoStore();
+            //    new window.matrixClient.MemoryCryptoStore();
+            //new window.matrixClient.IndexedDBCryptoStore(window.indexedDB,"OpenSourceVideosCryptoStore");
 
             const info = await newClient.login('m.login.password', {
                 user: userId,
                 password: password,
             });
 
-
             newClient.roomList.cryptoStore =
-            new window.matrixClient.MemoryCryptoStore();
+                new window.matrixClient.MemoryCryptoStore();
 
             newClient.accessToken = info.access_token;
             newClient.deviceId = info.device_id;
-            console.log("INFO22", info);
 
             await newClient.initCrypto();
             await newClient.setGlobalErrorOnUnknownDevices(false);
             await newClient.startClient();
 
+            setMatrixClientEvents(newClient);
+            return true;
 
-            // await newClient.stopClient();
-            
-            // await newClient.initCrypto();
-            // await newClient.setGlobalErrorOnUnknownDevices(false);
-            // await newClient.startClient();
-
-            matrixClientEvents(newClient);
         } catch (e) {
             if (onLogInResult) onLogInResult(false, e, null, null);
-            return;
+            return false;
         }
-    };
-
-    const matrixClientEvents = (newClient) => {
-        newClient.once('sync', async function (state, prevState, res) {
-            if (state === 'PREPARED') {
-                // state will be 'PREPARED' when the client is ready to use
-
-                didLogin = true;
-                roomList = await newClient.getRooms();
-                client = newClient;
-
-                var profile = await newClient.getProfileInfo("@test010:pdxinfosec.org")
-                console.log("PROFILE222", profile)
-
-                if (onLogInResult !== null)
-                    onLogInResult(
-                        true,
-                        null,
-                        await client.exportDevice(),
-                        client.accessToken
-                    );
-                    console.log('Having a new  history')
-
-                    for (let i = 0; i < roomList.length; i++)
-                    console.log(roomList[i]);
-
-                    for (let i = 0; i < roomList.length; i++)
-                    await client.scrollback(roomList[i], 10);
-
-                    // setTimeout(()=>{
-                    //     for (let i = 0; i < roomList.length; i++)
-                    //     console.log(roomList[i].getHistoryVisibility());
-
-                    // },1000)
-
-
-
-            }
-        });
-
-        newClient.on('Room',async  function (room) {
-            roomList.push(room);
-           
-        });
-
-        newClient.on(
-            'Room.timeline',
-            function (event, room, toStartOfTimeline) {
-                if (event.getType() === "m.room.create") {
-
-                }
-                // we know we only want to respond to messages
-                // if (event.getType() !== 'm.room.message') {
-                //     return;
-                // }
-
-                // we are only intested in messages from the test room, which start with "!"
-                // if (
-                //     event.getRoomId() === roomID &&
-                //     event.getContent().body[0] === '!'
-                // ) {
-                //     console.log('');
-                //     console.log('');
-                //     console.log(
-                //         'timeline, m.room.message = ',
-                //         event.event.content.body
-                //     );
-                //     console.log('');
-                //     console.log('');
-                // }
-
-              // console.log('timeline, m.room.message = ', event.event);
-            }
-        );
-
-
-        // automatic accept an joining room invitation
-        newClient.on('RoomMember.membership', async (event, member) => {
-            if (
-                member.membership === 'invite' &&
-                member.userId === newClient.getUserId()
-            ) {
-                await newClient.joinRoom(member.roomId);
-                // setting up of room encryption seems to be triggered automatically
-                // but if we don't wait for it the first messages we send are unencrypted
-                await newClient.setRoomEncryption(member.roomId, {
-                    algorithm: 'm.megolm.v1.aes-sha2',
-                });
-                console.log('');
-                console.log('>> Has join room = ', member.roomId);
-                console.log('');
-
-            }
-        });
-
-        newClient.onDecryptedMessage = message => {
-            console.log('\n\n\n Got encrypted message: ', message);
-        }
-
-        newClient.on('Event.decrypted', async (e) => {
-            const { content } = e.clearEvent;
-
-            if (content !== undefined && content.msgtype !== 'm.bad.encrypted' && typeof content.body !== "undefined") {
-                // console.log('my message is ', e.clearEvent);
-                if (onHavingNewMessage !== null)
-                    onHavingNewMessage(content.body);
-
-                if (typeof content.file !== 'undefined') {
-                    const response = await axios.get(
-                        newClient.mxcUrlToHttp(content.file.url),
-                        { responseType: 'arraybuffer' }
-                    );
-
-                    const decryptData = await decryptAttachment(
-                        response.data,
-                        content.file
-                    );
-
-                    const blobURL = await window.URL.createObjectURL(
-                        new Blob([decryptData]),
-                        { type: content.info.mimetype }
-                    );
-
-                    if (onHavingNewFile)
-                        onHavingNewFile({
-                            fileType: content.info.mimetype,
-                            fileUrl: blobURL,
-                            fileName: content.body,
-                        });
-                }
-            }
-        });
     };
 
     return {
         loginMatrixServer,
         logoutMatrixServer,
+
         saveBlobUrlToFile,
+
         sendMessageToRoom,
+
         isLogin,
+
         setOnHavingNewMessage,
         setOnLogInResult,
         setHavingNewFile,
+        setNumberHistoricMessages,
+
         getMatrixRooms,
-        getHistory,
-        reloginMatrixServer,
-        getAvatar
+        //  getHistory,
+        getAvatar,
+
+        createRoom,
+
+        isHavingAuthentication,
     };
 }
 
