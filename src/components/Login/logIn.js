@@ -39,13 +39,13 @@ export const Login = () => {
 
 	const [formSubmitted, setFormSubmitted] = useState(false);
 	const history = useHistory();
-    const {getAvatar,setOnLogInResult,loginMatrixServer, isLogin } = useMatrixClient();
+    const {getAvatar,setOnLogInResult,loginMatrixServer, isLogin,testLogin } = useMatrixClient();
 		
 	useEffect(()=>{
 		setOnLogInResult(handleLoginResult);
 				
 		(async () => {
-			await isLogin();
+			await testLogin();
 		})();
 		
 
