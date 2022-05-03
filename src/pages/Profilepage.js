@@ -3,7 +3,7 @@ import {
 	useEffect
 } from 'react';
 import useMatrixClient from '../hooks/useMatrixClient';
-import TopNavBar from '../components/TopNavBar';
+import TopNavigationBar from '../components/TopNavigationBar';
 import Page403 from './Page403';
 
 
@@ -164,7 +164,7 @@ const Profile = () => {
 		<>
 			{ yesLogin ? (
 				<div className="App">
-					<TopNavBar />
+					<TopNavigationBar />
 					{
 						avatar ? (
 							<ProfileView avatar={avatar} />

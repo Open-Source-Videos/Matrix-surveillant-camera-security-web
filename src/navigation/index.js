@@ -13,6 +13,7 @@ import Page403 from '../pages/Page403';
 import { AuthContext } from '../context/auth';
 import Profile from '../pages/Profilepage';
 import Setting from '../pages/Settingpage';
+import Requests from '../pages/Requests';
 //import { getStore } from '../utils';
 
 
@@ -34,6 +35,7 @@ class Navigation extends Component {
 					<Switch>
 						<Route exact path="/login" component={Login} />
 						<Route exact path='/homepage' component={Home} />
+						<Route exact path='/requests' component={Requests} />
 						<Route exact path='/profile' component={Profile} />
 						<Route exact path='/setting' component={Setting} />
 						<Route path="/404" component={Page404} />
