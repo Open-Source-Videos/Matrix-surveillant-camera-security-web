@@ -1,10 +1,9 @@
-import { Redirect } from 'react-router-dom';
-import useMatrixClient from '../hooks/useMatrixClient';
-import TopNavBar from '../components/TopNavBar';
 import { 
 	useState,
 	useEffect
 } from 'react';
+import useMatrixClient from '../hooks/useMatrixClient';
+import TopNavBar from '../components/TopNavBar';
 import Page403 from './Page403';
 
 
@@ -12,7 +11,7 @@ const ProfileView = ({ avatar }) => {
     return (
 		<>
 			<main className="profile-page">
-				<section className="relative block" style={{ height: "530px" }}>
+				<section className="relative block" style={{ height: "430px" }}>
 					<div
 						className="absolute top-0 w-full h-full bg-center bg-cover bg-amber-200"
 						style={{
@@ -122,42 +121,48 @@ const ProfileView = ({ avatar }) => {
 
 const Profile = () => {
 	const { isLogin, getAvatar, testLogin } = useMatrixClient();
+	const [yesLogin,setYesLogin] = useState(false);
 	const [avatar, setAvatar] = useState(null);
 
 	useEffect(() => {
-		(async () => {
-            console.log('\n\n Run test',await isLogin());
-            if (isLogin()===false ) 
-                await testLogin();
-			
-			const get_avatar = () => {
-				const local_storage_item = JSON.parse(window.localStorage.getItem('open_source_video'));
-				const exported_device = local_storage_item.exportedDevice;
-				const user_id = exported_device.userId;
-		
-				(async()=>{
-					try {
-						let profileAvatar = await getAvatar(user_id);
-						if (profileAvatar === null || profileAvatar === "") {
-							setAvatar(null)
-						} else {
-							setAvatar(profileAvatar);
-						}
-					} catch (e) {
-						console.log('error', e);
-						setAvatar(null);
-					}
-				})();
-			}
-	
-			get_avatar();
+		( async() => {
+            if (isLogin()===false) {
+                console.log('Run test login')
+                setYesLogin(await testLogin());
+            }
+            setTimeout(()=>{
+                setYesLogin(isLogin()); 
+            }, 500);
         })();
+
+
+		const get_avatar = () => {
+			const local_storage_item = JSON.parse(window.localStorage.getItem('open_source_video'));
+			const exported_device = local_storage_item.exportedDevice;
+			const user_id = exported_device.userId;
+	
+			(async()=>{
+				try {
+					let profileAvatar = await getAvatar(user_id);
+					if (profileAvatar === null || profileAvatar === "") {
+						setAvatar(null)
+					} else {
+						setAvatar(profileAvatar);
+					}
+				} catch (e) {
+					console.log('error', e);
+					setAvatar(null);
+				}
+			})();
+		}
+
+		get_avatar();
 
 	}, [avatar, getAvatar, isLogin, testLogin]);
 
 	return (
 		<>
-			{ isLogin() ? (
+			{ yesLogin ? (
 				<div className="App">
 					<TopNavBar />
 					{

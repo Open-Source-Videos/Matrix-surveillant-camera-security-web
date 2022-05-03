@@ -1,19 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { Redirect } from 'react-router-dom';
+import React, { 
+    useEffect, 
+    useState 
+} from 'react';
 import '../index.css';
 import useMatrixClient from '../hooks/useMatrixClient';
 import { ModalPopUp } from '../components/ModalPopUp';
 import TopNavBar from '../components/TopNavBar';
 import Page403 from './Page403';
 
-// const BASE_URL = 'https://matrix.pdxinfosec.org';
-// const PASSWORD = "G3Vsnzvr";
-// const USERNAME = "@test003:pdxinfosec.org";
 // const ROOM_ID = '!bdQMmkTBTMqUPAOvms:pdxinfosec.org';
 
+// Global list
 let list_image_url = [];
 let list_video_url = [];
 
+
+// Clear state when logging out
 export const clearState = () => {
     list_image_url = [];
     list_video_url = [];
@@ -24,10 +26,15 @@ function Home() {
     const [listImageURL, setListImageURL] = useState(list_image_url);
     const [listVideoURL, setListVideoURL] = useState(list_video_url);
     
-    const { isLogin,sendMessageToRoom, saveBlobUrlToFile, testLogin, setHavingNewFile } = useMatrixClient();
+    const { 
+        isLogin, 
+        sendMessageToRoom, 
+        saveBlobUrlToFile, 
+        testLogin, 
+        setHavingNewFile 
+    } = useMatrixClient();
 
     const [yesLogin,setYesLogin] = useState(false);
-
     const [showModal, setShowModal] = useState(false);
 
     const handleHavingNewFile = (sender, room, file) => {
@@ -69,17 +76,6 @@ function Home() {
 
     useEffect(() => {
         setHavingNewFile(handleHavingNewFile);
-        // (async () => {
-        //     // if (login === false) {
-        //     //     let checklogin =;
-        //     //     console.log('\n\n checklogi', checklogin);
-        //     //     setLogin(checklogin);
-        //     // }
-        //     console.log('\n\n Run test',await isLogin());
-        //     if (isLogin()===false ) 
-        //         await testLogin();
-        //     setHavingNewFile(handleHavingNewFile);
-        // })();
         (async()=>{
             if (isLogin()===false) {
                 console.log('Run test login')
@@ -96,14 +92,6 @@ function Home() {
             {yesLogin ? (
                 <div>
                     <TopNavBar />
-                    {/*<header className="App-header">*/}
-                    <header className="bg-white shadow">
-                        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                            <h1 className="text-3xl font-bold text-gray-900">
-                                Homepage
-                            </h1>
-                        </div>
-                    </header>
                     <main>
                         <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4 my-5">
                             {listImageURL.length > 0 ? (
