@@ -59,6 +59,14 @@ const TopNavBar = () => {
                                 </a>
 
                                 <a
+                                    href="/requests"
+                                    onClick={handleRouter}
+                                    className={splitLocation[1] === "requests" ? tabItem.concat(" bg-gray-700 text-white") : tabItem}
+                                >
+                                    Requests
+                                </a>
+
+                                <a
                                     href="/profile"
                                     onClick={handleRouter}
                                     className={splitLocation[1] === "profile" ? tabItem.concat(" bg-gray-700 text-white") : tabItem}

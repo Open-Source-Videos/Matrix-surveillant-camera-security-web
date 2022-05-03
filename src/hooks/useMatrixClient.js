@@ -300,7 +300,6 @@ function useMatrixClient() {
             if (didLogin && client) {
                 var profile = await client.getProfileInfo(userId, 'avatar_url');
                 avatar = client.mxcUrlToHttp(profile.avatar_url);
-                console.log('Avatar:::', avatar);
             }
         } catch (e) {
             console.log('error', e);
