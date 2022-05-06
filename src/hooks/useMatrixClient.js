@@ -19,7 +19,7 @@ var onHavingNewMessage = handleHavingNewMessage;
 var onHavingNewFile = handleHavingNewFile;
 var onLogInResult = handleLoginResult;
 
-var numberHistoricMessages = 20;
+var numberHistoricMessages = 0;
 var avatar = null;
 const loginKey = 'open_source_video';
 
@@ -107,7 +107,7 @@ function useMatrixClient() {
                         homeServer: newClient.baseUrl,
                     })
                 );
-                console.log('have login');
+                //  console.log('have login');
                 if (onLogInResult) {
                     console.log('return result');
                     //Return result
@@ -307,17 +307,20 @@ function useMatrixClient() {
         return avatar;
     };
 
-    const getUserId = () =>{
+    const getUserId = () => {
         if (roomList && roomList.length) {
             return roomList[0].myUserId;
         }
         return null;
-    }
+    };
 
     const getDisplayName = async (userId) => {
         try {
             if (didLogin && client) {
-                const {displayname} = await client.getProfileInfo(userId, 'displayname');
+                const { displayname } = await client.getProfileInfo(
+                    userId,
+                    'displayname'
+                );
                 return displayname;
             }
         } catch (e) {
@@ -325,18 +328,16 @@ function useMatrixClient() {
             return '-';
         }
     };
-    const getRoomIdByName = (name) =>{
+    const getRoomIdByName = (name) => {
         if (roomList && roomList.length) {
-            for(let i = 0; i < roomList.length; i ++) {
-                if (roomList[i].name === name){
+            for (let i = 0; i < roomList.length; i++) {
+                if (roomList[i].name === name) {
                     return roomList[i].roomId;
                 }
             }
-           
         }
         return null;
-        
-    }
+    };
 
     // const getHistory = async (roomID, limit = 30) => {
     //     try {
