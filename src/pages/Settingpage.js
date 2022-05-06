@@ -9,16 +9,15 @@ export default function ProfileView() {
         <main className="profile-page">
           <section className="relative block" style={{ height: "500px" }}>
             <div
-              className="absolute top-0 w-full h-full bg-center bg-cover"
+              className="absolute top-0 w-full h-full bg-center bg-cover bg-amber-200"
               style={{
-                backgroundImage:
-                  "url('https://images.unsplash.com/photo-1499336315816-097655dcfbda?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2710&q=80')"
+                backgroundImage:"url('/profile_page.svg')",
+                backgroundPosition: 'center',
+                backgroundSize: 'contain',
+                backgroundRepeat: 'no-repeat',
               }}
             >
-              <span
-                id="blackOverlay"
-                className="w-full h-full absolute opacity-50 bg-black"
-              ></span>
+           
             </div>
             <div
               className="top-auto bottom-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden"
@@ -34,13 +33,13 @@ export default function ProfileView() {
                 y="0"
               >
                 <polygon
-                  className="text-gray-300 fill-current"
+                  className="text-white fill-current"
                   points="2560 0 2560 100 0 100"
                 ></polygon>
               </svg>
             </div>
           </section>
-          <section className="relative py-16 bg-gray-300">
+          <section className="relative py-16 bg-white">
             <div className="container mx-auto px-4">
               <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg -mt-64">
                 <div className="px-6">
@@ -146,6 +145,7 @@ export default function ProfileView() {
               </div>
             </div>
           </section>
+          <img src={'/wave-haikei.svg'} alt="footer" width={'100%'} />
           <footer className="relative bg-gray-300 pt-8 pb-6">
           <hr className="my-6 border-gray-400" />
           <div className="flex flex-wrap items-center md:justify-between justify-center">

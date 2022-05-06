@@ -4,9 +4,9 @@ import TopNavigationBar from '../components/TopNavigationBar';
 import Page403 from './Page403';
 
 const ProfileView = ({ avatar, userID, displayName, roomID, roomList }) => {
-    // const listItems = roomList.map((number) =>
-    //     <li>{number}</li>
-    // );
+     const listItems = roomList.map((number) =>
+         <li>{number.name}</li>
+     );
     return (
         <>
             <main className="profile-page">
@@ -79,6 +79,7 @@ const ProfileView = ({ avatar, userID, displayName, roomID, roomList }) => {
                                     <div className="mb-2 text-gray-700">
                                         <i className="fas fa-university mr-2 text-lg text-gray-500"></i>
                                         <h6>Room List:</h6>
+                                       {listItems}
                                     </div>
                                 </div>
                                 <div className="mt-10 py-10 border-t border-gray-300 text-center">
