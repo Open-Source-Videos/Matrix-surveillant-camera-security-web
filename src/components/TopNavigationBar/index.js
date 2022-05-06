@@ -1,4 +1,6 @@
-import React, {
+import React, { 
+	useState,
+	useEffect,
     Fragment
 } from 'react';
 import useMatrixClient from '../../hooks/useMatrixClient';
@@ -22,7 +24,9 @@ const TopNavigationBar = () => {
     const history = useHistory();
     const { 
         isLogin, 
-        logoutMatrixServer 
+        logoutMatrixServer,
+		getAvatar,
+		testLogin,
     } = useMatrixClient();
     const location = useLocation();
     const { pathname } = location;
@@ -46,6 +50,43 @@ const TopNavigationBar = () => {
     const tabItem = "text-gray-800 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium text-decoration-none";
     const tabItemMenu = "-m-3 p-3 flex items-center rounded-md hover:bg-gray-50 text-decoration-none"
     const tabItemMenuText = "ml-3 text-base font-medium text-gray-900 text-decoration";
+
+	const [avatar, setAvatar] = useState(null);
+	const [yesLogin, setYesLogin] = useState(false);
+
+	useEffect(() => {
+        (async () => {
+            if (isLogin() === false) {
+                console.log('Run test login');
+                setYesLogin(await testLogin());
+            }
+            setTimeout(() => {
+                setYesLogin(isLogin());
+				const get_avatar = () => {
+					const local_storage_item = JSON.parse(
+						window.localStorage.getItem('open_source_video')
+					);
+
+					(async () => {
+						try {
+							let profileAvatar = await getAvatar();
+							if (profileAvatar === null || profileAvatar === '') {
+								setAvatar('logo_profile_static_avatar.svg');
+							} else {
+								setAvatar(profileAvatar);
+							}
+						} catch (e) {
+							console.log('error', e);
+							setAvatar(null);
+						}
+					})();
+				};
+
+				get_avatar();
+			}, 500);
+		})();
+		}, [avatar, isLogin, testLogin]);
+
 
 	return (
 		<Popover className={(splitLocation[1] === "homepage" || splitLocation[1] === "requests") ? "relative bg-white z-50" : "relative bg-amber-200 z-50"}>
@@ -111,7 +152,7 @@ const TopNavigationBar = () => {
 						<button className={"mr-3 hidden lg:block"}>
 							<img
 								className="inline-block h-8 w-8 rounded-full ring-2 ring-indigo-700"
-								src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+								src={avatar}
 								alt=""
 							/>
 						</button>
