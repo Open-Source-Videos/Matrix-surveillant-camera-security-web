@@ -102,7 +102,7 @@ function useMatrixClient() {
             if (state === 'PREPARED') {
                 didLogin = true;
                 roomList = await newClient.getRooms();
-                client = newClient;
+              //  client = newClient;
 
                 const exportedDevice = await newClient.exportDevice();
 
@@ -306,13 +306,11 @@ function useMatrixClient() {
         return roomList;
     };
 
-    const getAvatar =  () => {
+    const getAvatar =  async () => {
         try {
-            if (didLogin && client) {
-               // var profile = await client.getProfileInfo(userId, 'avatar_url');
-               // avatar = client.mxcUrlToHttp(profile.avatar_url);
-               const { avatarUrl } = client.getUser(client.getUserId());
-               avatar = client.mxcUrlToHttp(avatarUrl);
+            if (client) {
+               var profile = await client.getProfileInfo(client.getUserId(), 'avatar_url');
+               avatar = await client.mxcUrlToHttp(profile.avatar_url);
             }
         } catch (e) {
             console.log('error', e);
@@ -476,6 +474,8 @@ function useMatrixClient() {
             //     await new window.matrixClient.MemoryCryptoStore();
             await newClient.setGlobalErrorOnUnknownDevices(false);
             await newClient.startClient();
+            client = newClient;
+            
             setMatrixClientEvents(newClient);
             //  console.log('Testtest ',newClient);
             //  console.log('Login successfully by token ',await  newClient.getDevices());
@@ -524,8 +524,10 @@ function useMatrixClient() {
             await newClient.initCrypto();
             await newClient.setGlobalErrorOnUnknownDevices(false);
             await newClient.startClient();
-
+            
+            client = newClient;
             setMatrixClientEvents(newClient);
+
             return true;
         } catch (e) {
             if (onLogInResult) onLogInResult(false, e, null, null);
