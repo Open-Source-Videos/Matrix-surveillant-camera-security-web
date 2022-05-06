@@ -307,36 +307,35 @@ function useMatrixClient() {
     };
 
     const getAvatar =  async () => {
-        try {
-            if (client) {
-               var profile = await client.getProfileInfo(client.getUserId(), 'avatar_url');
-               avatar = await client.mxcUrlToHttp(profile.avatar_url);
-            }
-        } catch (e) {
-            console.log('error', e);
-        }
+        
+        if (client) {
+            var profile = await client.getProfileInfo(client.getUserId(), 'avatar_url');
+            avatar = await client.mxcUrlToHttp(profile.avatar_url);
+         }
+
         return avatar;
     };
 
-    const getUserId = () => {
+    const getUserId = async () => {
+        
         if (client) {
-            return client.getUserId();
+            return await client.getUserId();
         }
         return null;
     };
 
-    const getDisplayName =  () => {
-        try {
-            if (didLogin && client) {
-                const { displayName } = client.getUser(client.getUserId());
-                return displayName;
-            }
-        } catch (e) {
-            console.log('error', e);
-            return '-';
+    const getDisplayName = async  () => {
+        
+        if (client) {
+            const { displayName } = await client.getUser(client.getUserId());
+            return displayName;
         }
+
+        return '-';
+
     };
     const getRoomIdByName = (name) => {
+        
         if (roomList && roomList.length) {
             for (let i = 0; i < roomList.length; i++) {
                 if (roomList[i].name === name) {
