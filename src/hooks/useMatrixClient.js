@@ -62,7 +62,7 @@ function useMatrixClient() {
 
     const setMatrixClientEvents = (newClient) => {
         const processContent = async (sender, room, content) => {
-            if (onHavingNewMessage  && content.body) {
+            if (onHavingNewMessage && content.body) {
                 onHavingNewMessage(sender, room, content.body);
             }
 
@@ -107,7 +107,7 @@ function useMatrixClient() {
                         homeServer: newClient.baseUrl,
                     })
                 );
-                console.log('have login')
+                console.log('have login');
                 if (onLogInResult) {
                     console.log('return result');
                     //Return result
@@ -237,7 +237,7 @@ function useMatrixClient() {
         return didLogin;
     };
 
-    const testLogin = async() => {
+    const testLogin = async () => {
         if (didLogin === false && savedData) {
             let info = JSON.parse(savedData);
             const loginResult = await loginByAccessToken(
@@ -254,7 +254,7 @@ function useMatrixClient() {
                 return loginResult;
             }
         }
-    }
+    };
 
     const logoutMatrixServer = () => {
         try {
@@ -306,6 +306,37 @@ function useMatrixClient() {
         }
         return avatar;
     };
+
+    const getUserId = () =>{
+        if (roomList && roomList.length) {
+            return roomList[0].myUserId;
+        }
+        return null;
+    }
+
+    const getDisplayName = async (userId) => {
+        try {
+            if (didLogin && client) {
+                const {displayname} = await client.getProfileInfo(userId, 'displayname');
+                return displayname;
+            }
+        } catch (e) {
+            console.log('error', e);
+            return '-';
+        }
+    };
+    const getRoomIdByName = (name) =>{
+        if (roomList && roomList.length) {
+            for(let i = 0; i < roomList.length; i ++) {
+                if (roomList[i].name === name){
+                    return roomList[i].roomId;
+                }
+            }
+           
+        }
+        return null;
+        
+    }
 
     // const getHistory = async (roomID, limit = 30) => {
     //     try {
@@ -509,11 +540,13 @@ function useMatrixClient() {
         getMatrixRooms,
         //  getHistory,
         getAvatar,
-
+        getDisplayName,
+        getUserId,
+        getRoomIdByName,
         createRoom,
 
         isHavingAuthentication,
-        testLogin
+        testLogin,
     };
 }
 
