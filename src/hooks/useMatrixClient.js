@@ -310,7 +310,7 @@ function useMatrixClient() {
         
         if (client) {
            // console.log('tritri',client, await getRoomIdByName('Capstone-HelloWorld'));
-            var profile = await client.getProfileInfo(client.getUserId(), 'avatar_url');
+            var profile = await client.getProfileInfo(await client.getUserId(), 'avatar_url');
             avatar = await client.mxcUrlToHttp(profile.avatar_url);
          }
 
@@ -328,7 +328,7 @@ function useMatrixClient() {
     const getDisplayName = async  () => {
         
         if (client) {
-            const { displayName } = await client.getUser(client.getUserId());
+            const { displayName } = await client.getUser(await client.getUserId());
             return displayName;
         }
 
