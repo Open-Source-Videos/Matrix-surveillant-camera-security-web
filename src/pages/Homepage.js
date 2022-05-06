@@ -1,31 +1,43 @@
 import React, { 
-    useEffect,
+    useEffect, 
     useState 
 } from 'react';
-import { Redirect } from 'react-router-dom';
 import '../index.css';
-import { Navbar } from '../components/Navbar';
 import useMatrixClient from '../hooks/useMatrixClient';
-import { ModalPopUp } from "../components/ModalPopUp";
+import { ModalPopUp } from '../components/ModalPopUp';
+import TopNavigationBar from '../components/TopNavigationBar';
+import Page403 from './Page403';
 
-// const axios = require('axios');
+// const ROOM_ID = '!bdQMmkTBTMqUPAOvms:pdxinfosec.org';
 
-// const BASE_URL = 'https://matrix.pdxinfosec.org';
-// const PASSWORD = "G3Vsnzvr";
-// const USERNAME = "@test003:pdxinfosec.org";
-const ROOM_ID = '!bdQMmkTBTMqUPAOvms:pdxinfosec.org';
+// Global list
+let list_image_url = [];
+let list_video_url = [];
 
-const list_image_url = [];
-const list_video_url = [];
+
+// Clear state when logging out
+export const clearState = () => {
+    list_image_url = [];
+    list_video_url = [];
+}
+
 
 function Home() {
     const [listImageURL, setListImageURL] = useState(list_image_url);
     const [listVideoURL, setListVideoURL] = useState(list_video_url);
+    
+    const { 
+        isLogin, 
+        sendMessageToRoom, 
+        saveBlobUrlToFile, 
+        testLogin, 
+        setHavingNewFile 
+    } = useMatrixClient();
 
+    const [yesLogin,setYesLogin] = useState(false);
     const [showModal, setShowModal] = useState(false);
 
-    const handleHavingNewFile = (file) => {
-        
+    const handleHavingNewFile = (sender, room, file) => {
         switch (file.fileType) {
             case 'image/png':
             case 'image/jpeg':
@@ -33,11 +45,11 @@ function Home() {
                 // setListImageURL([...listImageURL]);
                 list_image_url.push(file.fileUrl);
                 setListImageURL([...list_image_url]);
-                console.log(file.fileUrl)
-                // sendMessageToRoom(
-                //     ROOM_ID, 
-                //     `{"type" : "video-send", "content" : "/var/lib/motioneye/Camrea1/02-05-2021/15-25-30.mp4", "requestor_id":"0"}`
-                // );
+                console.log(file.fileUrl);
+                /*sendMessageToRoom(
+                    ROOM_ID, 
+                    `{"type" : "video-send", "content" : "/var/lib/motioneye/Camrea1/02-05-2021/15-25-30.mp4", "requestor_id":"0"}`
+                );*/
                 break;
             case 'video/mp4':
                 list_video_url.push(file.fileUrl);
@@ -48,31 +60,40 @@ function Home() {
                 saveBlobUrlToFile(file.fileUrl, file.fileName);
                 break;
         }
-
     };
 
-    const { sendMessageToRoom, saveBlobUrlToFile, isLogin, setHavingNewFile } = useMatrixClient();
 
     const handleWatch = () => {
-        console.log("SEND MESSAGE")
-        // sendMessageToRoom(
-        //     ROOM_ID, 
-        //     `{"type" : "video-send", "content" : "/var/lib/motioneye/Camrea1/02-05-2021/15-25-30.mp4", "requestor_id":"0"}`
-        // );
+        console.log('SEND MESSAGE');
+        /*sendMessageToRoom(
+            ROOM_ID, 
+            `{"type" : "video-send", "content" : "/var/lib/motioneye/Camrea1/02-05-2021/15-25-30.mp4", "requestor_id":"0"}`
+        );*/
         setShowModal(true);
-    }
+    };
+
+   // const handleLoginResult =;
 
     useEffect(() => {
         setHavingNewFile(handleHavingNewFile);
+        (async()=>{
+            if (isLogin()===false) {
+                console.log('Run test login')
+                setYesLogin(await testLogin());
+            }
+            setTimeout(()=>{
+                setYesLogin(isLogin()); 
+            },500);
+        })();
     }, []);
 
     return (
         <>
-            {isLogin() ? (
+            {yesLogin ? (
                 <div>
-                    <Navbar />
-                    <header className="App-header">
-                        <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4">
+                    <TopNavigationBar />
+                    <main>
+                        <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4 my-5">
                             {listImageURL.length > 0 ? (
                                 listImageURL.map((url, index) => {
                                     return (
@@ -98,7 +119,9 @@ function Home() {
                                                         <button
                                                             type="button"
                                                             className="bg-yellow-300 hover:bg-amber-400 text-gray-800 text-sm leading-6 font-medium py-2 px-3 rounded-lg outline outline-amber-300 inline-flex items-center justify-center"
-                                                            onClick={handleWatch}
+                                                            onClick={
+                                                                handleWatch
+                                                            }
                                                         >
                                                             <svg
                                                                 xmlns="http://www.w3.org/2000/svg"
@@ -146,46 +169,19 @@ function Home() {
 
                         <br />
 
-                        
                         {showModal ? (
-                            <ModalPopUp onClickPause={() => {setShowModal(false);}}/>
-                        ) : <></>}
-
-                        <br />
-
-                        {/*
-                        <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4">
-                            {listVideoURL.length > 0 ? (
-                                listVideoURL.map((videoURL, index) => {
-                                    return (
-                                        <div
-                                            className="flex justify-center px-2"
-                                            key={1}
-                                        >
-                                            <video
-                                                key={index}
-                                                width="500"
-                                                height="500"
-                                                controls
-                                                autoplay
-                                            >
-                                                <source
-                                                    src={videoURL}
-                                                    type="video/mp4"
-                                                />
-                                            </video>
-                                        </div>
-                                    );
-                                })
-                            ) : (
-                                <></>
-                            )}
-                            </div>*/}
-                        <br />
-                    </header>
+                            <ModalPopUp
+                                onClickPause={() => {
+                                    setShowModal(false);
+                                }}
+                            />
+                        ) : (
+                            <></>
+                        )}
+                    </main>
                 </div>
             ) : (
-                <Redirect to="/403" />
+                <Page403 />
             )}
         </>
     );

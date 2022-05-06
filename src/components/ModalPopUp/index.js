@@ -29,7 +29,7 @@ export const ModalPopUp = ({onClickPause}) => {
                                         width="500"
                                         height="500"
                                         controls
-                                        autoplay
+                                        autoPlay
                                     >
                                         <source
                                             src={"testvideo1.mp4"}
