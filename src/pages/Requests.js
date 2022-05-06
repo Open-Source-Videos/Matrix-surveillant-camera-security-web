@@ -43,11 +43,27 @@ const SnapShot = () => {
             case 'image/png':
             case 'image/jpeg':
 				if (file.fileName.includes("snapshot")) {
-					list_snap_url.push(file.fileUrl);
+					let local_time = new Date();
+					try {
+						local_time = JSON.parse(file.fileName).content.split(',')[1];
+						local_time = new Date(local_time);
+					} catch(e) {
+						console.log("e");
+					}
+					local_time = local_time.toLocaleString();
+
+					let content = {
+						url: file.fileUrl,
+						type: "snapshot",
+						time: local_time,
+						contents: JSON.parse(file.fileName)
+					}
+					list_snap_url.push(content);
 					setListSnapURL([...list_snap_url]);
 					console.log("file.fileUrl: ", file.fileUrl);
 					console.log("file.fileName: ", file.fileName);
-					console.log("file.", file)
+					console.log("file.", content)
+					console.log("file.", content.contents)
 				}
                 break;
             default:
@@ -65,7 +81,7 @@ const SnapShot = () => {
 
 	const handleDeleteImg = (url) => {
 		list_snap_url = list_snap_url.filter((item) => {
-			return item !== url;
+			return item.url !== url;
 		})
 		setListSnapURL([...list_snap_url]);
 		console.log("DELETE:", listSnapURL.includes(url))
@@ -79,7 +95,7 @@ const SnapShot = () => {
 		<main>
 			<div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4 my-5">
 				{listSnapURL.length > 0 ? (
-					listSnapURL.map((url, index) => {
+					listSnapURL.map((content, index) => {
 						return (
 							<div
 								className="flex justify-center px-2"
@@ -89,7 +105,7 @@ const SnapShot = () => {
 									<div>
 										<img 
 											className="rounded-t-lg" 
-											src={ url } 
+											src={ content.url } 
 											alt="snapshot" 
 										/>
 									</div>
@@ -99,17 +115,17 @@ const SnapShot = () => {
 										</h5>
 										<div className="flex items-center mt-2.5 mb-5">
 											<span className="text-gray-700 text-xs font-semibold py-0.5 rounded px-2">
-												{ new Date().toLocaleString() }
+												{ content.time }
 											</span>
 										</div>
 										<div className="flex justify-between items-center">
 											<button 
-												onClick={() => handleDownloadImg(url, index)}
+												onClick={() => handleDownloadImg(content.url, index)}
 												className="w-full text-gray-600 bg-gradient-to-tl from-amber-200 to-amber-300 font-medium rounded-lg text-sm px-3 py-2.5 text-center mx-2">
 													Download
 											</button>
 											<button 
-												onClick={() => handleDeleteImg(url)}
+												onClick={() => handleDeleteImg(content.url)}
 												className="w-full text-white bg-gradient-to-r from-orange-400 to-rose-400 font-medium rounded-lg text-sm px-3 py-2.5 text-center mx-2">
 													Delete
 											</button>
@@ -139,17 +155,21 @@ const RecordVideo = () => {
         switch (file.fileType) {
             case 'video/mp4':
 				if (file.fileName.includes("video-send")) {
+					let local_time = new Date();
+					try {
+						local_time = JSON.parse(file.fileName).content.split(',')[1];
+						local_time = new Date(local_time);
+					} catch(e) {
+						console.log("e");
+					}
+					local_time = local_time.toLocaleString();
+
 					let content = {
 						url: file.fileUrl,
 						type: "video",
-						time: new Date().toLocaleString(),
+						time: local_time,
 						content: JSON.parse(file.fileName)
 					}
-					//list_rec_video_url.push(file.fileUrl);
-					//setListRecVideoURL([...list_rec_video_url]);
-					//console.log("file.fileUrl: ", file.fileUrl);
-					//console.log("file.fileName: ", file.fileName);
-
 					list_rec_video_url.push(content);
 					setListRecVideoURL([...list_rec_video_url]);
 					console.log("file.", file)
@@ -339,16 +359,21 @@ const RequestGroupList = () => {
 			</div>
 
 			<br/>
-			{/*<SnapShot />*/}
-			<RecordVideo />
+			{/*<SnapShot />
+			<div>Recording video</div>
+			<RecordVideo />*/}
 			<>
-			{/*(() => {
+			{(() => {
 				if (child_component === 1) {
 					return (
 						<SnapShot />
 					)
+				} else if (child_component === 2) {
+					return (
+						<RecordVideo />
+					)
 				}
-			})()*/}
+			})()}
 			</>
 		</>
 	)
