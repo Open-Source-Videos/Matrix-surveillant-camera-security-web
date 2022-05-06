@@ -140,7 +140,7 @@ function Home() {
                                                             <span>
                                                                 <CloudDownloadIcon className="inline-block w-5 h-5 pb-1 mr-1 -ml-1" />
                                                             </span>
-                                                                Download
+                                                            Download
                                                         </button>
                                                     </div>
                                                 </div>
