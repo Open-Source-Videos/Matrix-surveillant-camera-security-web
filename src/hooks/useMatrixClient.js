@@ -309,6 +309,7 @@ function useMatrixClient() {
     const getAvatar =  async () => {
         
         if (client) {
+           // console.log('tritri',client, await getRoomIdByName('Capstone-HelloWorld'));
             var profile = await client.getProfileInfo(client.getUserId(), 'avatar_url');
             avatar = await client.mxcUrlToHttp(profile.avatar_url);
          }
@@ -334,12 +335,14 @@ function useMatrixClient() {
         return '-';
 
     };
-    const getRoomIdByName = (name) => {
-        
-        if (roomList && roomList.length) {
-            for (let i = 0; i < roomList.length; i++) {
-                if (roomList[i].name === name) {
-                    return roomList[i].roomId;
+    const getRoomIdByName = async (name) => {
+      
+        if (client) {
+            const rooms = await client.getRooms();
+           // console.log('tritri',rooms);
+            for (let i = 0; i < rooms.length; i++) {
+                if (rooms[i].name === name) {
+                    return rooms[i].roomId;
                 }
             }
         }
