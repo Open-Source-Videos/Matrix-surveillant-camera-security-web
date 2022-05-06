@@ -7,7 +7,11 @@ import TopNavigationBar from '../components/TopNavigationBar';
 import Page403 from './Page403';
 
 
-const ProfileView = ({ avatar }) => {
+const ProfileView = ({ avatar, userID, displayName, roomID, roomList}) => {
+
+  // const listItems = roomList.map((number) =>
+  //     <li>{number}</li>
+  // );
     return (
 		<>
 			<main className="profile-page">
@@ -61,7 +65,7 @@ const ProfileView = ({ avatar }) => {
 								</div>
 								<div className="text-center mt-12">
 									<h3 className="text-4xl font-semibold leading-normal mb-2 text-gray-800 pt-5">
-										Phuoc Nguyen
+										{displayName}
 									</h3>
 									<div className="text-sm leading-normal mt-0 mb-2 text-gray-500 font-bold uppercase">
 										<i className="fas fa-map-marker-alt mr-2 text-lg text-gray-500"></i>{" "}
@@ -73,8 +77,18 @@ const ProfileView = ({ avatar }) => {
 									</div>
 									<div className="mb-2 text-gray-700">
 										<i className="fas fa-university mr-2 text-lg text-gray-500"></i>
-										@minh25:matrix.org
+										<h6>User ID:</h6> {userID}
 									</div>
+                  <div className="mb-2 text-gray-700">
+										<i className="fas fa-university mr-2 text-lg text-gray-500"></i>
+										<h6>Room ID:</h6> {roomID}
+									</div>
+                  <div className="mb-2 text-gray-700">
+										<i className="fas fa-university mr-2 text-lg text-gray-500"></i>
+										<h6>Room List:</h6> 
+                
+									</div>
+                  
 								</div>
 								<div className="mt-10 py-10 border-t border-gray-300 text-center">
 									<div className="flex flex-wrap justify-center">
@@ -120,9 +134,13 @@ const ProfileView = ({ avatar }) => {
 }
 
 const Profile = () => {
-	const { isLogin, getAvatar, testLogin } = useMatrixClient();
+	const { isLogin, getAvatar, testLogin, getDisplayName, getRoomIdByName, getUserId, getMatrixRooms } = useMatrixClient();
 	const [yesLogin,setYesLogin] = useState(false);
 	const [avatar, setAvatar] = useState(null);
+  const [userID, setUserId] = useState(null);
+  const [displayName, setDisplayName] = useState(null);
+  const [roomID, setRoomID] = useState(null);
+  const [roomList, setRoomList] =useState([]);
 
 	useEffect(() => {
 		( async() => {
@@ -143,7 +161,17 @@ const Profile = () => {
 	
 			(async()=>{
 				try {
-					let profileAvatar = await getAvatar(user_id);
+					let profileAvatar = await getAvatar();
+          let display_name = await getDisplayName();
+          let room_id = await getRoomIdByName("Capstone-HelloWorld");
+          let user_ID = await getUserId();
+          let matrixRoom = await getMatrixRooms();
+
+          setUserId(user_ID);
+          setDisplayName(display_name);
+          setRoomID(room_id);
+          setRoomList(matrixRoom);
+          
 					if (profileAvatar === null || profileAvatar === "") {
 						setAvatar(null)
 					} else {
@@ -152,24 +180,31 @@ const Profile = () => {
 				} catch (e) {
 					console.log('error', e);
 					setAvatar(null);
+          setUserId(null);
+          setDisplayName(null);
+          setRoomID(null);
+          setRoomList(null);
 				}
 			})();
 		}
 
 		get_avatar();
 
-	}, [avatar, getAvatar, isLogin, testLogin]);
+	}, [ avatar, getAvatar, isLogin, testLogin]);
 
 	return (
+          
 		<>
+    
 			{ yesLogin ? (
 				<div className="App">
 					<TopNavigationBar />
 					{
 						avatar ? (
-							<ProfileView avatar={avatar} />
+							<ProfileView avatar={avatar} userID={userID} displayName={displayName} roomID={roomID} roomList={roomList}/>
+              
 						) : (
-							<ProfileView avatar={"logo_profile_static_avatar.svg"} />
+							<ProfileView avatar={"logo_profile_static_avatar.svg"} userID={userID} displayName={displayName} roomID={roomID} roomList={roomList}/>
 						)
 					}
 				</div>
