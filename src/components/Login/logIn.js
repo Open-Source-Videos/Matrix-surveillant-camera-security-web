@@ -121,7 +121,7 @@ export const Login = () => {
 			// 	})();
 
 			// }
-			history.push('/homepage');
+			history.push('/room');
 
 		} else {
 			alert("Failed to sign in...");
@@ -244,12 +244,15 @@ export const Login = () => {
 						className="pt-4 text-center my-2"
 					>
 						<ControlLabel>Don't have an account?</ControlLabel>
-						<Label 
+						<Button 
 							id="sign_up" 
+							title='Sign_up'
 							className="text-decoration-none text-sm ps-2"
+							onClick={() => window.location.href = "https://element.pdxinfosec.org/#/register"}
 						>
 							Sign-up here! 
-						</Label>
+							
+						</Button>
 					</FormGroup>
 				</form>
 				</Col>
