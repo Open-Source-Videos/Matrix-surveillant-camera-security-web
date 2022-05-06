@@ -72,7 +72,12 @@ function Home() {
         setShowModal(true);
     };
 
-   // const handleLoginResult =;
+    const handleDownload = (url, index) => {
+        saveBlobUrlToFile(
+            url, 
+            "video".concat(index).concat('.jpg')
+        );
+}
 
     useEffect(() => {
         setHavingNewFile(handleHavingNewFile);
@@ -93,6 +98,66 @@ function Home() {
                 <div>
                     <TopNavigationBar />
                     <main>
+                        <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4 my-5">
+                            {listImageURL.length > 0 ? (
+                                listImageURL.map((url, index) => {
+                                    return (
+                                        <div
+                                            className="flex justify-center px-2"
+                                            key={index}
+                                        >
+                                            <div className="max-w-sm bg-white rounded-lg shadow-md">
+                                                <div>
+                                                    <img 
+                                                        className="rounded-t-lg" 
+                                                        src={ url } 
+                                                        alt="thumbnails" 
+                                                    />
+                                                </div>
+                                                <div className="px-3 pb-3">
+                                                    <h5 className="text-lg font-semibold text-gray-900 text-decoration-none px-2 pt-4">
+                                                        Thumbnails
+                                                    </h5>
+                                                    <div className="flex items-center mt-2.5 mb-5">
+                                                        <span className="text-gray-700 text-xs font-semibold py-0.5 rounded px-2">
+                                                            { new Date().toLocaleString() }
+                                                        </span>
+                                                    </div>
+                                                    <div className="flex justify-between items-center">
+                                                        <button 
+                                                            onClick={ handleWatch }
+                                                            className="w-full text-gray-600 bg-gradient-to-tl from-amber-200 to-amber-300 font-medium rounded-lg text-sm px-3 py-2.5 text-center mx-2">
+                                                                Watch
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleDownload(url)}
+                                                            className="w-full text-white bg-gradient-to-r from-orange-400 to-rose-400 font-medium rounded-lg text-sm px-3 py-2.5 text-center mx-2">
+                                                                Download
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })
+                            ) : (
+                                <></>
+                            )}
+                        </div>
+
+                        <br/>
+
+                        {showModal ? (
+                            <ModalPopUp
+                                onClickPause={() => {
+                                    setShowModal(false);
+                                }}
+                            />
+                        ) : (
+                            <></>
+                        )}
+                    </main>
+                    {/*<main>
                         <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4 my-5">
                             {listImageURL.length > 0 ? (
                                 listImageURL.map((url, index) => {
@@ -178,7 +243,7 @@ function Home() {
                         ) : (
                             <></>
                         )}
-                    </main>
+                    </main>*/}
                 </div>
             ) : (
                 <Page403 />
