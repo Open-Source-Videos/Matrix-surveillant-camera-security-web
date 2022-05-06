@@ -8,10 +8,12 @@ import Page403 from './Page403';
 import TopNavigationBar from '../components/TopNavigationBar'
 import { Fragment } from 'react'
 import {
-  ChevronDownIcon,
-  CameraIcon,
-  CloudIcon,
-  VideoCameraIcon
+	ChevronDownIcon,
+	CameraIcon,
+	CloudIcon,
+	VideoCameraIcon,
+	CloudDownloadIcon,
+	TrashIcon
 } from '@heroicons/react/solid'
 import { 
 	Menu, 
@@ -125,11 +127,17 @@ const SnapShot = () => {
 											<button 
 												onClick={() => handleDownloadImg(content.url, index)}
 												className="w-full text-gray-600 bg-gradient-to-tl from-amber-200 to-amber-300 font-medium rounded-lg text-sm px-3 py-2.5 text-center mx-2">
+												<span>
+													<CloudDownloadIcon className="inline-block w-5 h-5 pb-1 mr-1 -ml-1" />
+												</span>
 													Download
 											</button>
 											<button 
 												onClick={() => handleDeleteImg(content.url)}
 												className="w-full text-white bg-gradient-to-r from-orange-400 to-rose-400 font-medium rounded-lg text-sm px-3 py-2.5 text-center mx-2">
+												<span>
+													<TrashIcon className="inline-block w-5 h-5 pb-1 mr-1 -ml-1" />
+												</span>	
 													Delete
 											</button>
 										</div>
@@ -160,7 +168,8 @@ const RecordVideo = () => {
 				if (file.fileName.includes("video-send")) {
 					let local_time = new Date();
 					try {
-						local_time = JSON.parse(file.fileName).content.split(',')[1];
+						//local_time = JSON.parse(file.fileName).content.split(',')[1];
+						local_time = JSON.parse(file.fileName).content;
 						local_time = new Date(local_time);
 					} catch(e) {
 						console.log("e");
@@ -240,11 +249,17 @@ const RecordVideo = () => {
 											<button 
 												onClick={() => handleDownloadVideo(content.url, index)}
 												className="w-full text-gray-600 bg-gradient-to-tl from-amber-200 to-amber-300 font-medium rounded-lg text-sm px-3 py-2.5 text-center mx-2">
+												<span>
+													<CloudDownloadIcon className="inline-block w-5 h-5 pb-1 mr-1 -ml-1" />
+												</span>
 													Download
 											</button>
 											<button 
 												onClick={() => handleDeleteRecVideo(content.url)}
 												className="w-full text-white bg-gradient-to-r from-orange-400 to-rose-400 font-medium rounded-lg text-sm px-3 py-2.5 text-center mx-2">
+												<span>
+													<TrashIcon className="inline-block w-5 h-5 pb-1 mr-1 -ml-1" />
+												</span>	
 													Delete
 											</button>
 										</div>

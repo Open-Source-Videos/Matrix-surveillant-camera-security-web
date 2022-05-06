@@ -7,8 +7,10 @@ import useMatrixClient from '../hooks/useMatrixClient';
 import { ModalPopUp } from '../components/ModalPopUp';
 import TopNavigationBar from '../components/TopNavigationBar';
 import Page403 from './Page403';
-
-// const ROOM_ID = '!bdQMmkTBTMqUPAOvms:pdxinfosec.org';
+import { 
+    PlayIcon,
+    CloudDownloadIcon
+} from '@heroicons/react/solid'
 
 // Global list
 let list_image_url = [];
@@ -127,11 +129,17 @@ function Home() {
                                                         <button 
                                                             onClick={ handleWatch }
                                                             className="w-full text-gray-600 bg-gradient-to-tl from-amber-200 to-amber-300 font-medium rounded-lg text-sm px-3 py-2.5 text-center mx-2">
-                                                                Watch
+                                                            <span>
+                                                                <PlayIcon className="inline-block w-5 h-5 pb-1 mr-1 -ml-1" />
+                                                            </span>
+                                                            Watch
                                                         </button>
                                                         <button
                                                             onClick={() => handleDownload(url)}
                                                             className="w-full text-white bg-gradient-to-r from-orange-400 to-rose-400 font-medium rounded-lg text-sm px-3 py-2.5 text-center mx-2">
+                                                            <span>
+                                                                <CloudDownloadIcon className="inline-block w-5 h-5 pb-1 mr-1 -ml-1" />
+                                                            </span>
                                                                 Download
                                                         </button>
                                                     </div>
