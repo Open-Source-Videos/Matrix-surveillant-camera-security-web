@@ -4,9 +4,9 @@ import TopNavigationBar from '../components/TopNavigationBar';
 import Page403 from './Page403';
 
 const ProfileView = ({ avatar, userID, displayName, roomID, roomList }) => {
-    // const listItems = roomList.map((number) =>
-    //     <li>{number}</li>
-    // );
+     const listItems = roomList.map((number) =>
+         <li>{number.name}</li>
+     );
     return (
         <>
             <main className="profile-page">
@@ -60,14 +60,7 @@ const ProfileView = ({ avatar, userID, displayName, roomID, roomList }) => {
                                     <h3 className="text-4xl font-semibold leading-normal mb-2 text-gray-800 pt-5">
                                         {displayName}
                                     </h3>
-                                    <div className="text-sm leading-normal mt-0 mb-2 text-gray-500 font-bold uppercase">
-                                        <i className="fas fa-map-marker-alt mr-2 text-lg text-gray-500"></i>{' '}
-                                        Portland, Oregon
-                                    </div>
-                                    <div className="mb-2 text-gray-700 mt-10">
-                                        <i className="fas fa-briefcase mr-2 text-lg text-gray-500"></i>
-                                        Fond-end Lead - Golden Tiger Team
-                                    </div>
+                                    
                                     <div className="mb-2 text-gray-700">
                                         <i className="fas fa-university mr-2 text-lg text-gray-500"></i>
                                         <h6>User ID:</h6> {userID}
@@ -79,6 +72,7 @@ const ProfileView = ({ avatar, userID, displayName, roomID, roomList }) => {
                                     <div className="mb-2 text-gray-700">
                                         <i className="fas fa-university mr-2 text-lg text-gray-500"></i>
                                         <h6>Room List:</h6>
+                                       {listItems}
                                     </div>
                                 </div>
                                 <div className="mt-10 py-10 border-t border-gray-300 text-center">
