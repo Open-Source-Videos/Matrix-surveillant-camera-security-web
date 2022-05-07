@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+const ROOM_CRYPTO_CONFIG = { algorithm: 'm.megolm.v1.aes-sha2' };
 const handleLoginResult = async (
     _isLogin,
     error,
@@ -19,11 +19,13 @@ var onHavingNewMessage = handleHavingNewMessage;
 var onHavingNewFile = handleHavingNewFile;
 var onLogInResult = handleLoginResult;
 
-var numberHistoricMessages = 0;
+var numberHistoricMessages = 10;
 var avatar = null;
 const loginKey = 'open_source_video';
 
 var savedData = localStorage.getItem(loginKey);
+
+var dictTimeStamp = {};
 
 function useMatrixClient() {
     const resetValues = () => {
@@ -31,6 +33,7 @@ function useMatrixClient() {
         didLogin = false;
         roomList = [];
         savedData = null;
+        dictTimeStamp = {};
 
         onHavingNewMessage = handleHavingNewMessage;
         onHavingNewFile = handleHavingNewFile;
@@ -96,7 +99,7 @@ function useMatrixClient() {
                         );
                 }
             } catch (e) {
-                console.log('remove localstorage', loginKey);
+                console.log('remove local storage', loginKey);
                 localStorage.removeItem(loginKey);
 
                 resetValues();
@@ -143,40 +146,48 @@ function useMatrixClient() {
         newClient.on(
             'Room.timeline',
             async (event, room, toStartOfTimeline) => {
-                try {
-                    if (event.event.type === 'm.room.encrypted') {
-                        const decryptMessage =
-                            await newClient.crypto.decryptEvent(event);
-                        //console.log(decryptMessage);
-                        if (
-                            decryptMessage &&
-                            decryptMessage.clearEvent &&
-                            decryptMessage.clearEvent.content &&
-                            event.sender
-                        ) {
-                            // console.log('\n\nnew mess\n\n', event);
-                            processContent(
-                                event.sender.userId,
-                                event.sender.room,
-                                decryptMessage.clearEvent.content,
-                                event.origin_server_ts
-                            );
-                        }
-                        return;
-                    }
-
-                    if (event.getType() === 'm.room.message' && event.sender) {
-                        processContent(
-                            event.sender.userId,
-                            event.sender.room,
-                            event.event.content,
-                            event.event.origin_server_ts
-                        );
-                        return;
-                    }
-                } catch {
-                    //console.error('#### ', error);
-                }
+                //   console.log('event', event);
+                // try {
+                //     if (
+                //         event.event.type === 'm.room.encrypted' &&
+                //         event.sender &&
+                //         event.event.origin_server_ts
+                //     ) {
+                //         const decryptMessage =
+                //             await newClient.crypto.decryptEvent(event);
+                //         console.log(decryptMessage);
+                //         if (
+                //             decryptMessage &&
+                //             decryptMessage.clearEvent &&
+                //             decryptMessage.clearEvent.content &&
+                //             event.sender
+                //         ) {
+                //             console.log('\n\nnew mess\n\n', event);
+                //             processContent(
+                //                 event.sender.userId,
+                //                 event.sender.room,
+                //                 decryptMessage.clearEvent.content,
+                //                 event.event.origin_server_ts
+                //             );
+                //         }
+                //         return;
+                //     }
+                //     if (
+                //         event.getType() === 'm.room.message' &&
+                //         event.sender &&
+                //         event.event.origin_server_ts
+                //     ) {
+                //         processContent(
+                //             event.sender.userId,
+                //             event.sender.room,
+                //             event.event.content,
+                //             event.event.origin_server_ts
+                //         );
+                //         return;
+                //     }
+                // } catch {
+                //     console.error('#### ', error);
+                // }
             }
         );
 
@@ -189,18 +200,100 @@ function useMatrixClient() {
                 await newClient.joinRoom(member.roomId);
                 // setting up of room encryption seems to be triggered automatically
                 // but if we don't wait for it the first messages we send are unencrypted
-                await newClient.setRoomEncryption(member.roomId, {
-                    algorithm: 'm.megolm.v1.aes-sha2',
-                });
-                console.log('');
-                console.log('>> Has join room = ', member.roomId);
-                console.log('');
+                // await newClient.setRoomEncryption(member.roomId, {
+                //     algorithm: 'm.megolm.v1.aes-sha2',
+                // });
+                // console.log('');
+                // console.log('>> Has join room = ', member.roomId);
+                // console.log('');
+            }
+            console.log('\n\n tstmember = ', member);
+            if (
+                member.membership === 'join' &&
+                member.userId !== newClient.getUserId()
+            ) {
+                console.log('download keys of user', member.userId);
+                const userKey = await client.downloadKeys([member.userId]);
+
+                for (const deviceId in userKey[member.userId]) {
+                    console.log(
+                        'set device verified keys of user',
+                        member.userId,
+                        deviceId
+                    );
+                    await client.setDeviceVerified(member.userId, deviceId);
+                }
+
+                //  await client.setRoomName(roomID,roomName);
+                //return await client.getRoom(roomID);
+
+                //Verify user
+                // let room = await client.getRoom(roomId);
+                // let members = (await room.getEncryptionTargetMembers()).map(
+                //     (x) => x['userId']
+                // );
+                // let memberkeys = await client.downloadKeys(members);
+                // for (const userId in memberkeys) {
+                //     for (const deviceId in memberkeys[userId]) {
+                //         await this.setDeviceVerified(userId, deviceId);
+                //     }
+                // }
+                //return roomID;
+                //return userKey[userId];
             }
         });
 
         newClient.on('Room.receipt', async (event, room) => {});
 
-        newClient.on('Event.decrypted', (e) => {});
+        newClient.on('Event.decrypted', async (e) => {
+            if (e.clearEvent && e.sender && e.event.origin_server_ts) {
+                console.log('event =', e);
+                if (e.clearEvent.msgtype === 'm.bad.encrypted') {
+                    if (e.event.type === 'm.room.encrypted') {
+                        const decryptMessage =
+                            await newClient.crypto.decryptEvent(e);
+                        console.log(decryptMessage);
+                        if (
+                            decryptMessage &&
+                            decryptMessage.clearEvent &&
+                            decryptMessage.clearEvent.content &&
+                            e.sender
+                        ) {
+                            if (
+                                typeof dictTimeStamp[
+                                    e.event.origin_server_ts
+                                ] === 'undefined'
+                            ) {
+                                processContent(
+                                    e.sender.userId,
+                                    e.sender.room,
+                                    decryptMessage.clearEvent.content,
+                                    e.event.origin_server_ts
+                                );
+                                dictTimeStamp[e.event.origin_server_ts] =
+                                    e.event.origin_server_ts;
+                            }
+                        }
+                        return;
+                    }
+                } else {
+                    if (
+                        typeof dictTimeStamp[e.event.origin_server_ts] ===
+                        'undefined'
+                    ) {
+                        processContent(
+                            e.sender.userId,
+                            e.sender.room,
+                            e.clearEvent.content,
+                            e.event.origin_server_ts
+                        );
+
+                        dictTimeStamp[e.event.origin_server_ts] =
+                            e.event.origin_server_ts;
+                    }
+                }
+            }
+        });
     };
 
     const verifyAllDevicesInRoom = async (room) => {
@@ -344,6 +437,7 @@ function useMatrixClient() {
 
         return '-';
     };
+
     const getRoomIdByName = async (name) => {
         if (client) {
             const rooms = await client.getRooms();
@@ -389,31 +483,49 @@ function useMatrixClient() {
     //     }
     // };
 
-    const createRoom = async (roomID, usersToInvite) => {
-        // if (roomID !== null) {
-        //     // const {  roomID } = await client.createRoom({
-        //     //     visibility: 'private',
-        //     //     invite: usersToInvite,
-        //     // });
-        //     // await client.sendStateEvent(
-        //     //     roomID,
-        //     //     'm.room.encryption',
-        //     //     ROOM_CRYPTO_CONFIG
-        //     // );
-        //     // await client.setRoomEncryption(roomID, ROOM_CRYPTO_CONFIG);
-        //     // // Marking all devices as verified
-        //     // let room = client.getRoom(roomID);
-        //     // let members = (await room.getEncryptionTargetMembers()).map(
-        //     //     (x) => x['userId']
-        //     // );
-        //     // let memberkeys = await client.downloadKeys(members);
-        //     // for (const userId in memberkeys) {
-        //     //     for (const deviceId in memberkeys[userId]) {
-        //     //         await this.setDeviceVerified(userId, deviceId);
-        //     //     }
-        //     // }
-        // }
-        // return roomID;
+    const createRoom = async (roomName, _private = true) => {
+        if (client) {
+            const room = await client.createRoom({
+                visibility: _private ? 'private' : 'public',
+                name: roomName,
+            });
+
+            //   console.log('1 Createde Room');
+            await client.sendStateEvent(
+                room.room_id,
+                'm.room.encryption',
+                ROOM_CRYPTO_CONFIG
+            );
+            //   console.log('2 Createde Room', room);
+            await client.setRoomEncryption(room.room_id, ROOM_CRYPTO_CONFIG);
+            //   console.log('3 Oaky Createde Room');
+
+            //  await client.setRoomName(roomID,roomName);
+            //return await client.getRoom(roomID);
+
+            // Marking all devices as verified
+            // let room = client.getRoom(roomID);
+            // let members = (await room.getEncryptionTargetMembers()).map(
+            //     (x) => x['userId']
+            // );
+            // let memberkeys = await client.downloadKeys(members);
+            // for (const userId in memberkeys) {
+            //     for (const deviceId in memberkeys[userId]) {
+            //         await this.setDeviceVerified(userId, deviceId);
+            //     }
+            // }
+            return room.room_id;
+        }
+        return null;
+    };
+
+    const inviteUserToRoom = async (userId, roomId) => {
+        if (client) {
+            // console.log('invite user ...');
+            const result = await client.invite(roomId, userId);
+            return result;
+        }
+        return null;
     };
 
     const sendMessageToRoom = async (roomId, message) => {
@@ -545,6 +657,18 @@ function useMatrixClient() {
         }
     };
 
+    const setDisplayName = async (newName) => {
+        if (client) {
+            await client.setDisplayName(newName);
+        }
+    };
+
+    const setAvatart = async (data) => {
+        if (client) {
+            client.setAvatarUrl();
+        }
+    };
+
     return {
         loginMatrixServer,
         logoutMatrixServer,
@@ -559,6 +683,7 @@ function useMatrixClient() {
         setOnLogInResult,
         setHavingNewFile,
         setNumberHistoricMessages,
+        setDisplayName,
 
         getMatrixRooms,
         getHistory,
@@ -570,6 +695,8 @@ function useMatrixClient() {
 
         isHavingAuthentication,
         testLogin,
+
+        inviteUserToRoom,
     };
 }
 
