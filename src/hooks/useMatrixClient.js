@@ -247,7 +247,6 @@ function useMatrixClient() {
 
         newClient.on('Event.decrypted', async (e) => {
             if (e.clearEvent && e.sender && e.event.origin_server_ts) {
-                console.log('event =', e);
                 if (e.clearEvent.msgtype === 'm.bad.encrypted') {
                     if (e.event.type === 'm.room.encrypted') {
                         const decryptMessage =
@@ -264,14 +263,14 @@ function useMatrixClient() {
                                     e.event.origin_server_ts
                                 ] === 'undefined'
                             ) {
+                                dictTimeStamp[e.event.origin_server_ts] =
+                                    e.event.origin_server_ts;
                                 processContent(
                                     e.sender.userId,
                                     e.sender.room,
                                     decryptMessage.clearEvent.content,
                                     e.event.origin_server_ts
                                 );
-                                dictTimeStamp[e.event.origin_server_ts] =
-                                    e.event.origin_server_ts;
                             }
                         }
                         return;
@@ -281,15 +280,14 @@ function useMatrixClient() {
                         typeof dictTimeStamp[e.event.origin_server_ts] ===
                         'undefined'
                     ) {
+                        dictTimeStamp[e.event.origin_server_ts] =
+                            e.event.origin_server_ts;
                         processContent(
                             e.sender.userId,
                             e.sender.room,
                             e.clearEvent.content,
                             e.event.origin_server_ts
                         );
-
-                        dictTimeStamp[e.event.origin_server_ts] =
-                            e.event.origin_server_ts;
                     }
                 }
             }
@@ -490,15 +488,15 @@ function useMatrixClient() {
                 name: roomName,
             });
 
-            //   console.log('1 Createde Room');
+            console.log('1 Createde Room');
             await client.sendStateEvent(
                 room.room_id,
                 'm.room.encryption',
                 ROOM_CRYPTO_CONFIG
             );
-            //   console.log('2 Createde Room', room);
+            console.log('2 Createde Room', room);
             await client.setRoomEncryption(room.room_id, ROOM_CRYPTO_CONFIG);
-            //   console.log('3 Oaky Createde Room');
+            console.log('3 Oaky Createde Room');
 
             //  await client.setRoomName(roomID,roomName);
             //return await client.getRoom(roomID);
@@ -663,10 +661,28 @@ function useMatrixClient() {
         }
     };
 
-    const setAvatart = async (data) => {
+    const setAvatar = async (fileName, fileContent) => {
         if (client) {
-            client.setAvatarUrl();
+            const url = await uploadFile(fileName, fileContent);
+        
+            if (url) 
+                await client.setAvatarUrl(url);
+        
         }
+    };
+
+    const uploadFile = async (fileName, stream) => {
+        if (client) {
+            const result = await client.uploadContent({
+                stream: stream,
+                name: fileName,
+            });
+          //   console.log('\n\n result of upload = ',result);
+          //   console.log('\n\n result of upload = ',client.mxcUrlToHttp(result));
+            
+            return result;
+        }
+        return null;
     };
 
     return {
@@ -684,6 +700,7 @@ function useMatrixClient() {
         setHavingNewFile,
         setNumberHistoricMessages,
         setDisplayName,
+        setAvatar,
 
         getMatrixRooms,
         getHistory,
@@ -697,6 +714,7 @@ function useMatrixClient() {
         testLogin,
 
         inviteUserToRoom,
+        uploadFile,
     };
 }
 
