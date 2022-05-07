@@ -149,12 +149,12 @@ const RoomSelect = () => {
         isLogin,
         testLogin,
         getAvatar,
-        getRoomIdByName,
+        // getRoomIdByName,
         getDisplayName,
         getMatrixRooms,
     } = useMatrixClient();
     const [yesLogin, setYesLogin] = useState(false);
-    const [roomID, setRoomID] = useState(null);
+    // const [roomID, setRoomID] = useState(null);
     const [avatar, setAvatar] = useState(null);
     const [roomList, setRoomList] = useState([]);
     const [displayName, setDisplayName] = useState(null);
@@ -170,12 +170,12 @@ const RoomSelect = () => {
 				const get_room = () => {
 					(async () => {
 						try {
-							let room_id = await getRoomIdByName('Capstone-HelloWorld');
+							// let room_id = await getRoomIdByName('Capstone-HelloWorld');
 							let matrixRoom = await getMatrixRooms();
                             let profileAvatar = await getAvatar();
                             let display_name = await getDisplayName();
                             setDisplayName(display_name);
-							setRoomID(room_id);
+							// setRoomID(room_id);
 							setRoomList(matrixRoom);
                             if (profileAvatar === null || profileAvatar === '') {
 								setAvatar(null);
@@ -187,7 +187,7 @@ const RoomSelect = () => {
 							console.log('error', e);
                             setDisplayName(null);
                             setAvatar(null);
-							setRoomID(null);
+							// setRoomID(null);
 							setRoomList(null);
 						}
 					})();
@@ -197,7 +197,7 @@ const RoomSelect = () => {
             }, 500);
         })();
 
-    }, [avatar, getAvatar, getMatrixRooms, isLogin, testLogin]);
+    }, [avatar, getAvatar, getDisplayName, getMatrixRooms, isLogin, testLogin]);
 
     return (
         <>
