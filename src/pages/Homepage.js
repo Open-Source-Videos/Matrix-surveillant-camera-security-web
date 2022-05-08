@@ -11,18 +11,17 @@ import {
     PlayIcon,
     CloudDownloadIcon
 } from '@heroicons/react/solid'
+import { currentRoom } from './Roompage';
 
 // Global list
 let list_image_url = [];
 let list_video_url = [];
-
 
 // Clear state when logging out
 export const clearState = () => {
     list_image_url = [];
     list_video_url = [];
 }
-
 
 function Home() {
     const [listImageURL, setListImageURL] = useState(list_image_url);
@@ -41,28 +40,31 @@ function Home() {
     const [showModal, setShowModal] = useState(false);
 
     const handleHavingNewFile = (sender, room, file) => {
-        switch (file.fileType) {
-            case 'image/png':
-            case 'image/jpeg':
-                // listImageURL.push(file.fileUrl);
-                // setListImageURL([...listImageURL]);
-                list_image_url.push(file.fileUrl);
-                setListImageURL([...list_image_url]);
-                console.log(file.fileUrl);
-                /*sendMessageToRoom(
-                    ROOM_ID, 
-                    `{"type" : "video-send", "content" : "/var/lib/motioneye/Camrea1/02-05-2021/15-25-30.mp4", "requestor_id":"0"}`
-                );*/
-                break;
-            case 'video/mp4':
-                list_video_url.push(file.fileUrl);
-                setListVideoURL([...list_video_url]);
-                // setListVideoURL(file.fileUrl);
-                break;
-            default:
-                saveBlobUrlToFile(file.fileUrl, file.fileName);
-                break;
+        if (currentRoom.roomId === room) {
+            switch (file.fileType) {
+                case 'image/png':
+                case 'image/jpeg':
+                    // listImageURL.push(file.fileUrl);
+                    // setListImageURL([...listImageURL]);
+                    list_image_url.push(file.fileUrl);
+                    setListImageURL([...list_image_url]);
+                    console.log(file.fileUrl);
+                    /*sendMessageToRoom(
+                        ROOM_ID, 
+                        `{"type" : "video-send", "content" : "/var/lib/motioneye/Camrea1/02-05-2021/15-25-30.mp4", "requestor_id":"0"}`
+                    );*/
+                    break;
+                case 'video/mp4':
+                    list_video_url.push(file.fileUrl);
+                    setListVideoURL([...list_video_url]);
+                    // setListVideoURL(file.fileUrl);
+                    break;
+                default:
+                    saveBlobUrlToFile(file.fileUrl, file.fileName);
+                    break;
+            }
         }
+
     };
 
 
@@ -91,7 +93,9 @@ function Home() {
             }
             setTimeout(()=>{
                 setYesLogin(isLogin()); 
+                console.log('gethhis');
                 getHistory(10);
+
             },500);
         })();
 
