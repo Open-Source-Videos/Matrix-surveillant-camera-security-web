@@ -5,7 +5,7 @@ import { ModalPopUp } from '../components/ModalPopUp';
 import TopNavigationBar from '../components/TopNavigationBar';
 import Page403 from './Page403';
 import { PlayIcon, CloudDownloadIcon } from '@heroicons/react/solid';
-import { currentRoom } from './Roompage';
+import { currentRoomID,setCurrentRoomID } from './Roompage';
 
 // Global list
 let list_image_url = [];
@@ -21,6 +21,7 @@ function Home() {
     const [listImageURL, setListImageURL] = useState(list_image_url);
     const [listVideoURL, setListVideoURL] = useState(list_video_url);
 
+
     const {
         isLogin,
         sendMessageToRoom,
@@ -35,7 +36,7 @@ function Home() {
 
     const handleHavingNewFile = (sender, room, file) => {
         console.log('currentRoom.roomId-0');
-        console.log('currentRoom.roomId', currentRoom);
+        console.log('currentRoom.roomId', currentRoomID);
         // if (currentRoom.roomId === room) {
 
         // }
@@ -77,17 +78,28 @@ function Home() {
     };
 
     useEffect(() => {
-        setHavingNewFile(handleHavingNewFile);
+       
         (async () => {
+            setHavingNewFile(handleHavingNewFile);
+            
             if (isLogin() === false) {
-                console.log('Run test login');
-                setYesLogin(await testLogin());
+                
+                setCurrentRoomID(localStorage.getItem('currentRoomID'))
+                
+                console.log('currentRoomID=',currentRoomID);
+                await testLogin()
+                setHavingNewFile(handleHavingNewFile);
+               
+                setTimeout(() => {                
+                    console.log('getHiss')
+                    getHistory(currentRoomID);
+                }, 500);
             }
-            setTimeout(() => {
+
+            setTimeout(() => {                
                 setYesLogin(isLogin());
-                console.log('gethhis');
-                getHistory(10);
-            }, 500);
+            }, 500);            
+
         })();
     }, []);
 

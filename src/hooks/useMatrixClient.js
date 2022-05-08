@@ -63,49 +63,133 @@ function useMatrixClient() {
         return savedData ? true : false;
     };
 
-    const setMatrixClientEvents = (newClient) => {
-        const processContent = async (sender, room, content, time) => {
-            try {
-                if (onHavingNewMessage && content.body) {
-                    onHavingNewMessage(sender, room, content.body, time);
-                }
-
-                if (typeof content.file !== 'undefined') {
-                    const response = await axios.get(
-                        newClient.mxcUrlToHttp(content.file.url),
-                        { responseType: 'arraybuffer' }
-                    );
-
-                    const decryptData = await decryptAttachment(
-                        response.data,
-                        content.file
-                    );
-
-                    const blobURL = await window.URL.createObjectURL(
-                        new Blob([decryptData]),
-                        { type: content.info.mimetype }
-                    );
-
-                    if (onHavingNewFile)
-                        onHavingNewFile(
-                            sender,
-                            room,
-                            {
-                                fileType: content.info.mimetype,
-                                fileUrl: blobURL,
-                                fileName: content.body,
-                            },
-                            time
-                        );
-                }
-            } catch (e) {
-                console.log('remove local storage', loginKey);
-                localStorage.removeItem(loginKey);
-
-                resetValues();
+    const decryptFile = async (sender, room, content, time) => {
+        try {
+            if (onHavingNewMessage && content.body) {
+                onHavingNewMessage(sender, room, content.body, time);
             }
-        };
 
+            if (typeof content.file !== 'undefined') {
+                const response = await axios.get(
+                    client.mxcUrlToHttp(content.file.url),
+                    { responseType: 'arraybuffer' }
+                );
+
+                const decryptData = await decryptAttachment(
+                    response.data,
+                    content.file
+                );
+
+                const blobURL = await window.URL.createObjectURL(
+                    new Blob([decryptData]),
+                    { type: content.info.mimetype }
+                );
+
+                if (onHavingNewFile)
+                    onHavingNewFile(
+                        sender,
+                        room,
+                        {
+                            fileType: content.info.mimetype,
+                            fileUrl: blobURL,
+                            fileName: content.body,
+                        },
+                        time
+                    );
+            }
+        } catch (e) {
+            console.log('remove local storage', loginKey);
+            localStorage.removeItem(loginKey);
+
+            resetValues();
+        }
+    };
+    const decapsulateEvent = (e) => {
+        if (e.claimedEd25519Key !== null) {
+            if (onHavingNewMessage && e.clearEvent.type === 'm.room.message') {
+                onHavingNewMessage(
+                    e.sender.userId,
+                    e.sender.room,
+                    e.clearEvent.content.body,
+                    e.event.origin_server_ts
+                );
+                decryptFile(
+                    e.sender.userId,
+                    e.sender.room,
+                    e.clearEvent.content,
+                    e.event.origin_server_ts
+                );
+            }
+        } else {
+            decryptEvent(e);
+        }
+    };
+    const decryptEvent = async (e) => {
+        if (client) {
+            try {
+                if (e.event.type === 'm.room.encrypted') {
+                    const decryptMessage = await client.crypto.decryptEvent(e);
+
+                    if (
+                        decryptMessage &&
+                        decryptMessage.clearEvent &&
+                        decryptMessage.clearEvent.content &&
+                        e.sender
+                    ) {
+                        if (
+                            typeof dictTimeStamp[e.event.origin_server_ts] ===
+                            'undefined'
+                        ) {
+                            dictTimeStamp[e.event.origin_server_ts] =
+                                e.event.origin_server_ts;
+                            decryptFile(
+                                e.sender.userId,
+                                e.sender.room,
+                                decryptMessage.clearEvent.content,
+                                e.event.origin_server_ts
+                            );
+
+                            const room = client.getRoom(e.sender.room);
+                            let found = false;
+
+                            if (room && room.timeline) {
+                                for (let i = 0; i < room.timeline.length; i++) {
+                                    if (
+                                        room.timeline[i]
+                                            .event_origin_server_ts ===
+                                        e.event.origin_server_ts
+                                    ) {
+                                        found = true;
+                                        room.timeline[i] = decryptMessage;
+                                    }
+                                }
+                                if (found === false) {
+                                    room.timeline.push(decryptMessage);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (
+                    e.getType() === 'm.room.message' &&
+                    e.sender &&
+                    e.event.origin_server_ts
+                ) {
+                    decryptFile(
+                        e.sender.userId,
+                        e.sender.room,
+                        e.event.content,
+                        e.event.origin_server_ts
+                    );
+                    return;
+                }
+            } catch (error) {
+                console.error('#### ', error);
+            }
+        }
+    };
+
+    const setMatrixClientEvents = (newClient) => {
         newClient.once('sync', async (state, prevState, res) => {
             if (state === 'PREPARED') {
                 client = newClient;
@@ -136,9 +220,7 @@ function useMatrixClient() {
                     );
                 }
 
-                getHistory(numberHistoricMessages);
-
-                console.log('uploadKey++');
+                //console.log('uploadKey++');
                 //  client.uploadKeys();
             }
         });
@@ -149,49 +231,7 @@ function useMatrixClient() {
         });
 
         newClient.on('Room.timeline', async (e, room, toStartOfTimeline) => {
-            try {
-                if (e.event.type === 'm.room.encrypted') {
-                    const decryptMessage = await newClient.crypto.decryptEvent(
-                        e
-                    );
-
-                    if (
-                        decryptMessage &&
-                        decryptMessage.clearEvent &&
-                        decryptMessage.clearEvent.content &&
-                        e.sender
-                    ) {
-                        if (
-                            typeof dictTimeStamp[e.event.origin_server_ts] ===
-                            'undefined'
-                        ) {
-                            dictTimeStamp[e.event.origin_server_ts] =
-                                e.event.origin_server_ts;
-                            processContent(
-                                e.sender.userId,
-                                e.sender.room,
-                                decryptMessage.clearEvent.content,
-                                e.event.origin_server_ts
-                            );
-                        }
-                    }
-                }
-                if (
-                    e.getType() === 'm.room.message' &&
-                    e.sender &&
-                    e.event.origin_server_ts
-                ) {
-                    processContent(
-                        e.sender.userId,
-                        e.sender.room,
-                        e.event.content,
-                        e.event.origin_server_ts
-                    );
-                    return;
-                }
-            } catch (error) {
-                console.error('#### ', error);
-            }
+            decryptEvent(e);
         });
 
         // automatic accept an joining room invitation
@@ -207,34 +247,21 @@ function useMatrixClient() {
                 member.membership === 'join' &&
                 member.userId !== newClient.getUserId()
             ) {
-                console.log('download keys of user', member.userId);
-                const userKey = await client.downloadKeys([member.userId]);
+                try {
+                    console.log('download keys of user', member.userId);
+                    const userKey = await client.downloadKeys([member.userId]);
 
-                for (const deviceId in userKey[member.userId]) {
-                    console.log(
-                        'set device verified keys of user',
-                        member.userId,
-                        deviceId
-                    );
-                    await client.setDeviceVerified(member.userId, deviceId);
+                    for (const deviceId in userKey[member.userId]) {
+                        console.log(
+                            'set device verified keys of user',
+                            member.userId,
+                            deviceId
+                        );
+                        await client.setDeviceVerified(member.userId, deviceId);
+                    }
+                } catch (error) {
+                    console.log('#error', error);
                 }
-
-                //  await client.setRoomName(roomID,roomName);
-                //return await client.getRoom(roomID);
-
-                //Verify user
-                // let room = await client.getRoom(roomId);
-                // let members = (await room.getEncryptionTargetMembers()).map(
-                //     (x) => x['userId']
-                // );
-                // let memberkeys = await client.downloadKeys(members);
-                // for (const userId in memberkeys) {
-                //     for (const deviceId in memberkeys[userId]) {
-                //         await this.setDeviceVerified(userId, deviceId);
-                //     }
-                // }
-                //return roomID;
-                //return userKey[userId];
             }
         });
 
@@ -320,13 +347,18 @@ function useMatrixClient() {
         }
     };
 
-    const getHistory = async (numOfHistory = 1) => {
+    const getHistory = async (roomId) => {
         if (client) {
             const rooms = await client.getRooms();
-            dictTimeStamp ={}
+            dictTimeStamp = {};
+
             for (let i = 0; i < rooms.length; i++) {
-                await client.scrollback(rooms[i], numOfHistory);
-                console.log('get his ', i);
+                if (rooms[i].roomId === roomId) {
+                    for (let j = 0; j < rooms[i].timeline.length; j++) {
+                        console.log('getthis', rooms[i].timeline[j]);
+                        decapsulateEvent(rooms[i].timeline[j]);
+                    }
+                }
             }
         }
     };
@@ -353,7 +385,7 @@ function useMatrixClient() {
     };
 
     const isLogin = () => {
-        return didLogin;
+        return client !== null;
     };
 
     const testLogin = async () => {

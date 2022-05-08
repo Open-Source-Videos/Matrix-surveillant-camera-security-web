@@ -389,17 +389,11 @@ const Profile = () => {
         (async () => {
             if (isLogin() === false) {
                 console.log('Run test login');
-                setYesLogin(await testLogin());
+                await testLogin();
             }
             setTimeout(() => {
                 setYesLogin(isLogin());
 				const get_avatar = () => {
-					const local_storage_item = JSON.parse(
-						window.localStorage.getItem('open_source_video')
-					);
-					// const exported_device = local_storage_item.exportedDevice;
-					// const user_id = exported_device.userId;
-		
 					(async () => {
 						try {
 							let profileAvatar = await getAvatar();
@@ -434,7 +428,7 @@ const Profile = () => {
         })();
 
        
-    }, [avatar, getAvatar, isLogin, testLogin, getDisplayName, getMatrixRooms, getRoomIdByName, getUserId]);
+    }, [avatar, getAvatar, isLogin,getDisplayName, getMatrixRooms, getRoomIdByName, getUserId]);
 
     return (
         <>

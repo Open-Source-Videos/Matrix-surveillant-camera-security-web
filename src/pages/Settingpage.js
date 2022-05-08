@@ -211,7 +211,7 @@ const Setting = () => {
         (async () => {
             if (isLogin() === false) {
                 console.log('Run test login');
-                setYesLogin(await testLogin());
+                await testLogin();
             }
             setTimeout(() => {
                 setYesLogin(isLogin());
