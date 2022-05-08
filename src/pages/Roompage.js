@@ -8,7 +8,7 @@ import useMatrixClient from '../hooks/useMatrixClient';
 import Page403 from './Page403';
 import { useHistory } from "react-router-dom";
 
-
+export var currentRoom = null;
 
 const RoomPage = ({roomList, avarta, displayName, createRoom}) => {
     const [showModal, setShowModal] = useState(false);
@@ -36,7 +36,12 @@ const RoomPage = ({roomList, avarta, displayName, createRoom}) => {
     const listItems = roomList.map((number) =>
         <li 
             className="border-gray-400 flex flex-row mb-4" 
-            onClick={() => history.push('/homepage')}
+            onClick={() => 
+                {
+                    
+                    currentRoom = number
+                    history.push('/homepage')
+            }}
         >
             <div
                 className="select-none flex flex-1 items-center p-4 transition duration-500 ease-in-out transform hover:-translate-y-2 rounded-2xl border-2 p-6 hover:shadow-2xl border-yellow-400"
@@ -87,7 +92,7 @@ const RoomPage = ({roomList, avarta, displayName, createRoom}) => {
             </ul>
         </div>
 
-        <div class="container flex mx-auto w-full items-center justify-center">
+        <div className="container flex mx-auto w-full items-center justify-center">
             <button 
                 className="py-2 px-4 text-yellow-400 font-semibold border-2 p-6 border-yellow-400 rounded hover:bg-yellow-400 hover:text-white hover:border-transparent transition ease-in duration-200 transform hover:-translate-y-1 active:translate-y-0" 
                 type="button" 
@@ -205,12 +210,13 @@ const RoomSelect = () => {
 						try {
 							// let room_id = await getRoomIdByName('Capstone-HelloWorld');
 							let matrixRoom = await getMatrixRooms();
-                            console.log('Roomll', matrixRoom);
+                            
                             let profileAvatar = await getAvatar();
                             let display_name = await getDisplayName();
                             setDisplayName(display_name);
 							// setRoomID(room_id);
 							setRoomList(matrixRoom);
+
                             if (profileAvatar === null || profileAvatar === '') {
 								setAvatar(null);
 							} else {

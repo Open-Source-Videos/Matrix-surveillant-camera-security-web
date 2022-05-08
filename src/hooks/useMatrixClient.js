@@ -108,6 +108,9 @@ function useMatrixClient() {
 
         newClient.once('sync', async (state, prevState, res) => {
             if (state === 'PREPARED') {
+                client = newClient;
+                console.log('uploadKey++');
+                client.uploadKeys();
                 didLogin = true;
                 roomList = await newClient.getRooms();
                 //  client = newClient;
@@ -305,10 +308,18 @@ function useMatrixClient() {
         }
     };
 
-    const getHistory = async (numOfHistory) => {
-        roomList = [];
-        for (let i = 0; i < roomList.length; i++)
-            await client.scrollback(roomList[i], numOfHistory);
+    const getHistory = async (numOfHistory = 1) => {
+        if (client) {
+            
+            const rooms = await client.getRooms();
+
+            for (let i = 0; i < rooms.length; i++) {
+                await client.scrollback(rooms[i], numOfHistory);
+                console.log('get his ', i);
+            }
+                
+        }
+
     };
 
     const getKeyByEvent = (e) => {
@@ -574,8 +585,7 @@ function useMatrixClient() {
             //     await new window.matrixClient.MemoryCryptoStore();
             await newClient.setGlobalErrorOnUnknownDevices(false);
             await newClient.startClient();
-            client = newClient;
-
+           
             setMatrixClientEvents(newClient);
             //  console.log('Testtest ',newClient);
             //  console.log('Login successfully by token ',await  newClient.getDevices());
@@ -625,7 +635,6 @@ function useMatrixClient() {
             await newClient.setGlobalErrorOnUnknownDevices(false);
             await newClient.startClient();
 
-            client = newClient;
             setMatrixClientEvents(newClient);
 
             return true;
