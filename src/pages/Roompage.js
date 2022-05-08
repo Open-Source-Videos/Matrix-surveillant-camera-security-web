@@ -9,7 +9,21 @@ import { useHistory } from "react-router-dom";
 
 const RoomPage = ({roomList, avarta, displayName}) => {
     const [showModal, setShowModal] = useState(false);
+    const [roomName, setRoomName] = useState(null);
     const history = useHistory();
+    const { createRoom, inviteUserToRoom } = useMatrixClient();
+
+    const handleCreateRoom = async (e) => {
+        // e.preventDefault();
+        const roomID = await createRoom(roomName);
+        console.log('Create Room successfully', roomID);
+        const deviceID = await inviteUserToRoom(
+           '@test003:pdxinfosec.org',
+            roomID
+         );
+        console.log('\n\n test devices:', deviceID);
+    };
+
     const listItems = roomList.map((number) =>
     <li class="border-gray-400 flex flex-row mb-4" onClick={() => history.push('/homepage')}>
 										<div
@@ -80,7 +94,7 @@ const RoomPage = ({roomList, avarta, displayName}) => {
                                             <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                                                 {/*header*/}
                                                 <div className="mt-4 flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                                                <img class="mr-5 h-12 w-auto" src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg" alt="Workflow"></img>
+                                                <img class="mr-5 h-12 w-auto" src="icons8-tiger-96.png" alt="Workflow"></img>
                                                 <h3 className="text-3xl font-semibold">
                                                     Add Room
                                                 </h3>
@@ -96,13 +110,11 @@ const RoomPage = ({roomList, avarta, displayName}) => {
                                                 {/*body*/}
                                                
                                                 <div class="relative p-6 flex-auto">
-                                                    <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Room name</label>
-                                                    <input type="text" id="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@flowbite.com" required></input>
+                                                    <label for="text" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Room name</label>
+                                                    <input type="text" id="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter room name" required
+                                                    onChange={event => setRoomName(event.target.value)}></input>
                                                 </div>
-                                                <div class="relative p-6 flex-auto mb-6">
-                                                    <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Your password</label>
-                                                    <input type="password" id="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required></input>
-                                                </div>
+                                               
 
                                                 <div class="relative p-6 flex-auto">
                                                     <p class="my-4 text-slate-500 text-lg leading-relaxed">
@@ -127,7 +139,7 @@ const RoomPage = ({roomList, avarta, displayName}) => {
                                                 <button
                                                     className="bg-yellow-400 text-white active:bg-yellow-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                                                     type="button"
-                                                    onClick={() => setShowModal(false)}
+                                                    onClick={() => {handleCreateRoom(roomName); setShowModal(false)}}
                                                 >
                                                     Save Changes
                                                 </button>
