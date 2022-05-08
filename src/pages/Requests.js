@@ -1,12 +1,12 @@
 import React, { 
     useEffect, 
-    useState 
+    useState,
+	Fragment
 } from 'react';
 import '../index.css';
 import useMatrixClient from '../hooks/useMatrixClient';
 import Page403 from './Page403';
 import TopNavigationBar from '../components/TopNavigationBar'
-import { Fragment } from 'react'
 import {
 	ChevronDownIcon,
 	CameraIcon,
@@ -72,7 +72,6 @@ const SnapShot = () => {
 				}
                 break;
             default:
-                // saveBlobUrlToFile(file.fileUrl, file.fileName);
                 break;
         }
     };
@@ -168,8 +167,7 @@ const RecordVideo = () => {
 				if (file.fileName.includes("video-send")) {
 					let local_time = new Date();
 					try {
-						//local_time = JSON.parse(file.fileName).content.split(',')[1];
-						local_time = JSON.parse(file.fileName).content;
+						local_time = JSON.parse(file.fileName).content.split(',')[1];
 						local_time = new Date(local_time);
 					} catch(e) {
 						console.log("e");
@@ -278,7 +276,9 @@ const RecordVideo = () => {
 
 const RequestGroupList = () => {
 	let [child_component, setChildComponent] = useState(0);
-	const { sendMessageToRoom } = useMatrixClient();
+	const { 
+		sendMessageToRoom,
+	} = useMatrixClient();
 
 	const handleSnapshot = () => {
 		setChildComponent(1);
@@ -354,6 +354,7 @@ const RequestGroupList = () => {
 									{({ active }) => (
 									<button
 										type="button"
+										onClick={handleSnapshot}
 										className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
 									>
 										Snapshot
@@ -364,6 +365,7 @@ const RequestGroupList = () => {
 									{({ active }) => (
 									<button
 										type="button"
+										onClick={handleRecVideo}
 										className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
 									>
 										Recording Video
