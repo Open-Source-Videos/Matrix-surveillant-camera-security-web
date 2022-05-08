@@ -33,7 +33,8 @@ function Home() {
         sendMessageToRoom, 
         saveBlobUrlToFile, 
         testLogin, 
-        setHavingNewFile 
+        setHavingNewFile,
+        getHistory
     } = useMatrixClient();
 
     const [yesLogin,setYesLogin] = useState(false);
@@ -90,8 +91,10 @@ function Home() {
             }
             setTimeout(()=>{
                 setYesLogin(isLogin()); 
+                getHistory(10);
             },500);
         })();
+
     }, []);
 
     return (
