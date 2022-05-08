@@ -394,8 +394,11 @@ function useMatrixClient() {
         loginByPassword(baseUrl, username, password);
     };
 
-    const getMatrixRooms = () => {
-        return roomList;
+    const getMatrixRooms = async () => {
+        if (client) {
+            return await client.getRooms();
+        }
+        return null;
     };
 
     const getAvatar = async () => {

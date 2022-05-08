@@ -7,21 +7,21 @@ import { useHistory } from "react-router-dom";
 
 
 
-const RoomPage = ({roomList, avarta, displayName}) => {
+const RoomPage = ({roomList, avarta, displayName, createRoom}) => {
     const [showModal, setShowModal] = useState(false);
     const [roomName, setRoomName] = useState(null);
     const history = useHistory();
-    const { createRoom, inviteUserToRoom } = useMatrixClient();
+  //  const { createRoom, inviteUserToRoom } = useMatrixClient();
 
     const handleCreateRoom = async (e) => {
         // e.preventDefault();
         const roomID = await createRoom(roomName);
         console.log('Create Room successfully', roomID);
-        const deviceID = await inviteUserToRoom(
-           '@test003:pdxinfosec.org',
-            roomID
-         );
-        console.log('\n\n test devices:', deviceID);
+        // const deviceID = await inviteUserToRoom(
+        //    '@test003:pdxinfosec.org',
+        //     roomID
+        //  );
+        // console.log('\n\n test devices:', deviceID);
     };
 
     const listItems = roomList.map((number) =>
@@ -164,6 +164,7 @@ const RoomSelect = () => {
         // getRoomIdByName,
         getDisplayName,
         getMatrixRooms,
+        createRoom
     } = useMatrixClient();
     const [yesLogin, setYesLogin] = useState(false);
     // const [roomID, setRoomID] = useState(null);
@@ -184,6 +185,7 @@ const RoomSelect = () => {
 						try {
 							// let room_id = await getRoomIdByName('Capstone-HelloWorld');
 							let matrixRoom = await getMatrixRooms();
+                            console.log('Roomll', matrixRoom);
                             let profileAvatar = await getAvatar();
                             let display_name = await getDisplayName();
                             setDisplayName(display_name);
@@ -220,6 +222,7 @@ const RoomSelect = () => {
                         roomList={roomList}
                         avarta={avatar}
                         displayName={displayName}
+                        createRoom = {createRoom}
                     />
                 ) : (
                     <RoomPage 
