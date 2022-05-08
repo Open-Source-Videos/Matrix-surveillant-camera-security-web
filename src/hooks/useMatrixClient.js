@@ -671,6 +671,30 @@ function useMatrixClient() {
         }
     };
 
+    const leaveRoom = async (roomId) =>{
+        if (client) {
+            await client.leave (roomId)
+        }
+    }
+
+    const banUserFromRoom = async (roomId, userId, reason) =>{
+        if (client) {
+            await client.ban(roomId, userId, reason)
+        }
+    }
+
+    const unbanUserFromRoom = async (roomId, userId) =>{
+        if (client) {
+            await client.unban(roomId, userId)
+        }
+    }
+
+    const kickUserFromRoom = async (roomId, userId, reason) =>{
+        if (client) {
+            await client.kick(roomId, userId, reason)
+        }
+    }
+
     const uploadFile = async (fileName, stream) => {
         if (client) {
             const result = await client.uploadContent({
@@ -715,6 +739,10 @@ function useMatrixClient() {
 
         inviteUserToRoom,
         uploadFile,
+        kickUserFromRoom,
+        leaveRoom,
+        banUserFromRoom,
+        unbanUserFromRoom
     };
 }
 
