@@ -1,16 +1,10 @@
-import React, { 
-    useEffect, 
-    useState 
-} from 'react';
+import React, { useEffect, useState } from 'react';
 import '../index.css';
 import useMatrixClient from '../hooks/useMatrixClient';
 import { ModalPopUp } from '../components/ModalPopUp';
 import TopNavigationBar from '../components/TopNavigationBar';
 import Page403 from './Page403';
-import { 
-    PlayIcon,
-    CloudDownloadIcon
-} from '@heroicons/react/solid'
+import { PlayIcon, CloudDownloadIcon } from '@heroicons/react/solid';
 import { currentRoom } from './Roompage';
 
 // Global list
@@ -21,52 +15,53 @@ let list_video_url = [];
 export const clearState = () => {
     list_image_url = [];
     list_video_url = [];
-}
+};
 
 function Home() {
     const [listImageURL, setListImageURL] = useState(list_image_url);
     const [listVideoURL, setListVideoURL] = useState(list_video_url);
-    
-    const { 
-        isLogin, 
-        sendMessageToRoom, 
-        saveBlobUrlToFile, 
-        testLogin, 
+
+    const {
+        isLogin,
+        sendMessageToRoom,
+        saveBlobUrlToFile,
+        testLogin,
         setHavingNewFile,
-        getHistory
+        getHistory,
     } = useMatrixClient();
 
-    const [yesLogin,setYesLogin] = useState(false);
+    const [yesLogin, setYesLogin] = useState(false);
     const [showModal, setShowModal] = useState(false);
 
     const handleHavingNewFile = (sender, room, file) => {
-        if (currentRoom.roomId === room) {
-            switch (file.fileType) {
-                case 'image/png':
-                case 'image/jpeg':
-                    // listImageURL.push(file.fileUrl);
-                    // setListImageURL([...listImageURL]);
-                    list_image_url.push(file.fileUrl);
-                    setListImageURL([...list_image_url]);
-                    console.log(file.fileUrl);
-                    /*sendMessageToRoom(
-                        ROOM_ID, 
-                        `{"type" : "video-send", "content" : "/var/lib/motioneye/Camrea1/02-05-2021/15-25-30.mp4", "requestor_id":"0"}`
-                    );*/
-                    break;
-                case 'video/mp4':
-                    list_video_url.push(file.fileUrl);
-                    setListVideoURL([...list_video_url]);
-                    // setListVideoURL(file.fileUrl);
-                    break;
-                default:
-                    saveBlobUrlToFile(file.fileUrl, file.fileName);
-                    break;
-            }
+        console.log('currentRoom.roomId-0');
+        console.log('currentRoom.roomId', currentRoom);
+        // if (currentRoom.roomId === room) {
+
+        // }
+        switch (file.fileType) {
+            case 'image/png':
+            case 'image/jpeg':
+                // listImageURL.push(file.fileUrl);
+                // setListImageURL([...listImageURL]);
+                list_image_url.push(file.fileUrl);
+                setListImageURL([...list_image_url]);
+                console.log(file.fileUrl);
+                /*sendMessageToRoom(
+                    ROOM_ID, 
+                    `{"type" : "video-send", "content" : "/var/lib/motioneye/Camrea1/02-05-2021/15-25-30.mp4", "requestor_id":"0"}`
+                );*/
+                break;
+            case 'video/mp4':
+                list_video_url.push(file.fileUrl);
+                setListVideoURL([...list_video_url]);
+                // setListVideoURL(file.fileUrl);
+                break;
+            default:
+                saveBlobUrlToFile(file.fileUrl, file.fileName);
+                break;
         }
-
     };
-
 
     const handleWatch = () => {
         console.log('SEND MESSAGE');
@@ -78,27 +73,22 @@ function Home() {
     };
 
     const handleDownload = (url, index) => {
-        saveBlobUrlToFile(
-            url, 
-            "video".concat(index).concat('.jpg')
-        );
-}
+        saveBlobUrlToFile(url, 'video'.concat(index).concat('.jpg'));
+    };
 
     useEffect(() => {
         setHavingNewFile(handleHavingNewFile);
-        (async()=>{
-            if (isLogin()===false) {
-                console.log('Run test login')
+        (async () => {
+            if (isLogin() === false) {
+                console.log('Run test login');
                 setYesLogin(await testLogin());
             }
-            setTimeout(()=>{
-                setYesLogin(isLogin()); 
+            setTimeout(() => {
+                setYesLogin(isLogin());
                 console.log('gethhis');
                 getHistory(10);
-
-            },500);
+            }, 500);
         })();
-
     }, []);
 
     return (
@@ -117,10 +107,10 @@ function Home() {
                                         >
                                             <div className="max-w-sm bg-white rounded-lg shadow-md">
                                                 <div>
-                                                    <img 
-                                                        className="rounded-t-lg" 
-                                                        src={ url } 
-                                                        alt="thumbnails" 
+                                                    <img
+                                                        className="rounded-t-lg"
+                                                        src={url}
+                                                        alt="thumbnails"
                                                     />
                                                 </div>
                                                 <div className="px-3 pb-3">
@@ -129,25 +119,33 @@ function Home() {
                                                     </h5>
                                                     <div className="flex items-center mt-2.5 mb-5">
                                                         <span className="text-gray-700 text-xs font-semibold py-0.5 rounded px-2">
-                                                            { new Date().toLocaleString() }
+                                                            {new Date().toLocaleString()}
                                                         </span>
                                                     </div>
                                                     <div className="flex justify-between items-center">
-                                                        <button 
-                                                            onClick={ handleWatch }
-                                                            className="w-full text-gray-600 bg-gradient-to-tl from-amber-200 to-amber-300 font-medium rounded-lg text-sm px-3 py-2.5 text-center mx-2">
+                                                        <button
+                                                            onClick={
+                                                                handleWatch
+                                                            }
+                                                            className="w-full text-gray-600 bg-gradient-to-tl from-amber-200 to-amber-300 font-medium rounded-lg text-sm px-3 py-2.5 text-center mx-2"
+                                                        >
                                                             <span>
                                                                 <PlayIcon className="inline-block w-5 h-5 pb-1 mr-1 -ml-1" />
                                                             </span>
                                                             Watch
                                                         </button>
                                                         <button
-                                                            onClick={() => handleDownload(url)}
-                                                            className="w-full text-white bg-gradient-to-r from-orange-400 to-rose-400 font-medium rounded-lg text-sm px-3 py-2.5 text-center mx-2">
+                                                            onClick={() =>
+                                                                handleDownload(
+                                                                    url
+                                                                )
+                                                            }
+                                                            className="w-full text-white bg-gradient-to-r from-orange-400 to-rose-400 font-medium rounded-lg text-sm px-3 py-2.5 text-center mx-2"
+                                                        >
                                                             <span>
                                                                 <CloudDownloadIcon className="inline-block w-5 h-5 pb-1 mr-1 -ml-1" />
                                                             </span>
-                                                                Download
+                                                            Download
                                                         </button>
                                                     </div>
                                                 </div>
@@ -160,7 +158,7 @@ function Home() {
                             )}
                         </div>
 
-                        <br/>
+                        <br />
 
                         {showModal ? (
                             <ModalPopUp
