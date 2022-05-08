@@ -198,16 +198,8 @@ function useMatrixClient() {
                 member.userId === newClient.getUserId()
             ) {
                 await newClient.joinRoom(member.roomId);
-                // setting up of room encryption seems to be triggered automatically
-                // but if we don't wait for it the first messages we send are unencrypted
-                // await newClient.setRoomEncryption(member.roomId, {
-                //     algorithm: 'm.megolm.v1.aes-sha2',
-                // });
-                // console.log('');
-                // console.log('>> Has join room = ', member.roomId);
-                // console.log('');
             }
-            console.log('\n\n tstmember = ', member);
+
             if (
                 member.membership === 'join' &&
                 member.userId !== newClient.getUserId()
@@ -314,6 +306,7 @@ function useMatrixClient() {
     };
 
     const getHistory = async (numOfHistory) => {
+        roomList = [];
         for (let i = 0; i < roomList.length; i++)
             await client.scrollback(roomList[i], numOfHistory);
     };
@@ -439,7 +432,7 @@ function useMatrixClient() {
     const getRoomIdByName = async (name) => {
         if (client) {
             const rooms = await client.getRooms();
-            // console.log('tritri',rooms);
+
             for (let i = 0; i < rooms.length; i++) {
                 if (rooms[i].name === name) {
                     return rooms[i].roomId;
@@ -488,30 +481,14 @@ function useMatrixClient() {
                 name: roomName,
             });
 
-            console.log('1 Createde Room');
             await client.sendStateEvent(
                 room.room_id,
                 'm.room.encryption',
                 ROOM_CRYPTO_CONFIG
             );
-            console.log('2 Createde Room', room);
+
             await client.setRoomEncryption(room.room_id, ROOM_CRYPTO_CONFIG);
-            console.log('3 Oaky Createde Room');
 
-            //  await client.setRoomName(roomID,roomName);
-            //return await client.getRoom(roomID);
-
-            // Marking all devices as verified
-            // let room = client.getRoom(roomID);
-            // let members = (await room.getEncryptionTargetMembers()).map(
-            //     (x) => x['userId']
-            // );
-            // let memberkeys = await client.downloadKeys(members);
-            // for (const userId in memberkeys) {
-            //     for (const deviceId in memberkeys[userId]) {
-            //         await this.setDeviceVerified(userId, deviceId);
-            //     }
-            // }
             return room.room_id;
         }
         return null;
@@ -664,36 +641,34 @@ function useMatrixClient() {
     const setAvatar = async (fileName, fileContent) => {
         if (client) {
             const url = await uploadFile(fileName, fileContent);
-        
-            if (url) 
-                await client.setAvatarUrl(url);
-        
+
+            if (url) await client.setAvatarUrl(url);
         }
     };
 
-    const leaveRoom = async (roomId) =>{
+    const leaveRoom = async (roomId) => {
         if (client) {
-            await client.leave (roomId)
+            await client.leave(roomId);
         }
-    }
+    };
 
-    const banUserFromRoom = async (roomId, userId, reason) =>{
+    const banUserFromRoom = async (roomId, userId, reason) => {
         if (client) {
-            await client.ban(roomId, userId, reason)
+            await client.ban(roomId, userId, reason);
         }
-    }
+    };
 
-    const unbanUserFromRoom = async (roomId, userId) =>{
+    const unbanUserFromRoom = async (roomId, userId) => {
         if (client) {
-            await client.unban(roomId, userId)
+            await client.unban(roomId, userId);
         }
-    }
+    };
 
-    const kickUserFromRoom = async (roomId, userId, reason) =>{
+    const kickUserFromRoom = async (roomId, userId, reason) => {
         if (client) {
-            await client.kick(roomId, userId, reason)
+            await client.kick(roomId, userId, reason);
         }
-    }
+    };
 
     const uploadFile = async (fileName, stream) => {
         if (client) {
@@ -701,9 +676,9 @@ function useMatrixClient() {
                 stream: stream,
                 name: fileName,
             });
-          //   console.log('\n\n result of upload = ',result);
-          //   console.log('\n\n result of upload = ',client.mxcUrlToHttp(result));
-            
+            //   console.log('\n\n result of upload = ',result);
+            //   console.log('\n\n result of upload = ',client.mxcUrlToHttp(result));
+
             return result;
         }
         return null;
@@ -742,7 +717,7 @@ function useMatrixClient() {
         kickUserFromRoom,
         leaveRoom,
         banUserFromRoom,
-        unbanUserFromRoom
+        unbanUserFromRoom,
     };
 }
 
