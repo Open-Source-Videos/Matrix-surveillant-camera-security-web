@@ -36,7 +36,7 @@ const TopNavigationBar = () => {
         e.preventDefault();
         let link = e.target.href;
         let target = window.location.origin + "/";
-        let p = link.replace(target, "");
+        let p = link?.replace(target, "");
         history.push(p);
     }
 
@@ -63,10 +63,6 @@ const TopNavigationBar = () => {
             setTimeout(() => {
                 setYesLogin(isLogin());
 				const get_avatar = () => {
-					const local_storage_item = JSON.parse(
-						window.localStorage.getItem('open_source_video')
-					);
-
 					(async () => {
 						try {
 							let profileAvatar = await getAvatar();

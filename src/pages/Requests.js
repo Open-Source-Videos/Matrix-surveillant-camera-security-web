@@ -19,8 +19,11 @@ import {
 	Menu, 
 	Transition 
 } from '@headlessui/react';
+//import { currentRoom } from './Roompage';
 
 const ROOM_ID = "!bdQMmkTBTMqUPAOvms:pdxinfosec.org";
+
+
 
 function classNames(...classes) {
 	return classes.filter(Boolean).join(' ')
