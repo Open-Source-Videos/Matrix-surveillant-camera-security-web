@@ -29,7 +29,6 @@ function classNames(...classes) {
 // Global list
 let list_snap_url = [];
 let list_rec_video_url = [];
-
 // Clear state when logging out
 export const clearAllStates = () => {
     list_snap_url = [];
@@ -160,17 +159,38 @@ const RecordVideo = () => {
     const { saveBlobUrlToFile, setHavingNewFile } = useMatrixClient();
 
     const handleHavingNewFile = (sender, room, file) => {
-        switch (file.fileType) {
-            case 'video/mp4':
-				if (file.fileName.includes("video-send")) {
-					let local_time = new Date();
-					try {
-						local_time = JSON.parse(file.fileName).content.split(',')[1];
-						local_time = new Date(local_time);
-					} catch(e) {
-						console.log("e");
-					}
-					local_time = local_time.toLocaleString();
+        const ROOM_ID = localStorage.getItem('currentRoomID');
+        if (ROOM_ID === room) {
+            switch (file.fileType) {
+                case 'video/mp4':
+                    if (file.fileName.includes('video-send')) {
+                        let local_time = new Date();
+                        try {
+                            local_time = JSON.parse(
+                                file.fileName
+                            ).content.split(',')[1];
+                            local_time = new Date(local_time);
+                        } catch (e) {
+                            console.log('e');
+                        }
+                        local_time = local_time.toLocaleString();
+
+                        let content = {
+                            url: file.fileUrl,
+                            type: 'video',
+                            time: local_time,
+                            content: JSON.parse(file.fileName),
+                        };
+                        let found = false;
+                        for (let i = 0; i < list_rec_video_url.length; i++) {
+                            if (list_rec_video_url[i] === 'empty') {
+                                list_rec_video_url[i] = content;
+                                found = true;
+                                console.log('replace++');
+                                break;
+                            }
+                        }
+                        if (found === false) list_rec_video_url.push(content);
 
                     let content = {
                         url: file.fileUrl,
@@ -204,7 +224,7 @@ const RecordVideo = () => {
     useEffect(() => {
         setHavingNewFile(handleHavingNewFile);
         console.log('LIST VIDEO: ', listRecVideoURL);
-    }, [listRecVideoURL]);
+    }, []);
 
     return (
         <main>
@@ -216,12 +236,60 @@ const RecordVideo = () => {
                                 className="flex justify-center px-2"
                                 key={index}
                             >
-                                <div className="max-w-sm bg-white rounded-lg shadow-md">
-                                    <div>
-                                        <video
-                                            controls
-                                            autoPlay
-                                            className="rounded-t-lg object-cover w-96 h-72"
+                                {content !== 'empty' ? (
+                                    <div className="max-w-sm bg-white rounded-lg shadow-md">
+                                        <div>
+                                            <video
+                                                controls
+                                                autoPlay
+                                                className="rounded-t-lg object-cover w-96 h-72"
+                                            >
+                                                <source
+                                                    src={content.url}
+                                                    type="video/mp4"
+                                                />
+                                            </video>
+                                        </div>
+                                        <div className="px-3 pb-3">
+                                            <h5 className="text-lg font-semibold text-gray-900 text-decoration-none px-2 pt-4">
+                                                Recoding Video
+                                            </h5>
+                                            <div className="flex items-center mt-2.5 mb-5">
+                                                <ClockIcon className="w-4 h-4" />
+                                                <span className="text-gray-500 text-xs font-semibold py-0.5 rounded px-2">
+                                                    {content.time}
+                                                </span>
+                                            </div>
+                                            <div className="flex justify-end">
+                                                <button
+                                                    className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-100 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
+                                                    onClick={() =>
+                                                        handleDownloadVideo(
+                                                            content.url,
+                                                            index
+                                                        )
+                                                    }
+                                                >
+                                                    <CloudDownloadIcon className="w-5 h-5" />
+                                                </button>
+                                                <button
+                                                    className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-100 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
+                                                    onClick={() =>
+                                                        handleDeleteRecVideo(
+                                                            content.url
+                                                        )
+                                                    }
+                                                >
+                                                    <TrashIcon className="w-5 h-5" />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="flex items-center justify-center content-center h-screen">
+                                        <div
+                                            className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full m-auto"
+                                            role="status"
                                         >
                                             <source
                                                 src={content.url}
@@ -297,8 +365,9 @@ const RequestGroupList = () => {
         const ROOM_ID = localStorage.getItem("currentRoomID");
         sendMessageToRoom(
             ROOM_ID,
-            `{"type" : "record-video", "content" : "1,20", "requestor_id":"0"}`
+            `{"type" : "record-video", "content" : "1,2", "requestor_id":"0"}`
         );
+        list_rec_video_url.push('empty');
     };
 
     return (
