@@ -93,16 +93,6 @@ function Home() {
     const handleWatch = (imageURL) => {
         
         setPlayingVideo(imageURL)
-        /*
-        for(let i = 0; i< listVideoURL.length; i++){
-            console.log("listVideoURL[i].id :" + listVideoURL[i].id)
-            /*
-            if(JSON.stringify(imageURL.id).replace(".thumb","") === JSON.stringify(listVideoURL[i].id)){
-                setPlayingVideo(listVideoURL[i].url)
-                console.log("PLAYING VIDEO", listVideoURL[i].url)
-                break;
-            }
-        }*/
         setShowModal(true);
     };
 
