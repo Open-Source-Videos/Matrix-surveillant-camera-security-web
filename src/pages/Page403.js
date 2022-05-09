@@ -7,7 +7,7 @@ const Page403 = () => {
     useEffect(() => {
         timeOut = setTimeout(() => {
             setDelayRender(false);
-        }, 2000);
+        }, 30000);
 
         return () => {
             clearTimeout(timeOut);

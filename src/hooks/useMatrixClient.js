@@ -97,23 +97,27 @@ function useMatrixClient() {
     const decryptFile = async (sender, room, content, time) => {
         try {
             if (onHavingNewMessage.length > 0 && content.body) {
-                // console.log('currentRoom.roomId 2',room)
+                
                 for (let __onHavingNewMessage of onHavingNewMessage) {
                     __onHavingNewMessage(sender, room, content.body, time);
                 }
             }
 
             if (typeof content.file !== 'undefined') {
+                
                 const response = await axios.get(
                     client.mxcUrlToHttp(content.file.url),
                     { responseType: 'arraybuffer' }
                 );
+                
+                
+                let decryptData = null; 
 
-                const decryptData = await decryptAttachment(
+                decryptData = await decryptAttachment(
                     response.data,
                     content.file
                 );
-
+               
                 const blobURL = await window.URL.createObjectURL(
                     new Blob([decryptData]),
                     { type: content.info.mimetype }
@@ -121,21 +125,26 @@ function useMatrixClient() {
 
                 if (onHavingNewFile.length) {
                     for (let __onHavingNewFile of onHavingNewFile) {
-                        __onHavingNewFile(
-                            sender,
-                            room,
-                            {
-                                fileType: content.info.mimetype,
-                                fileUrl: blobURL,
-                                fileName: content.body,
-                            },
-                            time
-                        );
+                        try {
+                            __onHavingNewFile(
+                                sender,
+                                room,
+                                {
+                                    fileType: content.info.mimetype,
+                                    fileUrl: blobURL,
+                                    fileName: content.body,
+                                },
+                                time
+                            );
+                        }catch(e) {
+                            console.log('currentRoom.roomId 4',e)
+                        }
+
                     }
                 }
             }
         } catch (e) {
-            console.log('remove local storage', loginKey);
+            console.log('#error',e)
             localStorage.removeItem(loginKey);
             resetValues();
         }
@@ -238,7 +247,9 @@ function useMatrixClient() {
                     return;
                 }
             } catch (error) {
+
                 console.error('#### ', error);
+                
             }
         }
     };
@@ -269,9 +280,9 @@ function useMatrixClient() {
                         homeServer: newClient.baseUrl,
                     })
                 );
-                //  console.log('have login');
+                
                 if (onLogInResult.length > 0) {
-                    console.log('return result', onLogInResult);
+                 
                     //Return result
                     for (let __onLogInResult of onLogInResult) {
                         __onLogInResult(
@@ -283,7 +294,7 @@ function useMatrixClient() {
                     }
                 }
                 try {
-                    //console.log('getmember',client);
+                   
                     for (let i = 0; i < roomList.length; i++) {
                         const members = roomList[i].getMembers();
                         for (let j = 0; j < members.length; j++) {
@@ -342,16 +353,12 @@ function useMatrixClient() {
                 member.userId !== (await newClient.getUserId())
             ) {
                 try {
-                    console.log('download keys of user', member.userId);
+                 
                     const userKey = await client.downloadKeys([member.userId]);
-                    console.log('\n\nMemM', userKey);
+                 
                     if (userKey) {
                         for (const deviceId in userKey[member.userId]) {
-                            console.log(
-                                'set device verified keys of user',
-                                member.userId,
-                                deviceId
-                            );
+                 
                             await client.setDeviceVerified(
                                 member.userId,
                                 deviceId
@@ -433,7 +440,7 @@ function useMatrixClient() {
         );
 
         if (members !== null) {
-            console.log('members =', members);
+        
             let memberkeys = await client.downloadKeys([members]);
 
             if (memberkeys) {
@@ -487,7 +494,7 @@ function useMatrixClient() {
     };
 
     const testLogin = async () => {
-        console.log('Run-here1', didLogin, savedData);
+       
         if (isTesting === false && didLogin === false && savedData) {
             isTesting = true;
             let info = JSON.parse(savedData);
@@ -502,7 +509,7 @@ function useMatrixClient() {
                 isTesting = false;
                 return true;
             } else {
-                console.log('remove localstorage', loginKey);
+               
                 localStorage.removeItem(loginKey);
                 isTesting = false;
                 return loginResult;
@@ -538,11 +545,11 @@ function useMatrixClient() {
                 info.exportedDevice,
                 info.accessToken
             );
-            console.log('login result ', loginResult);
+          
 
             if (loginResult) return;
             else {
-                console.log('remove localstorage', loginKey);
+          
                 localStorage.removeItem(loginKey);
                 resetValues();
             }
@@ -560,7 +567,7 @@ function useMatrixClient() {
 
     const getAvatar = async () => {
         if (client) {
-            // console.log('tritri',client, await getRoomIdByName('Capstone-HelloWorld'));
+           
             var profile = await client.getProfileInfo(
                 await client.getUserId(),
                 'avatar_url'
@@ -656,7 +663,6 @@ function useMatrixClient() {
 
     const inviteUserToRoom = async (userId, roomId) => {
         if (client) {
-            // console.log('invite user ...');
             const result = await client.invite(roomId, userId);
             return result;
         }
@@ -665,7 +671,7 @@ function useMatrixClient() {
 
     const sendMessageToRoom = async (roomId, message) => {
         try {
-            console.log('send--', didLogin);
+            
             if (client) {
                 await client.sendEvent(
                     roomId,
@@ -734,16 +740,11 @@ function useMatrixClient() {
             await newClient.startClient();
 
             setMatrixClientEvents(newClient);
-            //  console.log('Testtest ',newClient);
-            //  console.log('Login successfully by token ',await  newClient.getDevices());
+
             return true;
         } catch (e) {
-            console.log('Login by token fail', e);
-            console.log('remove localstorage', loginKey);
             localStorage.removeItem(loginKey);
-
             resetValues();
-
             return false;
         }
     };

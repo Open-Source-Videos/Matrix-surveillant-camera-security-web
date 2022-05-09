@@ -13,7 +13,7 @@ import {
     ClockIcon,
 } from '@heroicons/react/outline';
 import { Menu, Transition } from '@headlessui/react';
-
+import { currentRoomID, setCurrentRoomID } from './Roompage';
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ');
 }
@@ -151,13 +151,47 @@ const SnapShot = () => {
 
 const RecordVideo = () => {
     const [listRecVideoURL, setListRecVideoURL] = useState(list_rec_video_url);
-    const { saveBlobUrlToFile, setHavingNewFile, removeOnHavingNewFile } =
+    const { saveBlobUrlToFile,sendMessageToRoom, setHavingNewFile, removeOnHavingNewFile } =
         useMatrixClient();
 
     const handleHavingNewFile = (sender, room, file) => {
         const ROOM_ID = localStorage.getItem('currentRoomID');
         if (ROOM_ID === room) {
+            let jsonObj = null;
+            let content = null;
+
             switch (file.fileType) {
+                case 'image/png':
+                    case 'image/jpeg':
+                        try {
+                            jsonObj = JSON.parse(file.fileName);
+                            content = jsonObj.content.replace('.thumb', '');
+                        } catch {
+                            jsonObj = null;
+                            content = null;
+                        }
+                            if (
+                            currentRoomID &&
+                            jsonObj &&
+                            jsonObj.type === 'thumbnail'
+                        ) {
+                            //send request-video message to room
+    
+                            console.log(jsonObj.content.split(',')[0]);
+                            jsonObj.type = 'video-request';
+                            jsonObj.content = jsonObj.content.split(',')[0];
+                            const message = JSON.stringify(jsonObj);
+    
+                            console.log(
+                                'send video request ',
+                                currentRoomID,
+                                message
+                            );
+    
+                            sendMessageToRoom(currentRoomID, message);
+
+                        }
+                        break;                
                 case 'video/mp4':
                     if (file.fileName.includes('video-send')) {
                         let local_time = new Date();
@@ -202,6 +236,8 @@ const RecordVideo = () => {
     const handleDownloadVideo = (url, index) => {
         saveBlobUrlToFile(url, 'record-video('.concat(index).concat(').mp4'));
     };
+
+
 
     const handleDeleteRecVideo = (url) => {
         list_rec_video_url = list_rec_video_url.filter((item) => {
