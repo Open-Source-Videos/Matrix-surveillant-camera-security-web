@@ -4,8 +4,13 @@ import useMatrixClient from '../hooks/useMatrixClient';
 import { ModalPopUp } from '../components/ModalPopUp';
 import TopNavigationBar from '../components/TopNavigationBar';
 import Page403 from './Page403';
-import { ClockIcon, CloudDownloadIcon, VideoCameraIcon, TrashIcon } from '@heroicons/react/outline';
-import { currentRoomID,setCurrentRoomID } from './Roompage';
+import {
+    ClockIcon,
+    CloudDownloadIcon,
+    VideoCameraIcon,
+    TrashIcon,
+} from '@heroicons/react/outline';
+import { currentRoomID, setCurrentRoomID } from './Roompage';
 
 // Global list
 let list_image_url = [];
@@ -21,7 +26,6 @@ function Home() {
     const [listImageURL, setListImageURL] = useState(list_image_url);
     const [listVideoURL, setListVideoURL] = useState(list_video_url);
 
-
     const {
         isLogin,
         sendMessageToRoom,
@@ -35,10 +39,9 @@ function Home() {
     const [showModal, setShowModal] = useState(false);
 
     const handleHavingNewFile = (sender, room, file) => {
-      //  console.log('currentRoom.roomId 0',room);
-       // console.log('currentRoom.roomId 1', currentRoomID);
-        if (currentRoomID === room){
-   
+        //  console.log('currentRoom.roomId 0',room);
+        // console.log('currentRoom.roomId 1', currentRoomID);
+        if (currentRoomID === room) {
             switch (file.fileType) {
                 case 'image/png':
                 case 'image/jpeg':
@@ -62,7 +65,6 @@ function Home() {
                     break;
             }
         }
-       
     };
 
     const handleWatch = () => {
@@ -79,28 +81,24 @@ function Home() {
     };
 
     useEffect(() => {
-       
         (async () => {
             setHavingNewFile(handleHavingNewFile);
-            
+
             if (isLogin() === false) {
-                
-                setCurrentRoomID(localStorage.getItem('currentRoomID'))
-                
-                console.log('currentRoomID=',currentRoomID);
-                await testLogin()
+                setCurrentRoomID(localStorage.getItem('currentRoomID'));
+
+                console.log('currentRoomID=', currentRoomID);
+                await testLogin();
                 setHavingNewFile(handleHavingNewFile);
-               
-                setTimeout(() => {                
-                    console.log('getHiss')
+
+                setTimeout(() => {
                     getHistory(currentRoomID);
                 }, 500);
             }
 
-            setTimeout(() => {                
+            setTimeout(() => {
                 setYesLogin(isLogin());
-            }, 500);            
-
+            }, 500);
         })();
     }, []);
 
@@ -131,13 +129,13 @@ function Home() {
                                                         Thumbnails
                                                     </h5>
                                                     <div className="flex items-center mt-2.5 mb-5">
-                                                        <ClockIcon className="w-4 h-4"/>
+                                                        <ClockIcon className="w-4 h-4" />
                                                         <span className="text-gray-500 text-xs font-semibold py-0.5 rounded px-2">
                                                             {new Date().toLocaleString()}
                                                         </span>
                                                     </div>
                                                     {/*<div className="flex justify-between items-center">*/}
-                                                        {/*<button
+                                                    {/*<button
                                                             onClick={
                                                                 handleWatch
                                                             }
@@ -162,21 +160,25 @@ function Home() {
                                                             Download
                                                         </button>*/}
                                                     <div className="flex justify-end">
-                                                        <button 
+                                                        <button
                                                             className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-100 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
-                                                            onClick={handleWatch}
+                                                            onClick={
+                                                                handleWatch
+                                                            }
                                                         >
                                                             <VideoCameraIcon className="w-5 h-5" />
                                                         </button>
-                                                        <button 
+                                                        <button
                                                             className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-100 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
-                                                            onClick={() => handleDownload(url)}
+                                                            onClick={() =>
+                                                                handleDownload(
+                                                                    url
+                                                                )
+                                                            }
                                                         >
                                                             <CloudDownloadIcon className="w-5 h-5" />
                                                         </button>
-                                                        <button 
-                                                            className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-100 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
-                                                        >
+                                                        <button className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-100 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400">
                                                             <TrashIcon className="w-5 h-5" />
                                                         </button>
                                                     </div>

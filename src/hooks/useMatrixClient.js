@@ -66,7 +66,7 @@ function useMatrixClient() {
     const decryptFile = async (sender, room, content, time) => {
         try {
             if (onHavingNewMessage && content.body) {
-               // console.log('currentRoom.roomId 2',room)
+                // console.log('currentRoom.roomId 2',room)
                 onHavingNewMessage(sender, room, content.body, time);
             }
 
@@ -113,7 +113,7 @@ function useMatrixClient() {
                     e.clearEvent.content.body,
                     e.event.origin_server_ts
                 );
-               // console.log('currentRoom.roomId 3', e.sender.room);
+                // console.log('currentRoom.roomId 3', e.sender.room);
                 decryptFile(
                     e.sender.userId,
                     e.sender.roomId,
@@ -130,7 +130,7 @@ function useMatrixClient() {
             try {
                 if (e.event.type === 'm.room.encrypted') {
                     const decryptMessage = await client.crypto.decryptEvent(e);
-
+                    // console.log('===>>>',decryptMessage,e);
                     if (
                         decryptMessage &&
                         decryptMessage.clearEvent &&
@@ -143,8 +143,8 @@ function useMatrixClient() {
                         ) {
                             dictTimeStamp[e.event.origin_server_ts] =
                                 e.event.origin_server_ts;
-                              //  console.log('currentRoom.roomId 4', e);
-                                decryptFile(
+                            //  console.log('currentRoom.roomId 4', e);
+                            decryptFile(
                                 e.sender.userId,
                                 e.sender.roomId,
                                 decryptMessage.clearEvent.content,
@@ -162,11 +162,21 @@ function useMatrixClient() {
                                         e.event.origin_server_ts
                                     ) {
                                         found = true;
-                                        room.timeline[i] = decryptMessage;
+                                        room.timeline[i].clearEvent =
+                                            decryptMessage.clearEvent;
+                                        room.timeline[i].claimedEd25519Key =
+                                            decryptMessage.claimedEd25519Key;
+                                        room.timeline[i].senderCurve25519Key =
+                                            decryptMessage.senderCurve25519Key;
                                     }
                                 }
                                 if (found === false) {
-                                    room.timeline.push(decryptMessage);
+                                    e.clearEvent = decryptMessage.clearEvent;
+                                    e.claimedEd25519Key =
+                                        decryptMessage.claimedEd25519Key;
+                                    e.senderCurve25519Key =
+                                        decryptMessage.senderCurve25519Key;
+                                    room.timeline.push(e);
                                 }
                             }
                         }
@@ -191,11 +201,11 @@ function useMatrixClient() {
         }
     };
 
-    const forgetRoom = async (roomID) =>{
+    const forgetRoom = async (roomID) => {
         if (client) {
-            await client.forget(roomID,true);
+            await client.forget(roomID, true);
         }
-    }
+    };
 
     const setMatrixClientEvents = (newClient) => {
         newClient.once('sync', async (state, prevState, res) => {
@@ -234,8 +244,7 @@ function useMatrixClient() {
                         const members = roomList[i].getMembers();
                         for (let j = 0; j < members.length; j++) {
                             try {
-                                console.log('u=', members[j]);
-                                client.downloadKeys(members[j].userId);
+                                client.downloadKeys([members[j].userId]);
                             } catch {}
                         }
                     }
@@ -380,7 +389,7 @@ function useMatrixClient() {
 
         if (members !== null) {
             console.log('members =', members);
-            let memberkeys = await client.downloadKeys(members);
+            let memberkeys = await client.downloadKeys([members]);
 
             if (memberkeys) {
                 for (const userId in memberkeys) {
@@ -400,7 +409,6 @@ function useMatrixClient() {
             for (let i = 0; i < rooms.length; i++) {
                 if (rooms[i].roomId === roomId) {
                     for (let j = 0; j < rooms[i].timeline.length; j++) {
-                        console.log('getthis', rooms[i].timeline[j]);
                         decapsulateEvent(rooms[i].timeline[j]);
                     }
                 }
@@ -819,7 +827,7 @@ function useMatrixClient() {
         leaveRoom,
         banUserFromRoom,
         unbanUserFromRoom,
-        forgetRoom
+        forgetRoom,
     };
 }
 
