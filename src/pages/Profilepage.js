@@ -9,7 +9,7 @@ function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
   }
 
-const ProfileView = ({ avatar, userID, displayName, roomID, roomList }) => {
+const ProfileView = ({ avatar, userID, displayName, roomID, roomList, leaveRoom }) => {
      const [showModal, setShowModal] = useState(false);
      const [changeName, setShowChangeName] = useState(false);
      const [newName, setChangeName] = useState(null);
@@ -30,6 +30,10 @@ const ProfileView = ({ avatar, userID, displayName, roomID, roomList }) => {
 
     const handleChangeName = async (e) => {
         setDisplayName(e);
+    }
+
+    const handleLeaveRoom = async (e) => {
+        leaveRoom(e);
     }
 
 
@@ -84,18 +88,18 @@ const ProfileView = ({ avatar, userID, displayName, roomID, roomList }) => {
                                             <img
                                                 alt="..."
                                                 src={avatar}
-                                                className="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16"
+                                                className="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 lg:-ml-16 flex justify-center"
                                                 style={{ maxWidth: '150px' }}
                                             />
                                             
                                         </div>
                                         <Menu as="div" className="relative mt-14 mx-4">
-                                            <Menu.Button class="flex flex-wrap items-center justify-center  w-10 h-10 text-gray-700 transition-colors duration-150 bg-yellow-300 rounded-full focus:shadow-outline hover:bg-gray-200"
+                                            <Menu.Button className="flex flex-wrap items-center justify-center  w-10 h-10 text-gray-700 transition-colors duration-150 bg-yellow-300 rounded-full focus:shadow-outline hover:bg-gray-200"
                                                     type="button"
                                                     // onClick={() => setShowModal(true)}>
                                                     >
                                                         
-                                                <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path></svg>
+                                                <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path></svg>
                                             </Menu.Button >
 
                                             <Transition
@@ -166,6 +170,21 @@ const ProfileView = ({ avatar, userID, displayName, roomID, roomList }) => {
                                                         </a>
                                                         )}
                                                     </Menu.Item>
+                                                    <Menu.Item>
+                                                    {({ active }) => (
+                                                        <a
+                                                        href="#"
+                                                        className={classNames(
+                                                            active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                                                            'block px-4 py-2 text-sm'
+                                                        )}
+                                                        onClick={() => {handleLeaveRoom(roomID); 
+                                                                        history.push('/room')}}
+                                                        >
+                                                        Leave Room
+                                                        </a>
+                                                    )}
+                                                    </Menu.Item>
                                                     </form>
                                                 </div>
                                                 </Menu.Items>
@@ -182,7 +201,7 @@ const ProfileView = ({ avatar, userID, displayName, roomID, roomList }) => {
                                                     <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                                                         {/*header*/}
                                                         <div className="mt-4 flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                                                        <img class="mr-5 h-12 w-auto" src="icons8-tiger-96.png" alt="Workflow"></img>
+                                                        <img className="mr-5 h-12 w-auto" src="icons8-tiger-96.png" alt="Workflow"></img>
                                                         <h3 className="text-3xl font-semibold">
                                                             Edit Avarta
                                                         </h3>
@@ -197,14 +216,14 @@ const ProfileView = ({ avatar, userID, displayName, roomID, roomList }) => {
                                                         </div>
                                                         {/*body*/}
                                                     
-                                                        <div class="relative p-6 flex-auto">
+                                                        <div className="relative p-6 flex-auto">
                                                             <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Change Picture</label>
                                                             <input type={'file'}  id={'imagetest'} accept={'*'} ></input>
                                                             <div id= {"display-image"}></div>
                                                         </div>
-                                                        <div class="relative p-6 flex-auto mb-6">
-                                                            <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Remove Picture</label>
-                                                            <button class="h-10 w-100 px-5 text-yellow-400 duration-150 border-2 border-yellow-400 rounded-lg focus:shadow-outline hover:bg-yellow-400 hover:text-white">Remove Picture</button>
+                                                        <div className="relative p-6 flex-auto mb-6">
+                                                            <label for="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Remove Picture</label>
+                                                            <button className="h-10 w-100 px-5 text-yellow-400 duration-150 border-2 border-yellow-400 rounded-lg focus:shadow-outline hover:bg-yellow-400 hover:text-white">Remove Picture</button>
                                                         </div>
 
                             
@@ -246,7 +265,7 @@ const ProfileView = ({ avatar, userID, displayName, roomID, roomList }) => {
                                                         <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                                                             {/*header*/}
                                                             <div className="mt-4 flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                                                            <img class="mr-5 h-12 w-auto" src="icons8-tiger-96.png" alt="Workflow"></img>
+                                                            <img className="mr-5 h-12 w-auto" src="icons8-tiger-96.png" alt="Workflow"></img>
                                                             <h3 className="text-3xl font-semibold">
                                                                 Change Name
                                                             </h3>
@@ -254,16 +273,13 @@ const ProfileView = ({ avatar, userID, displayName, roomID, roomList }) => {
                                                         </div>
                                                             {/*body*/}
                                                         
-                                                            <div class="relative p-6 flex-auto">
-                                                                <label for="nameText" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Enter the new User Name: </label>
-                                                                <input  class="w-100" type={'text'}  id={'nameText'} onChange={event => setChangeName(event.target.value)}></input>
+                                                            <div className="relative p-6 flex-auto">
+                                                                <label for="nameText" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Enter the new User Name: </label>
+                                                                <input  className="w-100" type={'text'}  id={'nameText'} onChange={event => setChangeName(event.target.value)}></input>
                                                                 
                                                             </div>
-                                                            
-
-                                
-                                    
-                                                            
+                                                                     
+                                                                                               
                                                             {/*footer*/}
                                                             <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                                                             <button
@@ -289,19 +305,7 @@ const ProfileView = ({ avatar, userID, displayName, roomID, roomList }) => {
                                                 
                                                 </>
                                             ) : null}
-                           
-                           
-
-
-
-
-
-
-
-
-
-
-                                        
+                                   
                                     </div>
 
                                 </div>
@@ -329,16 +333,6 @@ const ProfileView = ({ avatar, userID, displayName, roomID, roomList }) => {
                                 <div className="mt-10 py-10 border-t border-gray-300 text-center">
                                     <div className="flex flex-wrap justify-center">
                                         <div className="w-full lg:w-9/12 px-4">
-                                            <p className="mb-4 text-lg leading-relaxed text-gray-800">
-                                                An artist of considerable range,
-                                                Jenna the name taken by
-                                                Melbourne-raised, Brooklyn-based
-                                                Nick Murphy writes, performs and
-                                                records all of his own music,
-                                                giving it a warm, intimate feel
-                                                with a solid groove structure.
-                                                An artist of considerable range.
-                                            </p>
                                             <a
                                                 href="#pablo"
                                                 className="font-normal text-pink-500"
@@ -379,6 +373,7 @@ const Profile = () => {
         getRoomIdByName,
         getUserId,
         getMatrixRooms,
+        leaveRoom,
     } = useMatrixClient();
     const [yesLogin, setYesLogin] = useState(false);
     const [avatar, setAvatar] = useState(null);
@@ -400,7 +395,7 @@ const Profile = () => {
 						try {
 							let profileAvatar = await getAvatar();
 							let display_name = await getDisplayName();
-							let room_id = await getRoomIdByName('Capstone-HelloWorld');
+							let room_id = localStorage.getItem("currentRoomID");
 							let user_ID = await getUserId();
 							let matrixRoom = await getMatrixRooms();
 		
@@ -430,7 +425,7 @@ const Profile = () => {
         })();
 
        
-    }, [avatar, getAvatar, isLogin,getDisplayName, getMatrixRooms, getRoomIdByName, getUserId]);
+    }, [avatar, getAvatar, isLogin,getDisplayName, getMatrixRooms, getRoomIdByName, getUserId, testLogin]);
 
     return (
         <>
@@ -444,6 +439,7 @@ const Profile = () => {
                             displayName={displayName}
                             roomID={roomID}
                             roomList={roomList}
+                            leaveRoom = {leaveRoom}
                         />
                     ) : (
                         <ProfileView
@@ -452,6 +448,7 @@ const Profile = () => {
                             displayName={displayName}
                             roomID={roomID}
                             roomList={roomList}
+                            leaveRoom = {leaveRoom}
                         />
                     )}
                 </div>

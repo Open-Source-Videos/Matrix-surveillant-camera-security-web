@@ -276,13 +276,15 @@ export const Login = () => {
                                 Sign-up here!
                             </Button>
                             <div className="text-decoration-none text-sm ps-2">
-                                <a
+							<button 
+									className="bg-black hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+									type="button"
                                     onClick={() => {
                                         localStorage.clear();
                                     }}
                                 >
                                     Having problem
-                                </a>
+                            </button>
                             </div>
                         </FormGroup>
                     </form>

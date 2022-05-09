@@ -22,7 +22,7 @@ const RoomPage = ({
 
     useEffect(() => {
         console.log('ROOM LIST: ', roomList);
-    }, []);
+    }, [roomList]);
 
     const handleCreateRoom = async (e) => {
         // e.preventDefault();
@@ -50,7 +50,7 @@ const RoomPage = ({
                 <div className="flex-1 pl-1 mr-16">
                     <div className="font-medium">{number.name}</div>
                 </div>
-                <div className="w-1/4 text-wrap text-center flex text-white text-bold flex-col rounded-md bg-yellow-400 justify-center items-center mr-10 p-2">
+                <div className="w-20 text-wrap text-center flex text-white text-bold flex-col rounded-md bg-yellow-400 justify-center items-center ml-10 p-2">
                     Join
                 </div>
             </div>
@@ -74,19 +74,19 @@ const RoomPage = ({
                 </div>
             </div>
 
-            <div className="text-center mt-12">
+            <div className="text-center mt-10">
                 <h3 className="text-4xl font-semibold leading-normal mb-2 text-gray-800 pt-5">
                     {displayName}
                 </h3>
             </div>
 
-            <div className="container mt-5 flex mx-auto w-full items-center justify-center">
-                <ul className="flex flex-col p-4">{listItems}</ul>
+            <div className="container mt-2 flex mx-auto w-full items-center justify-center">
+                <ul className="flex flex-col px-2">{listItems}</ul>
             </div>
 
             <div className="container flex mx-auto w-full items-center justify-center">
                 <button
-                    className="py-2 px-4 text-yellow-400 font-semibold border-2 p-6 border-yellow-400 rounded hover:bg-yellow-400 hover:text-white hover:border-transparent transition ease-in duration-200 transform hover:-translate-y-1 active:translate-y-0"
+                    className="mb-20 py-2 px-4 text-yellow-400 font-semibold border-2 p-6 border-yellow-400 rounded hover:bg-yellow-400 hover:text-white hover:border-transparent transition ease-in duration-200 transform hover:-translate-y-1 active:translate-y-0"
                     type="button"
                     onClick={() => setShowModal(true)}
                 >
@@ -123,7 +123,7 @@ const RoomPage = ({
                                 <div className="relative p-6 flex-auto">
                                     <label
                                         for="text"
-                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                                     >
                                         Room name
                                     </label>
@@ -239,7 +239,7 @@ const RoomSelect = () => {
                 get_room();
             }, 500);
         })();
-    }, [avatar, getAvatar, getDisplayName, getMatrixRooms, isLogin]);
+    }, [avatar, getAvatar, getDisplayName, getMatrixRooms, isLogin, testLogin]);
 
     return (
         <>
