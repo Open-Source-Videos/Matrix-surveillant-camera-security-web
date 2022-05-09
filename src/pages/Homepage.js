@@ -4,7 +4,7 @@ import useMatrixClient from '../hooks/useMatrixClient';
 import { ModalPopUp } from '../components/ModalPopUp';
 import TopNavigationBar from '../components/TopNavigationBar';
 import Page403 from './Page403';
-import { PlayIcon, CloudDownloadIcon } from '@heroicons/react/solid';
+import { ClockIcon, CloudDownloadIcon, VideoCameraIcon, TrashIcon } from '@heroicons/react/outline';
 import { currentRoomID,setCurrentRoomID } from './Roompage';
 
 // Global list
@@ -120,7 +120,7 @@ function Home() {
                                             <div className="max-w-sm bg-white rounded-lg shadow-md">
                                                 <div>
                                                     <img
-                                                        className="rounded-t-lg"
+                                                        className="rounded-t-lg object-cover w-96 h-72"
                                                         src={url}
                                                         alt="thumbnails"
                                                     />
@@ -130,12 +130,13 @@ function Home() {
                                                         Thumbnails
                                                     </h5>
                                                     <div className="flex items-center mt-2.5 mb-5">
-                                                        <span className="text-gray-700 text-xs font-semibold py-0.5 rounded px-2">
+                                                        <ClockIcon className="w-4 h-4"/>
+                                                        <span className="text-gray-500 text-xs font-semibold py-0.5 rounded px-2">
                                                             {new Date().toLocaleString()}
                                                         </span>
                                                     </div>
-                                                    <div className="flex justify-between items-center">
-                                                        <button
+                                                    {/*<div className="flex justify-between items-center">*/}
+                                                        {/*<button
                                                             onClick={
                                                                 handleWatch
                                                             }
@@ -158,6 +159,24 @@ function Home() {
                                                                 <CloudDownloadIcon className="inline-block w-5 h-5 pb-1 mr-1 -ml-1" />
                                                             </span>
                                                             Download
+                                                        </button>*/}
+                                                    <div className="flex justify-end">
+                                                        <button 
+                                                            className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-100 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
+                                                            onClick={handleWatch}
+                                                        >
+                                                            <VideoCameraIcon className="w-5 h-5" />
+                                                        </button>
+                                                        <button 
+                                                            className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-100 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
+                                                            onClick={() => handleDownload(url)}
+                                                        >
+                                                            <CloudDownloadIcon className="w-5 h-5" />
+                                                        </button>
+                                                        <button 
+                                                            className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-100 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
+                                                        >
+                                                            <TrashIcon className="w-5 h-5" />
                                                         </button>
                                                     </div>
                                                 </div>

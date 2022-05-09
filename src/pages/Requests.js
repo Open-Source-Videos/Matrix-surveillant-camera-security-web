@@ -13,15 +13,15 @@ import {
 	CloudIcon,
 	VideoCameraIcon,
 	CloudDownloadIcon,
-	TrashIcon
-} from '@heroicons/react/solid'
+	TrashIcon,
+    ClockIcon
+} from '@heroicons/react/outline'
 import { 
 	Menu, 
 	Transition 
 } from '@headlessui/react';
-//import { currentRoom } from './Roompage';
 
-const ROOM_ID = '!bdQMmkTBTMqUPAOvms:pdxinfosec.org';
+// const ROOM_ID = '!bdQMmkTBTMqUPAOvms:pdxinfosec.org';
 
 
 
@@ -107,7 +107,7 @@ const SnapShot = () => {
                                 <div className="max-w-sm bg-white rounded-lg shadow-md">
                                     <div>
                                         <img
-                                            className="rounded-t-lg"
+                                            className="rounded-t-lg object-cover w-96 h-72"
                                             src={content.url}
                                             alt="snapshot"
                                         />
@@ -117,35 +117,32 @@ const SnapShot = () => {
                                             Snapshot
                                         </h5>
                                         <div className="flex items-center mt-2.5 mb-5">
-                                            <span className="text-gray-700 text-xs font-semibold py-0.5 rounded px-2">
+                                            <ClockIcon className="w-4 h-4"/>
+                                            <span className="text-gray-500 text-xs font-semibold py-0.5 rounded px-2">
                                                 {content.time}
                                             </span>
                                         </div>
-                                        <div className="flex justify-between items-center">
-                                            <button
+                                        <div className="flex justify-end">
+                                            <button 
+                                                className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-100 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
                                                 onClick={() =>
                                                     handleDownloadImg(
                                                         content.url,
                                                         index
                                                     )
                                                 }
-                                                className="w-full text-gray-600 bg-gradient-to-tl from-amber-200 to-amber-300 font-medium rounded-lg text-sm px-3 py-2.5 text-center mx-2"
                                             >
-                                                <span>
-                                                    <CloudDownloadIcon className="inline-block w-5 h-5 pb-1 mr-1 -ml-1" />
-                                                </span>
-                                                Download
+                                                <CloudDownloadIcon className="w-5 h-5" />
                                             </button>
-                                            <button
+                                            <button 
+                                                className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-100 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
                                                 onClick={() =>
-                                                    handleDeleteImg(content.url)
+                                                    handleDeleteImg(
+                                                        content.url
+                                                    )
                                                 }
-                                                className="w-full text-white bg-gradient-to-r from-orange-400 to-rose-400 font-medium rounded-lg text-sm px-3 py-2.5 text-center mx-2"
                                             >
-                                                <span>
-                                                    <TrashIcon className="inline-block w-5 h-5 pb-1 mr-1 -ml-1" />
-                                                </span>
-                                                Delete
+                                                <TrashIcon className="w-5 h-5" />
                                             </button>
                                         </div>
                                     </div>
@@ -227,7 +224,7 @@ const RecordVideo = () => {
                                         <video
                                             controls
                                             autoPlay
-                                            className="rounded-t-lg"
+                                            className="rounded-t-lg object-cover w-96 h-72"
                                         >
                                             <source
                                                 src={content.url}
@@ -240,37 +237,32 @@ const RecordVideo = () => {
                                             Recoding Video
                                         </h5>
                                         <div className="flex items-center mt-2.5 mb-5">
-                                            <span className="text-gray-700 text-xs font-semibold py-0.5 rounded px-2">
+                                            <ClockIcon className="w-4 h-4" />
+                                            <span className="text-gray-500 text-xs font-semibold py-0.5 rounded px-2">
                                                 {content.time}
                                             </span>
                                         </div>
-                                        <div className="flex justify-between items-center">
-                                            <button
+                                        <div className="flex justify-end">
+                                            <button 
+                                                className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-100 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
                                                 onClick={() =>
                                                     handleDownloadVideo(
                                                         content.url,
                                                         index
                                                     )
                                                 }
-                                                className="w-full text-gray-600 bg-gradient-to-tl from-amber-200 to-amber-300 font-medium rounded-lg text-sm px-3 py-2.5 text-center mx-2"
                                             >
-                                                <span>
-                                                    <CloudDownloadIcon className="inline-block w-5 h-5 pb-1 mr-1 -ml-1" />
-                                                </span>
-                                                Download
+                                                <CloudDownloadIcon className="w-5 h-5" />
                                             </button>
-                                            <button
+                                            <button 
+                                                className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-100 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
                                                 onClick={() =>
                                                     handleDeleteRecVideo(
                                                         content.url
                                                     )
                                                 }
-                                                className="w-full text-white bg-gradient-to-r from-orange-400 to-rose-400 font-medium rounded-lg text-sm px-3 py-2.5 text-center mx-2"
                                             >
-                                                <span>
-                                                    <TrashIcon className="inline-block w-5 h-5 pb-1 mr-1 -ml-1" />
-                                                </span>
-                                                Delete
+                                                <TrashIcon className="w-5 h-5" />
                                             </button>
                                         </div>
                                     </div>
@@ -294,6 +286,7 @@ const RequestGroupList = () => {
 
     const handleSnapshot = () => {
         setChildComponent(1);
+        const ROOM_ID = localStorage.getItem("currentRoomID");
         sendMessageToRoom(
             ROOM_ID,
             `{"type" : "snapshot", "content" : "1", "requestor_id":"0"}`
@@ -302,6 +295,7 @@ const RequestGroupList = () => {
 
     const handleRecVideo = () => {
         setChildComponent(2);
+        const ROOM_ID = localStorage.getItem("currentRoomID");
         sendMessageToRoom(
             ROOM_ID,
             `{"type" : "record-video", "content" : "1,20", "requestor_id":"0"}`
@@ -399,9 +393,6 @@ const RequestGroupList = () => {
 				</div>
 			</div>
             <br />
-            {/*<SnapShot />
-			<div>Recording video</div>
-			<RecordVideo />*/}
             <>
                 {(() => {
                     if (child_component === 1) {
