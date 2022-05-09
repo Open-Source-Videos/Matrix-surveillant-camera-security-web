@@ -1,7 +1,7 @@
 import React from "react";
 import '../../index.css';
 
-export const ModalPopUp = ({onClickPause}) => {
+export const ModalPopUp = ({onClickPause, videoURL}) => {
     return (
             <>
                 <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
@@ -32,7 +32,7 @@ export const ModalPopUp = ({onClickPause}) => {
                                         autoPlay
                                     >
                                         <source
-                                            src={"testvideo1.mp4"}
+                                            src={videoURL}
                                             type="video/mp4"
                                         />
                                     </video>

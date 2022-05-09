@@ -15,16 +15,23 @@ import { currentRoomID, setCurrentRoomID } from './Roompage';
 // Global list
 let list_image_url = [];
 let list_video_url = [];
+let list_check_image = [];
 
 // Clear state when logging out
 export const clearState = () => {
     list_image_url = [];
     list_video_url = [];
+    list_check_image = [];
+
 };
 
 function Home() {
     const [listImageURL, setListImageURL] = useState(list_image_url);
     const [listVideoURL, setListVideoURL] = useState(list_video_url);
+    const [listCheckImage, setListCheckImage] = useState(list_check_image);
+
+    const [isLoadingVideo, setIsLoadingVideo] = useState(false);
+    const [playingVideo, setPlayingVideo] = useState();
 
     const {
         isLogin,
@@ -41,21 +48,37 @@ function Home() {
     const handleHavingNewFile = (sender, room, file) => {
         //  console.log('currentRoom.roomId 0',room);
         // console.log('currentRoom.roomId 1', currentRoomID);
+
         if (currentRoomID === room) {
             switch (file.fileType) {
                 case 'image/png':
                 case 'image/jpeg':
-                    // listImageURL.push(file.fileUrl);
-                    // setListImageURL([...listImageURL]);
+                    let json_obj = JSON.parse(file.fileName);
+                    console.log("json_obj", json_obj);
+
+                    for(let i = 0; i< listCheckImage.length; i++){ // imageid
+                        if(JSON.stringify(json_obj.content.split(",")[0].replace(".thumb","")) === JSON.stringify(listVideoURL[i].id)){ //compare id - if video URL already exist
+                            console.log("EXIST IMAGE")
+                            break;
+                        }
+                    }
+
+                    if(json_obj.type === "thumbnail"){ //send request-video message to room
+                        setIsLoadingVideo(false);
+                        json_obj.type = "video-request";
+                        json_obj.content = json_obj.content.split(",")[0];     
+                        sendMessageToRoom(
+                            currentRoomID, 
+                            JSON.stringify(json_obj)
+                        );
+                    }
                     list_image_url.push(file.fileUrl);
+                    list_check_image.push({id : json_obj.content, url: file.fileUrl}); // add image url and id to list
                     setListImageURL([...list_image_url]);
-                    console.log(file.fileUrl);
-                    /*sendMessageToRoom(
-                        ROOM_ID, 
-                        `{"type" : "video-send", "content" : "/var/lib/motioneye/Camrea1/02-05-2021/15-25-30.mp4", "requestor_id":"0"}`
-                    );*/
+                    setListCheckImage([...list_check_image]);
                     break;
                 case 'video/mp4':
+                    console.log("GETTING VIDEO...", file)
                     list_video_url.push(file.fileUrl);
                     setListVideoURL([...list_video_url]);
                     // setListVideoURL(file.fileUrl);
@@ -67,12 +90,9 @@ function Home() {
         }
     };
 
-    const handleWatch = () => {
-        console.log('SEND MESSAGE');
-        /*sendMessageToRoom(
-            ROOM_ID, 
-            `{"type" : "video-send", "content" : "/var/lib/motioneye/Camrea1/02-05-2021/15-25-30.mp4", "requestor_id":"0"}`
-        );*/
+    const handleWatch = (imageURL) => {
+        
+        setPlayingVideo(imageURL)
         setShowModal(true);
     };
 
@@ -83,7 +103,7 @@ function Home() {
     useEffect(() => {
         (async () => {
             setHavingNewFile(handleHavingNewFile);
-
+            //console.log('test',isLogin());
             if (isLogin() === false) {
                 setCurrentRoomID(localStorage.getItem('currentRoomID'));
 
@@ -163,7 +183,7 @@ function Home() {
                                                         <button
                                                             className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-100 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
                                                             onClick={
-                                                                handleWatch
+                                                                handleWatch(url)
                                                             }
                                                         >
                                                             <VideoCameraIcon className="w-5 h-5" />
@@ -199,6 +219,8 @@ function Home() {
                                 onClickPause={() => {
                                     setShowModal(false);
                                 }}
+
+                                url = {playingVideo}
                             />
                         ) : (
                             <></>

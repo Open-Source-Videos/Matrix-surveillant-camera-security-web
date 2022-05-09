@@ -2,6 +2,7 @@
   "name": "capstone-frontend-web",
   "version": "0.1.0",
   "private": true,
+  "homepage": "./",
   "dependencies": {
     "@headlessui/react": "^1.6.0",
     "@heroicons/react": "^1.0.6",
@@ -20,7 +21,7 @@
     "react-redux": "^7.2.8",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "5.0.1",
+    "react-scripts": "^5.0.1",
     "react-user-profile": "^1.0.3",
     "redux": "^4.1.2",
     "redux-thunk": "^2.4.1",
@@ -29,7 +30,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && cp -r build/* ./cordova/www",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
