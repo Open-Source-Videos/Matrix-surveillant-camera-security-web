@@ -1,268 +1,303 @@
-import React, { 
-	useState,
-	useEffect
-} from 'react';
-import { useHistory } from "react-router-dom";
-import { withRouter} from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-
 import './style.css';
-import { 
-	Row, 
-	Col, 
-	FormGroup, 
-	FormControl, 
-	ControlLabel, 
-	Button, 
-	HelpBlock, 
-	Label, 
-	Image 
+import {
+    Row,
+    Col,
+    FormGroup,
+    FormControl,
+    ControlLabel,
+    Button,
+    HelpBlock,
+    Label,
+    Image,
 } from 'react-bootstrap';
-import { 
-	isEmpty, 
-	isLength, 
-	isContainWhiteSpace
-} from '../../pages/Homepage';
+import { isEmpty, isLength, isContainWhiteSpace } from '../../pages/Homepage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import useMatrixClient from '../../hooks/useMatrixClient';
 
 export const Login = () => {
-	const [formData, setFormData] = useState({
-		homeserver:"https://matrix.pdxinfosec.org",
-		email:'@test003:pdxinfosec.org',
-		password:'G3Vsnzvr'
+    const [formData, setFormData] = useState({
+        homeserver: 'https://matrix.pdxinfosec.org',
+        email: '@test003:pdxinfosec.org',
+        password: 'G3Vsnzvr',
+    });
+    const [errors, setErrors] = useState({});
+    const [homeServer, setHomeServer] = useState({});
 
-	});
-	const [errors, setErrors] = useState({}); 
-	const [homeServer, setHomeServer] = useState({}); 
+    const [formSubmitted, setFormSubmitted] = useState(false);
+    const history = useHistory();
+    const {
+        getAvatar,
+        setOnLogInResult,
+        loginMatrixServer,
+        isLogin,
+        testLogin,
+    } = useMatrixClient();
 
-	const [formSubmitted, setFormSubmitted] = useState(false);
-	const history = useHistory();
-    const {getAvatar,setOnLogInResult,loginMatrixServer, isLogin,testLogin } = useMatrixClient();
-		
-	useEffect(()=>{
-		setOnLogInResult(handleLoginResult);
-				
-		(async () => {
-			await testLogin();
-		})();
-		
+    useEffect(() => {
+        setOnLogInResult(handleLoginResult);
 
-		// const saved = localStorage.getItem("matrix_account");
-		// if (saved)
-		// {
-		// 	(async() => {
-		// 		let info = JSON.parse(saved);
-		// 		console.log("My Info", info);
-		// 		await reloginMatrixServer(info.homeServer, info.exportedDevice, info.accessToken );
-		// 	})();
-		// } else {
-		// 	console.log('Set handleLoginResult');
-		// }
-		
-		
-	},[]);
-	
-	const handleInputChange = (event) => {
-		const target = event.target;
-		const value = target.value;
-		const name = target.name;
+        (async () => {
+            console.log('Test login');
+            await testLogin();
+        })();
 
-		formData[name] = value;
-		setFormData(formData);
-	}
+        // const saved = localStorage.getItem("matrix_account");
+        // if (saved)
+        // {
+        // 	(async() => {
+        // 		let info = JSON.parse(saved);
+        // 		console.log("My Info", info);
+        // 		await reloginMatrixServer(info.homeServer, info.exportedDevice, info.accessToken );
+        // 	})();
+        // } else {
+        // 	console.log('Set handleLoginResult');
+        // }
+    }, []);
 
-	const validateLoginForm = (e) => {
-		
-		if (isEmpty(formData.homeserver)) {
-			errors.homeserver = "Homeserver can't be blank";
-		}
-		
-		if (isEmpty(formData.email)) {
-			errors.email = "Email can't be blank";
-		}
-	
-		if (isEmpty(formData.password)) {
-			errors.password = "Password can't be blank";
-		}  else if (isContainWhiteSpace(formData.password)) {
-			errors.password = "Password should not contain white spaces";
-		} else if (!isLength(formData.password, { gte: 6, lte: 16, trim: true })) {
-			errors.password = "Password's length must between 6 to 16";
-		}
+    const handleInputChange = (event) => {
+        const target = event.target;
+        const value = target.value;
+        const name = target.name;
 
-		if (isEmpty(errors)) {
-			//setHomeServer(formData.homeserver);
-			return true;
-		} else {
-			return errors;
-		}
-	}
+        formData[name] = value;
+        setFormData(formData);
+    };
 
-	const handleLoginResult = (
-		_isLogin, 
-		error, 
-		exportedDevice, 
-		accessToken
-	) => {
+    const validateLoginForm = (e) => {
+        if (isEmpty(formData.homeserver)) {
+            errors.homeserver = "Homeserver can't be blank";
+        }
+
+        if (isEmpty(formData.email)) {
+            errors.email = "Email can't be blank";
+        }
+
+        if (isEmpty(formData.password)) {
+            errors.password = "Password can't be blank";
+        } else if (isContainWhiteSpace(formData.password)) {
+            errors.password = 'Password should not contain white spaces';
+        } else if (
+            !isLength(formData.password, { gte: 6, lte: 16, trim: true })
+        ) {
+            errors.password = "Password's length must between 6 to 16";
+        }
+
+        if (isEmpty(errors)) {
+            //setHomeServer(formData.homeserver);
+            return true;
+        } else {
+            return errors;
+        }
+    };
+
+    const handleLoginResult = (
+        _isLogin,
+        error,
+        exportedDevice,
+        accessToken
+    ) => {
         console.log('Login = ', _isLogin);
         console.log('error = ', error);
         console.log('exportedDevice = ', exportedDevice);
         console.log('accessToken = ', accessToken);
 
-		if (_isLogin) {
-			// if (exportedDevice && accessToken) {
-			// 	localStorage.setItem("matrix_account", JSON.stringify({exportedDevice,accessToken, homeServer: formData.homeserver}));
-			// 	(async()=>{
+        if (_isLogin) {
+            // if (exportedDevice && accessToken) {
+            // 	localStorage.setItem("matrix_account", JSON.stringify({exportedDevice,accessToken, homeServer: formData.homeserver}));
+            // 	(async()=>{
 
-			// 		//@test007:pdxinfosec.org To Test
-			// 		let profileAvatar = await getAvatar(exportedDevice.userId)
-			// 		console.log("profileAvatar", profileAvatar)
-			// 	})();
+            // 		//@test007:pdxinfosec.org To Test
+            // 		let profileAvatar = await getAvatar(exportedDevice.userId)
+            // 		console.log("profileAvatar", profileAvatar)
+            // 	})();
 
-			// }
-			history.push('/homepage');
-
-		} else {
-			alert("Failed to sign in...");
-		}
+            // }
+            history.push('/room');
+        } else {
+            alert('Failed to sign in...');
+        }
     };
-	
-	const login = async(e) => {
-		e.preventDefault();
 
-		let valid = validateLoginForm();
-	
-		if(valid === true) {
-			console.log('Here',valid)
-			await loginMatrixServer(
-				formData.homeserver, 
-				formData.email, 
-				formData.password
-			);
-		} else {
-			setErrors(errors);
-			setFormSubmitted(true);
-		}
-	}
+    const login = async (e) => {
+        e.preventDefault();
 
-	return (
-		<div className="bg-white m-4 rounded">
-			<Row>
-				<Col xs={12} lg={6} className="d-none d-lg-block">
-					<Image src={"Mobile login-cuate.svg"} alt="login" />
-				</Col>
-				<Col xs={12} lg={6} className="Login my-auto">
-				<figure id="mainImg" className="my-auto">
-					<img src={"security-camera.png"} alt="MainImg" width={70} height={70}/>
-					<figcaption id="figcaption text-lg">OpenCamera</figcaption>
-				</figure>
+        let valid = validateLoginForm();
 
-				<h1 className="text-xxl fw-bold text-center py-3">Login</h1>
+        if (valid === true) {
+            console.log('Here', valid);
+            setOnLogInResult(handleLoginResult);
+            await loginMatrixServer(
+                formData.homeserver,
+                formData.email,
+                formData.password
+            );
+        } else {
+            setErrors(errors);
+            setFormSubmitted(true);
+        }
+    };
 
-				<form onSubmit={login} className="px-3 px-md-5 mx-xl-5">
-					<FormGroup 
-						controlId="homeserver" 
-						validationState={ 
-							formSubmitted ? (errors.homeserver ? 'error' : 'success') : null 
-						}
-						className="my-2"
-					>
-						<ControlLabel id="homeserver1">Home server</ControlLabel>
+    return (
+        <div className="bg-white m-4 rounded">
+            <Row>
+                <Col xs={12} lg={6} className="d-none d-lg-block">
+                    <Image src={'Mobile login-cuate.svg'} alt="login" />
+                </Col>
+                <Col xs={12} lg={6} className="Login my-auto">
+                    <figure id="mainImg" className="my-auto">
+                        <img
+                            src={'security-camera.png'}
+                            alt="MainImg"
+                            width={70}
+                            height={70}
+                        />
+                        <figcaption id="figcaption text-lg">
+                            OpenCamera
+                        </figcaption>
+                    </figure>
 
-						<FormControl 
-							type="text" 
-							name="homeserver" 
-							placeholder="Enter your homeserver" 
-							onChange={handleInputChange} 
-							defaultValue = {"https://matrix.pdxinfosec.org"}
-						/>
+                    <h1 className="text-xxl fw-bold text-center py-3">Login</h1>
 
-						{ errors.homeserver &&
-							<HelpBlock id="helpBlock">{errors.homeserver}</HelpBlock>
-						}
+                    <form onSubmit={login} className="px-3 px-md-5 mx-xl-5">
+                        <FormGroup
+                            controlId="homeserver"
+                            validationState={
+                                formSubmitted
+                                    ? errors.homeserver
+                                        ? 'error'
+                                        : 'success'
+                                    : null
+                            }
+                            className="my-2"
+                        >
+                            <ControlLabel id="homeserver1">
+                                Home server
+                            </ControlLabel>
 
-						</FormGroup>
-						<FormGroup 
-							controlId="email" 
-							validationState={ 
-								formSubmitted ? (errors.email ? 'error' : 'success') : null 
-							}
-							
-						>
+                            <FormControl
+                                type="text"
+                                name="homeserver"
+                                placeholder="Enter your homeserver"
+                                onChange={handleInputChange}
+                                defaultValue={'https://matrix.pdxinfosec.org'}
+                            />
 
-						<ControlLabel id="homeserver1">Username</ControlLabel>
+                            {errors.homeserver && (
+                                <HelpBlock id="helpBlock">
+                                    {errors.homeserver}
+                                </HelpBlock>
+                            )}
+                        </FormGroup>
+                        <FormGroup
+                            controlId="email"
+                            validationState={
+                                formSubmitted
+                                    ? errors.email
+                                        ? 'error'
+                                        : 'success'
+                                    : null
+                            }
+                        >
+                            <ControlLabel id="homeserver1">
+                                Username
+                            </ControlLabel>
 
-						<FormControl 
-							type="text" 
-							name="email" 
-							placeholder="Enter your username" 
-							onChange={handleInputChange} 
-							defaultValue = {"@test003:pdxinfosec.org"}
-						/>
+                            <FormControl
+                                type="text"
+                                name="email"
+                                placeholder="Enter your username"
+                                onChange={handleInputChange}
+                                defaultValue={'@test003:pdxinfosec.org'}
+                            />
 
-						{ errors.email &&
-							<HelpBlock id="helpBlock">{errors.email}</HelpBlock>
-						}
-					</FormGroup>
+                            {errors.email && (
+                                <HelpBlock id="helpBlock">
+                                    {errors.email}
+                                </HelpBlock>
+                            )}
+                        </FormGroup>
 
-					<FormGroup 
-						controlId="password" 
-						validationState={ 
-							formSubmitted ? (errors.password ? 'error' : 'success') : null 
-						}
-						className="my-2"
-						
-					>
-						<ControlLabel id="homeserver1">Password</ControlLabel>
+                        <FormGroup
+                            controlId="password"
+                            validationState={
+                                formSubmitted
+                                    ? errors.password
+                                        ? 'error'
+                                        : 'success'
+                                    : null
+                            }
+                            className="my-2"
+                        >
+                            <ControlLabel id="homeserver1">
+                                Password
+                            </ControlLabel>
 
-						<FormControl 
-							type="password" 
-							name="password" 
-							placeholder="Enter your password" 
-							onChange={handleInputChange} 
-							defaultValue={"G3Vsnzvr"}
-						/>
-						{ errors.password &&
-							<HelpBlock id="helpBlock">{errors.password}</HelpBlock>
-						}
+                            <FormControl
+                                type="password"
+                                name="password"
+                                placeholder="Enter your password"
+                                onChange={handleInputChange}
+                                defaultValue={'G3Vsnzvr'}
+                            />
+                            {errors.password && (
+                                <HelpBlock id="helpBlock">
+                                    {errors.password}
+                                </HelpBlock>
+                            )}
+                        </FormGroup>
 
-					</FormGroup>
+                        <div className="text-center">
+                            <Button
+                                id="button"
+                                type="submit"
+                                bsStyle="primary"
+                                className="border border-dark"
+                            >
+                                Login
+                            </Button>
+                        </div>
 
-					<div className="text-center">
-						<Button 
-							id="button" 
-							type="submit" 
-							bsStyle="primary"
-							className="border border-dark"
-						>
-							Login
-						</Button>
-					</div>
-
-					<FormGroup 
-						className="pt-4 text-center my-2"
-					>
-						<ControlLabel>Don't have an account?</ControlLabel>
-						<Label 
-							id="sign_up" 
-							className="text-decoration-none text-sm ps-2"
-						>
-							Sign-up here! 
-						</Label>
-					</FormGroup>
-				</form>
-				</Col>
-			</Row>
-		</div>
-	)
-}
-
+                        <FormGroup className="pt-4 text-center my-2">
+                            <ControlLabel>Don't have an account?</ControlLabel>
+                            <Button
+                                id="sign_up"
+                                title="Sign_up"
+                                className="text-decoration-none text-sm ps-2"
+                                onClick={() =>
+                                    (window.location.href =
+                                        'https://element.pdxinfosec.org/#/register')
+                                }
+                            >
+                                Sign-up here!
+                            </Button>
+                            <div className="text-decoration-none text-sm ps-2">
+							<button 
+									className="bg-black hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+									type="button"
+                                    onClick={() => {
+                                        localStorage.clear();
+                                    }}
+                                >
+                                    Having problem
+                            </button>
+                            </div>
+                        </FormGroup>
+                    </form>
+                </Col>
+            </Row>
+        </div>
+    );
+};
 
 const mapStateToProps = (state) => {
-	return {
-		profile: state.user.profile
-	}
-}
+    return {
+        profile: state.user.profile,
+    };
+};
 
 export default connect(mapStateToProps)(withRouter(Login));

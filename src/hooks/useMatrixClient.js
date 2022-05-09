@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+const ROOM_CRYPTO_CONFIG = { algorithm: 'm.megolm.v1.aes-sha2' };
 const handleLoginResult = async (
     _isLogin,
     error,
@@ -7,9 +7,9 @@ const handleLoginResult = async (
     accessToken
 ) => {};
 
-const handleHavingNewFile = (sender, room, file) => {};
+const handleHavingNewFile = (sender, room, file, time) => {};
 
-const handleHavingNewMessage = (sender, room, message) => {};
+const handleHavingNewMessage = (sender, room, message, time) => {};
 
 var client = null;
 var didLogin = false;
@@ -18,12 +18,14 @@ var roomList = [];
 var onHavingNewMessage = handleHavingNewMessage;
 var onHavingNewFile = handleHavingNewFile;
 var onLogInResult = handleLoginResult;
-
-var numberHistoricMessages = 20;
+const maxHistory = 10;
+var numberHistoricMessages = maxHistory;
 var avatar = null;
 const loginKey = 'open_source_video';
 
 var savedData = localStorage.getItem(loginKey);
+
+var dictTimeStamp = {};
 
 function useMatrixClient() {
     const resetValues = () => {
@@ -31,12 +33,13 @@ function useMatrixClient() {
         didLogin = false;
         roomList = [];
         savedData = null;
+        dictTimeStamp = {};
 
         onHavingNewMessage = handleHavingNewMessage;
         onHavingNewFile = handleHavingNewFile;
         onLogInResult = handleLoginResult;
 
-        numberHistoricMessages = 5;
+        numberHistoricMessages = maxHistory;
         avatar = null;
     };
 
@@ -60,15 +63,16 @@ function useMatrixClient() {
         return savedData ? true : false;
     };
 
-    const setMatrixClientEvents = (newClient) => {
-        const processContent = async (sender, room, content) => {
-            if (onHavingNewMessage  && content.body) {
-                onHavingNewMessage(sender, room, content.body);
+    const decryptFile = async (sender, room, content, time) => {
+        try {
+            if (onHavingNewMessage && content.body) {
+               // console.log('currentRoom.roomId 2',room)
+                onHavingNewMessage(sender, room, content.body, time);
             }
 
             if (typeof content.file !== 'undefined') {
                 const response = await axios.get(
-                    newClient.mxcUrlToHttp(content.file.url),
+                    client.mxcUrlToHttp(content.file.url),
                     { responseType: 'arraybuffer' }
                 );
 
@@ -83,19 +87,125 @@ function useMatrixClient() {
                 );
 
                 if (onHavingNewFile)
-                    onHavingNewFile(sender, room, {
-                        fileType: content.info.mimetype,
-                        fileUrl: blobURL,
-                        fileName: content.body,
-                    });
+                    onHavingNewFile(
+                        sender,
+                        room,
+                        {
+                            fileType: content.info.mimetype,
+                            fileUrl: blobURL,
+                            fileName: content.body,
+                        },
+                        time
+                    );
             }
-        };
+        } catch (e) {
+            console.log('remove local storage', loginKey);
+            localStorage.removeItem(loginKey);
+            resetValues();
+        }
+    };
+    const decapsulateEvent = (e) => {
+        if (e.claimedEd25519Key !== null) {
+            if (onHavingNewMessage && e.clearEvent.type === 'm.room.message') {
+                onHavingNewMessage(
+                    e.sender.userId,
+                    e.sender.roomId,
+                    e.clearEvent.content.body,
+                    e.event.origin_server_ts
+                );
+               // console.log('currentRoom.roomId 3', e.sender.room);
+                decryptFile(
+                    e.sender.userId,
+                    e.sender.roomId,
+                    e.clearEvent.content,
+                    e.event.origin_server_ts
+                );
+            }
+        } else {
+            decryptEvent(e);
+        }
+    };
+    const decryptEvent = async (e) => {
+        if (client) {
+            try {
+                if (e.event.type === 'm.room.encrypted') {
+                    const decryptMessage = await client.crypto.decryptEvent(e);
 
+                    if (
+                        decryptMessage &&
+                        decryptMessage.clearEvent &&
+                        decryptMessage.clearEvent.content &&
+                        e.sender
+                    ) {
+                        if (
+                            typeof dictTimeStamp[e.event.origin_server_ts] ===
+                            'undefined'
+                        ) {
+                            dictTimeStamp[e.event.origin_server_ts] =
+                                e.event.origin_server_ts;
+                              //  console.log('currentRoom.roomId 4', e);
+                                decryptFile(
+                                e.sender.userId,
+                                e.sender.roomId,
+                                decryptMessage.clearEvent.content,
+                                e.event.origin_server_ts
+                            );
+
+                            const room = client.getRoom(e.sender.roomId);
+                            let found = false;
+
+                            if (room && room.timeline) {
+                                for (let i = 0; i < room.timeline.length; i++) {
+                                    if (
+                                        room.timeline[i]
+                                            .event_origin_server_ts ===
+                                        e.event.origin_server_ts
+                                    ) {
+                                        found = true;
+                                        room.timeline[i] = decryptMessage;
+                                    }
+                                }
+                                if (found === false) {
+                                    room.timeline.push(decryptMessage);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (
+                    e.getType() === 'm.room.message' &&
+                    e.sender &&
+                    e.event.origin_server_ts
+                ) {
+                    decryptFile(
+                        e.sender.userId,
+                        e.sender.roomId,
+                        e.event.content,
+                        e.event.origin_server_ts
+                    );
+                    return;
+                }
+            } catch (error) {
+                console.error('#### ', error);
+            }
+        }
+    };
+
+    const forgetRoom = async (roomID) =>{
+        if (client) {
+            await client.forget(roomID,true);
+        }
+    }
+
+    const setMatrixClientEvents = (newClient) => {
         newClient.once('sync', async (state, prevState, res) => {
             if (state === 'PREPARED') {
+                client = newClient;
+
                 didLogin = true;
                 roomList = await newClient.getRooms();
-                client = newClient;
+
+                //  client = newClient;
 
                 const exportedDevice = await newClient.exportDevice();
 
@@ -107,7 +217,7 @@ function useMatrixClient() {
                         homeServer: newClient.baseUrl,
                     })
                 );
-                console.log('have login')
+                //  console.log('have login');
                 if (onLogInResult) {
                     console.log('return result');
                     //Return result
@@ -118,8 +228,41 @@ function useMatrixClient() {
                         newClient.accessToken
                     );
                 }
+                try {
+                    //console.log('getmember',client);
+                    for (let i = 0; i < roomList.length; i++) {
+                        const members = roomList[i].getMembers();
+                        for (let j = 0; j < members.length; j++) {
+                            try {
+                                console.log('u=', members[j]);
+                                client.downloadKeys(members[j].userId);
+                            } catch {}
+                        }
+                    }
+                } catch (err) {
+                    console.log('uploadKeys key error', err);
+                }
 
-                getHistory(numberHistoricMessages);
+                try {
+                    await newClient.uploadKeys();
+                } catch (err) {
+                    console.log('##error', err);
+                }
+
+                //GetHistory
+                try {
+                    const roomList = await newClient.getRooms();
+                    for (let i = 0; i < roomList.length; i++) {
+                        try {
+                            client.scrollback(
+                                roomList[i],
+                                numberHistoricMessages
+                            );
+                        } catch {}
+                    }
+                } catch (err) {
+                    console.log('##error', err);
+                }
             }
         });
 
@@ -128,42 +271,9 @@ function useMatrixClient() {
             //verifyAllDevicesInRoom(room);
         });
 
-        newClient.on(
-            'Room.timeline',
-            async (event, room, toStartOfTimeline) => {
-                try {
-                    if (event.event.type === 'm.room.encrypted') {
-                        const decryptMessage =
-                            await newClient.crypto.decryptEvent(event);
-                        //console.log(decryptMessage);
-                        if (
-                            decryptMessage &&
-                            decryptMessage.clearEvent &&
-                            decryptMessage.clearEvent.content &&
-                            event.sender
-                        ) {
-                            processContent(
-                                event.sender.userId,
-                                event.sender.room,
-                                decryptMessage.clearEvent.content
-                            );
-                        }
-                        return;
-                    }
-
-                    if (event.getType() === 'm.room.message' && event.sender) {
-                        processContent(
-                            event.sender.userId,
-                            event.sender.room,
-                            event.event.content
-                        );
-                        return;
-                    }
-                } catch {
-                    //console.error('#### ', error);
-                }
-            }
-        );
+        newClient.on('Room.timeline', async (e, room, toStartOfTimeline) => {
+            decryptEvent(e);
+        });
 
         // automatic accept an joining room invitation
         newClient.on('RoomMember.membership', async (event, member) => {
@@ -172,20 +282,95 @@ function useMatrixClient() {
                 member.userId === newClient.getUserId()
             ) {
                 await newClient.joinRoom(member.roomId);
-                // setting up of room encryption seems to be triggered automatically
-                // but if we don't wait for it the first messages we send are unencrypted
-                await newClient.setRoomEncryption(member.roomId, {
-                    algorithm: 'm.megolm.v1.aes-sha2',
-                });
-                console.log('');
-                console.log('>> Has join room = ', member.roomId);
-                console.log('');
+            }
+
+            if (
+                member.membership === 'join' &&
+                member.userId !== (await newClient.getUserId())
+            ) {
+                try {
+                    console.log('download keys of user', member.userId);
+                    const userKey = await client.downloadKeys([member.userId]);
+                    if (userKey) {
+                        for (const deviceId in userKey[member.userId]) {
+                            console.log(
+                                'set device verified keys of user',
+                                member.userId,
+                                deviceId
+                            );
+                            await client.setDeviceVerified(
+                                member.userId,
+                                deviceId
+                            );
+                        }
+                    }
+                } catch (error) {
+                    console.log('#error', error);
+                }
             }
         });
 
         newClient.on('Room.receipt', async (event, room) => {});
 
-        newClient.on('Event.decrypted', (e) => {});
+        newClient.on('Event.decrypted', async (e) => {
+            // try {
+            //     if (e.clearEvent && e.sender && e.event.origin_server_ts) {
+            //         console.log('message', e);
+            //         if (
+            //             e.clearEvent.content &&
+            //             e.clearEvent.content.msgtype === 'm.bad.encrypted'
+            //         ) {
+            //             if (e.event.type === 'm.room.encrypted') {
+            //                 console.log('decrypt-again');
+            //                 const decryptMessage =
+            //                     await newClient.crypto.decryptEvent(e);
+            //                 console.log(
+            //                     'decrypt-again-result:',
+            //                     decryptMessage
+            //                 );
+            //                 if (
+            //                     decryptMessage &&
+            //                     decryptMessage.clearEvent &&
+            //                     decryptMessage.clearEvent.content &&
+            //                     e.sender
+            //                 ) {
+            //                     if (
+            //                         typeof dictTimeStamp[
+            //                             e.event.origin_server_ts
+            //                         ] === 'undefined'
+            //                     ) {
+            //                         dictTimeStamp[e.event.origin_server_ts] =
+            //                             e.event.origin_server_ts;
+            //                         processContent(
+            //                             e.sender.userId,
+            //                             e.sender.room,
+            //                             decryptMessage.clearEvent.content,
+            //                             e.event.origin_server_ts
+            //                         );
+            //                     }
+            //                 }
+            //                 return;
+            //             }
+            //         } else {
+            //             if (
+            //                 typeof dictTimeStamp[e.event.origin_server_ts] ===
+            //                 'undefined'
+            //             ) {
+            //                 dictTimeStamp[e.event.origin_server_ts] =
+            //                     e.event.origin_server_ts;
+            //                 processContent(
+            //                     e.sender.userId,
+            //                     e.sender.room,
+            //                     e.clearEvent.content,
+            //                     e.event.origin_server_ts
+            //                 );
+            //             }
+            //         }
+            //     }
+            // } catch (e) {
+            //     console.log('#error =', e);
+            // }
+        });
     };
 
     const verifyAllDevicesInRoom = async (room) => {
@@ -207,9 +392,20 @@ function useMatrixClient() {
         }
     };
 
-    const getHistory = async (numOfHistory) => {
-        for (let i = 0; i < roomList.length; i++)
-            await client.scrollback(roomList[i], numOfHistory);
+    const getHistory = async (roomId) => {
+        if (client) {
+            const rooms = await client.getRooms();
+            dictTimeStamp = {};
+
+            for (let i = 0; i < rooms.length; i++) {
+                if (rooms[i].roomId === roomId) {
+                    for (let j = 0; j < rooms[i].timeline.length; j++) {
+                        console.log('getthis', rooms[i].timeline[j]);
+                        decapsulateEvent(rooms[i].timeline[j]);
+                    }
+                }
+            }
+        }
     };
 
     const getKeyByEvent = (e) => {
@@ -234,12 +430,14 @@ function useMatrixClient() {
     };
 
     const isLogin = () => {
-        return didLogin;
+        return client !== null;
     };
 
-    const testLogin = async() => {
+    const testLogin = async () => {
+        console.log('Run-here1', didLogin, savedData);
         if (didLogin === false && savedData) {
             let info = JSON.parse(savedData);
+
             const loginResult = await loginByAccessToken(
                 info.homeServer,
                 info.exportedDevice,
@@ -254,7 +452,8 @@ function useMatrixClient() {
                 return loginResult;
             }
         }
-    }
+        return false;
+    };
 
     const logoutMatrixServer = () => {
         try {
@@ -273,38 +472,77 @@ function useMatrixClient() {
 
     const loginMatrixServer = async (baseUrl, username, password) => {
         savedData = localStorage.getItem(loginKey);
+
         if (savedData) {
             let info = JSON.parse(savedData);
+
             const loginResult = await loginByAccessToken(
                 info.homeServer,
                 info.exportedDevice,
                 info.accessToken
             );
+            console.log('login result ', loginResult);
 
             if (loginResult) return;
             else {
                 console.log('remove localstorage', loginKey);
                 localStorage.removeItem(loginKey);
+                resetValues();
             }
         }
 
         loginByPassword(baseUrl, username, password);
     };
 
-    const getMatrixRooms = () => {
-        return roomList;
+    const getMatrixRooms = async () => {
+        if (client) {
+            return await client.getRooms();
+        }
+        return null;
     };
 
-    const getAvatar = async (userId) => {
-        try {
-            if (didLogin && client) {
-                var profile = await client.getProfileInfo(userId, 'avatar_url');
-                avatar = client.mxcUrlToHttp(profile.avatar_url);
-            }
-        } catch (e) {
-            console.log('error', e);
+    const getAvatar = async () => {
+        if (client) {
+            // console.log('tritri',client, await getRoomIdByName('Capstone-HelloWorld'));
+            var profile = await client.getProfileInfo(
+                await client.getUserId(),
+                'avatar_url'
+            );
+            avatar = await client.mxcUrlToHttp(profile.avatar_url);
         }
+
         return avatar;
+    };
+
+    const getUserId = async () => {
+        if (client) {
+            return await client.getUserId();
+        }
+        return null;
+    };
+
+    const getDisplayName = async () => {
+        if (client) {
+            const { displayName } = await client.getUser(
+                await client.getUserId()
+            );
+            return displayName;
+        }
+
+        return '-';
+    };
+
+    const getRoomIdByName = async (name) => {
+        if (client) {
+            const rooms = await client.getRooms();
+
+            for (let i = 0; i < rooms.length; i++) {
+                if (rooms[i].name === name) {
+                    return rooms[i].roomId;
+                }
+            }
+        }
+        return null;
     };
 
     // const getHistory = async (roomID, limit = 30) => {
@@ -339,31 +577,33 @@ function useMatrixClient() {
     //     }
     // };
 
-    const createRoom = async (roomID, usersToInvite) => {
-        // if (roomID !== null) {
-        //     // const {  roomID } = await client.createRoom({
-        //     //     visibility: 'private',
-        //     //     invite: usersToInvite,
-        //     // });
-        //     // await client.sendStateEvent(
-        //     //     roomID,
-        //     //     'm.room.encryption',
-        //     //     ROOM_CRYPTO_CONFIG
-        //     // );
-        //     // await client.setRoomEncryption(roomID, ROOM_CRYPTO_CONFIG);
-        //     // // Marking all devices as verified
-        //     // let room = client.getRoom(roomID);
-        //     // let members = (await room.getEncryptionTargetMembers()).map(
-        //     //     (x) => x['userId']
-        //     // );
-        //     // let memberkeys = await client.downloadKeys(members);
-        //     // for (const userId in memberkeys) {
-        //     //     for (const deviceId in memberkeys[userId]) {
-        //     //         await this.setDeviceVerified(userId, deviceId);
-        //     //     }
-        //     // }
-        // }
-        // return roomID;
+    const createRoom = async (roomName, _private = true) => {
+        if (client) {
+            const room = await client.createRoom({
+                visibility: _private ? 'private' : 'public',
+                name: roomName,
+            });
+
+            await client.sendStateEvent(
+                room.room_id,
+                'm.room.encryption',
+                ROOM_CRYPTO_CONFIG
+            );
+
+            await client.setRoomEncryption(room.room_id, ROOM_CRYPTO_CONFIG);
+
+            return room.room_id;
+        }
+        return null;
+    };
+
+    const inviteUserToRoom = async (userId, roomId) => {
+        if (client) {
+            // console.log('invite user ...');
+            const result = await client.invite(roomId, userId);
+            return result;
+        }
+        return null;
     };
 
     const sendMessageToRoom = async (roomId, message) => {
@@ -434,9 +674,10 @@ function useMatrixClient() {
             //     await new window.matrixClient.MemoryCryptoStore();
             await newClient.setGlobalErrorOnUnknownDevices(false);
             await newClient.startClient();
-            setMatrixClientEvents(newClient);
 
-            console.log('Login successfully by token');
+            setMatrixClientEvents(newClient);
+            //  console.log('Testtest ',newClient);
+            //  console.log('Login successfully by token ',await  newClient.getDevices());
             return true;
         } catch (e) {
             console.log('Login by token fail', e);
@@ -484,11 +725,64 @@ function useMatrixClient() {
             await newClient.startClient();
 
             setMatrixClientEvents(newClient);
+
             return true;
         } catch (e) {
             if (onLogInResult) onLogInResult(false, e, null, null);
             return false;
         }
+    };
+
+    const setDisplayName = async (newName) => {
+        if (client) {
+            await client.setDisplayName(newName);
+        }
+    };
+
+    const setAvatar = async (fileName, fileContent) => {
+        if (client) {
+            const url = await uploadFile(fileName, fileContent);
+
+            if (url) await client.setAvatarUrl(url);
+        }
+    };
+
+    const leaveRoom = async (roomId) => {
+        if (client) {
+            await client.leave(roomId);
+        }
+    };
+
+    const banUserFromRoom = async (roomId, userId, reason) => {
+        if (client) {
+            await client.ban(roomId, userId, reason);
+        }
+    };
+
+    const unbanUserFromRoom = async (roomId, userId) => {
+        if (client) {
+            await client.unban(roomId, userId);
+        }
+    };
+
+    const kickUserFromRoom = async (roomId, userId, reason) => {
+        if (client) {
+            await client.kick(roomId, userId, reason);
+        }
+    };
+
+    const uploadFile = async (fileName, stream) => {
+        if (client) {
+            const result = await client.uploadContent({
+                stream: stream,
+                name: fileName,
+            });
+            //   console.log('\n\n result of upload = ',result);
+            //   console.log('\n\n result of upload = ',client.mxcUrlToHttp(result));
+
+            return result;
+        }
+        return null;
     };
 
     return {
@@ -505,15 +799,27 @@ function useMatrixClient() {
         setOnLogInResult,
         setHavingNewFile,
         setNumberHistoricMessages,
+        setDisplayName,
+        setAvatar,
 
         getMatrixRooms,
-        //  getHistory,
+        getHistory,
         getAvatar,
-
+        getDisplayName,
+        getUserId,
+        getRoomIdByName,
         createRoom,
 
         isHavingAuthentication,
-        testLogin
+        testLogin,
+
+        inviteUserToRoom,
+        uploadFile,
+        kickUserFromRoom,
+        leaveRoom,
+        banUserFromRoom,
+        unbanUserFromRoom,
+        forgetRoom
     };
 }
 

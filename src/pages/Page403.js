@@ -16,7 +16,13 @@ const Page403 = () => {
     return (
         <>
             {delayRender ? (
-                <></>
+                <>
+                    <div className="flex items-center justify-center content-center h-screen">
+                        <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full m-auto" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </>
             ) : (
                 <div className="container mx-auto h-screen">
                     <img

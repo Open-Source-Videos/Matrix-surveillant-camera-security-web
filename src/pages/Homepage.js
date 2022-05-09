@@ -1,67 +1,69 @@
-import React, { 
-    useEffect, 
-    useState 
-} from 'react';
+import React, { useEffect, useState } from 'react';
 import '../index.css';
 import useMatrixClient from '../hooks/useMatrixClient';
 import { ModalPopUp } from '../components/ModalPopUp';
 import TopNavigationBar from '../components/TopNavigationBar';
 import Page403 from './Page403';
-
-// const ROOM_ID = '!bdQMmkTBTMqUPAOvms:pdxinfosec.org';
+import { ClockIcon, CloudDownloadIcon, VideoCameraIcon, TrashIcon } from '@heroicons/react/outline';
+import { currentRoomID,setCurrentRoomID } from './Roompage';
 
 // Global list
 let list_image_url = [];
 let list_video_url = [];
 
-
 // Clear state when logging out
 export const clearState = () => {
     list_image_url = [];
     list_video_url = [];
-}
-
+};
 
 function Home() {
     const [listImageURL, setListImageURL] = useState(list_image_url);
     const [listVideoURL, setListVideoURL] = useState(list_video_url);
-    
-    const { 
-        isLogin, 
-        sendMessageToRoom, 
-        saveBlobUrlToFile, 
-        testLogin, 
-        setHavingNewFile 
+
+
+    const {
+        isLogin,
+        sendMessageToRoom,
+        saveBlobUrlToFile,
+        testLogin,
+        setHavingNewFile,
+        getHistory,
     } = useMatrixClient();
 
-    const [yesLogin,setYesLogin] = useState(false);
+    const [yesLogin, setYesLogin] = useState(false);
     const [showModal, setShowModal] = useState(false);
 
     const handleHavingNewFile = (sender, room, file) => {
-        switch (file.fileType) {
-            case 'image/png':
-            case 'image/jpeg':
-                // listImageURL.push(file.fileUrl);
-                // setListImageURL([...listImageURL]);
-                list_image_url.push(file.fileUrl);
-                setListImageURL([...list_image_url]);
-                console.log(file.fileUrl);
-                /*sendMessageToRoom(
-                    ROOM_ID, 
-                    `{"type" : "video-send", "content" : "/var/lib/motioneye/Camrea1/02-05-2021/15-25-30.mp4", "requestor_id":"0"}`
-                );*/
-                break;
-            case 'video/mp4':
-                list_video_url.push(file.fileUrl);
-                setListVideoURL([...list_video_url]);
-                // setListVideoURL(file.fileUrl);
-                break;
-            default:
-                saveBlobUrlToFile(file.fileUrl, file.fileName);
-                break;
+      //  console.log('currentRoom.roomId 0',room);
+       // console.log('currentRoom.roomId 1', currentRoomID);
+        if (currentRoomID === room){
+   
+            switch (file.fileType) {
+                case 'image/png':
+                case 'image/jpeg':
+                    // listImageURL.push(file.fileUrl);
+                    // setListImageURL([...listImageURL]);
+                    list_image_url.push(file.fileUrl);
+                    setListImageURL([...list_image_url]);
+                    console.log(file.fileUrl);
+                    /*sendMessageToRoom(
+                        ROOM_ID, 
+                        `{"type" : "video-send", "content" : "/var/lib/motioneye/Camrea1/02-05-2021/15-25-30.mp4", "requestor_id":"0"}`
+                    );*/
+                    break;
+                case 'video/mp4':
+                    list_video_url.push(file.fileUrl);
+                    setListVideoURL([...list_video_url]);
+                    // setListVideoURL(file.fileUrl);
+                    break;
+                default:
+                    saveBlobUrlToFile(file.fileUrl, file.fileName);
+                    break;
+            }
         }
+       
     };
-
 
     const handleWatch = () => {
         console.log('SEND MESSAGE');
@@ -72,18 +74,33 @@ function Home() {
         setShowModal(true);
     };
 
-   // const handleLoginResult =;
+    const handleDownload = (url, index) => {
+        saveBlobUrlToFile(url, 'video'.concat(index).concat('.jpg'));
+    };
 
     useEffect(() => {
-        setHavingNewFile(handleHavingNewFile);
-        (async()=>{
-            if (isLogin()===false) {
-                console.log('Run test login')
-                setYesLogin(await testLogin());
+       
+        (async () => {
+            setHavingNewFile(handleHavingNewFile);
+            
+            if (isLogin() === false) {
+                
+                setCurrentRoomID(localStorage.getItem('currentRoomID'))
+                
+                console.log('currentRoomID=',currentRoomID);
+                await testLogin()
+                setHavingNewFile(handleHavingNewFile);
+               
+                setTimeout(() => {                
+                    console.log('getHiss')
+                    getHistory(currentRoomID);
+                }, 500);
             }
-            setTimeout(()=>{
-                setYesLogin(isLogin()); 
-            },500);
+
+            setTimeout(() => {                
+                setYesLogin(isLogin());
+            }, 500);            
+
         })();
     }, []);
 
@@ -93,6 +110,99 @@ function Home() {
                 <div>
                     <TopNavigationBar />
                     <main>
+                        <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4 my-5">
+                            {listImageURL.length > 0 ? (
+                                listImageURL.map((url, index) => {
+                                    return (
+                                        <div
+                                            className="flex justify-center px-2"
+                                            key={index}
+                                        >
+                                            <div className="max-w-sm bg-white rounded-lg shadow-md">
+                                                <div>
+                                                    <img
+                                                        className="rounded-t-lg object-cover w-96 h-72"
+                                                        src={url}
+                                                        alt="thumbnails"
+                                                    />
+                                                </div>
+                                                <div className="px-3 pb-3">
+                                                    <h5 className="text-lg font-semibold text-gray-900 text-decoration-none px-2 pt-4">
+                                                        Thumbnails
+                                                    </h5>
+                                                    <div className="flex items-center mt-2.5 mb-5">
+                                                        <ClockIcon className="w-4 h-4"/>
+                                                        <span className="text-gray-500 text-xs font-semibold py-0.5 rounded px-2">
+                                                            {new Date().toLocaleString()}
+                                                        </span>
+                                                    </div>
+                                                    {/*<div className="flex justify-between items-center">*/}
+                                                        {/*<button
+                                                            onClick={
+                                                                handleWatch
+                                                            }
+                                                            className="w-full text-gray-600 bg-gradient-to-tl from-amber-200 to-amber-300 font-medium rounded-lg text-sm px-3 py-2.5 text-center mx-2"
+                                                        >
+                                                            <span>
+                                                                <PlayIcon className="inline-block w-5 h-5 pb-1 mr-1 -ml-1" />
+                                                            </span>
+                                                            Watch
+                                                        </button>
+                                                        <button
+                                                            onClick={() =>
+                                                                handleDownload(
+                                                                    url
+                                                                )
+                                                            }
+                                                            className="w-full text-white bg-gradient-to-r from-orange-400 to-rose-400 font-medium rounded-lg text-sm px-3 py-2.5 text-center mx-2"
+                                                        >
+                                                            <span>
+                                                                <CloudDownloadIcon className="inline-block w-5 h-5 pb-1 mr-1 -ml-1" />
+                                                            </span>
+                                                            Download
+                                                        </button>*/}
+                                                    <div className="flex justify-end">
+                                                        <button 
+                                                            className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-100 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
+                                                            onClick={handleWatch}
+                                                        >
+                                                            <VideoCameraIcon className="w-5 h-5" />
+                                                        </button>
+                                                        <button 
+                                                            className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-100 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
+                                                            onClick={() => handleDownload(url)}
+                                                        >
+                                                            <CloudDownloadIcon className="w-5 h-5" />
+                                                        </button>
+                                                        <button 
+                                                            className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-100 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
+                                                        >
+                                                            <TrashIcon className="w-5 h-5" />
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })
+                            ) : (
+                                <></>
+                            )}
+                        </div>
+
+                        <br />
+
+                        {showModal ? (
+                            <ModalPopUp
+                                onClickPause={() => {
+                                    setShowModal(false);
+                                }}
+                            />
+                        ) : (
+                            <></>
+                        )}
+                    </main>
+                    {/*<main>
                         <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4 my-5">
                             {listImageURL.length > 0 ? (
                                 listImageURL.map((url, index) => {
@@ -178,7 +288,7 @@ function Home() {
                         ) : (
                             <></>
                         )}
-                    </main>
+                    </main>*/}
                 </div>
             ) : (
                 <Page403 />
