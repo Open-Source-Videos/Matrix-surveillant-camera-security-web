@@ -21,14 +21,10 @@ function classNames(...classes) {
 // Global list
 let list_snap_url = [];
 let list_rec_video_url = [];
-let list_rec_video_url_waiting = [];
-let currentWaiting = 0;
 // Clear state when logging out
 export const clearAllStates = () => {
     list_snap_url = [];
     list_rec_video_url = [];
-    list_rec_video_url_waiting = [];
-    currentWaiting = 0;
 };
 
 const SnapShot = () => {
@@ -150,9 +146,6 @@ const SnapShot = () => {
 
 const RecordVideo = () => {
     const [listRecVideoURL, setListRecVideoURL] = useState(list_rec_video_url);
-    const [listRecVideoURWaiting, setListRecVideoURLWaiting] = useState(
-        list_rec_video_url_waiting
-    );
     const { saveBlobUrlToFile, setHavingNewFile } = useMatrixClient();
 
     const handleHavingNewFile = (sender, room, file) => {
@@ -179,10 +172,12 @@ const RecordVideo = () => {
                             content: JSON.parse(file.fileName),
                         };
                         let found = false;
-                        for (let c in list_rec_video_url) {
-                            if (content === '') {
-                                c = content;
+                        for (let i = 0; i < list_rec_video_url.length; i++) {
+                            if (list_rec_video_url[i] === 'empty') {
+                                list_rec_video_url[i] = content;
                                 found = true;
+                                console.log('replace++');
+                                break;
                             }
                         }
                         if (found === false) list_rec_video_url.push(content);
@@ -215,14 +210,6 @@ const RecordVideo = () => {
         console.log('LIST VIDEO: ', listRecVideoURL);
     }, []);
 
-    useEffect(() => {
-        setHavingNewFile(handleHavingNewFile);
-        console.log('LIST VIDEO: ', listRecVideoURL);
-
-        listRecVideoURL.push('');
-        setListRecVideoURL([...listRecVideoURL]);
-    }, [list_rec_video_url_waiting]);
-
     return (
         <main>
             <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4 my-5">
@@ -233,7 +220,7 @@ const RecordVideo = () => {
                                 className="flex justify-center px-2"
                                 key={index}
                             >
-                                {content !== '' ? (
+                                {content !== 'empty' ? (
                                     <div className="max-w-sm bg-white rounded-lg shadow-md">
                                         <div>
                                             <video
@@ -323,10 +310,9 @@ const RequestGroupList = () => {
         const ROOM_ID = localStorage.getItem('currentRoomID');
         sendMessageToRoom(
             ROOM_ID,
-            `{"type" : "record-video", "content" : "1,20", "requestor_id":"0"}`
+            `{"type" : "record-video", "content" : "1,2", "requestor_id":"0"}`
         );
-        currentWaiting++;
-        list_rec_video_url_waiting.push(currentWaiting);
+        list_rec_video_url.push('empty');
     };
 
     return (
