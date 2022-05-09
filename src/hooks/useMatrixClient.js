@@ -191,6 +191,12 @@ function useMatrixClient() {
         }
     };
 
+    const forgetRoom = async (roomID) =>{
+        if (client) {
+            await client.forget(roomID,true);
+        }
+    }
+
     const setMatrixClientEvents = (newClient) => {
         newClient.once('sync', async (state, prevState, res) => {
             if (state === 'PREPARED') {
@@ -813,6 +819,7 @@ function useMatrixClient() {
         leaveRoom,
         banUserFromRoom,
         unbanUserFromRoom,
+        forgetRoom
     };
 }
 
