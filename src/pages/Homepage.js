@@ -15,7 +15,7 @@ import { currentRoomID, setCurrentRoomID } from './Roompage';
 // Global list
 let list_image_url = [];
 let list_video_url = [];
-
+let contentID = "";
 // Clear state when logging out
 export const clearState = () => {
     list_image_url = [];
@@ -33,32 +33,62 @@ function Home() {
         testLogin,
         setHavingNewFile,
         getHistory,
+        removeOnHavingNewFile
     } = useMatrixClient();
 
     const [yesLogin, setYesLogin] = useState(false);
     const [showModal, setShowModal] = useState(false);
+    const [playingVideo, setPlayingVideo] = useState();
+    const [currentVideoID, setCurrentVideoID] = useState();
+    const [isLoadingVideo, setIsLoadingVideo] = useState(false);
+
 
     const handleHavingNewFile = (sender, room, file) => {
-        //  console.log('currentRoom.roomId 0',room);
-        console.log('currentRoom.roomId 1', currentRoomID);
+         console.log('currentRoom.roomId 0',room);
+         console.log('currentRoom.roomId 1', currentRoomID);
+         
         if (currentRoomID === room) {
             switch (file.fileType) {
                 case 'image/png':
                 case 'image/jpeg':
+                    let json_obj = JSON.parse(file.fileName);
+                    let content = json_obj.content;
+                    contentID = content;
+                    let myContent = {
+                        url: file.fileUrl,
+                        id: content
+                    };
+                    console.log("THIS IS FILE", file)
                     // listImageURL.push(file.fileUrl);
                     // setListImageURL([...listImageURL]);
-                    list_image_url.push(file.fileUrl);
+                    list_image_url.push(myContent);
                     setListImageURL([...list_image_url]);
                     console.log(file.fileUrl);
-                    /*sendMessageToRoom(
-                        ROOM_ID, 
-                        `{"type" : "video-send", "content" : "/var/lib/motioneye/Camrea1/02-05-2021/15-25-30.mp4", "requestor_id":"0"}`
-                    );*/
+
+                    if(json_obj.type === "thumbnail"){ //send request-video message to room
+
+                        console.log(json_obj.content.split(",")[0])
+                        setIsLoadingVideo(true);
+                        json_obj.type = "video-request";
+                        json_obj.content = json_obj.content.split(",")[0];   
+                        sendMessageToRoom(
+                            "!bdQMmkTBTMqUPAOvms:pdxinfosec.org", 
+                            JSON.stringify(json_obj)
+                        );
+                    }
                     break;
                 case 'video/mp4':
-                    list_video_url.push(file.fileUrl);
+                    console.log("GETTING VIDEO mp4", file)
+                    //json_obj.content = json_obj.content.split(",")[0];
+                    let mContent = {
+                        url: file.fileUrl,
+                        id: contentID
+                    };
+                    console.log("myContent.id", contentID)
+                    list_video_url.push(mContent);
                     setListVideoURL([...list_video_url]);
-                    // setListVideoURL(file.fileUrl);
+                    setIsLoadingVideo(false);
+
                     break;
                 default:
                     saveBlobUrlToFile(file.fileUrl, file.fileName);
@@ -67,13 +97,18 @@ function Home() {
         }
     };
 
-    const handleWatch = () => {
-        console.log('SEND MESSAGE');
-        /*sendMessageToRoom(
-            ROOM_ID, 
-            `{"type" : "video-send", "content" : "/var/lib/motioneye/Camrea1/02-05-2021/15-25-30.mp4", "requestor_id":"0"}`
-        );*/
-        setShowModal(true);
+    const handleWatch = (imageURL) => {
+
+        console.log("WATCHING...", imageURL)
+        console.log("listVideoURL.length", listVideoURL.length)
+        for(let i = 0; i< listVideoURL.length; i++){
+            if(imageURL === listVideoURL[i].id){
+                setPlayingVideo(listVideoURL[i].url)
+                console.log("FINDING>....", listVideoURL[i].url)
+                break;
+            }
+        }
+        setShowModal(true)
     };
 
     const handleDownload = (url, index) => {
@@ -81,15 +116,14 @@ function Home() {
     };
 
     useEffect(() => {
+        setHavingNewFile(handleHavingNewFile);
         (async () => {
-            setHavingNewFile(handleHavingNewFile);
-            //console.log('test',isLogin());
+           
             if (isLogin() === false) {
                 setCurrentRoomID(localStorage.getItem('currentRoomID'));
 
                 console.log('currentRoomID=', currentRoomID);
                 await testLogin();
-                setHavingNewFile(handleHavingNewFile);
 
                 setTimeout(() => {
                     getHistory(currentRoomID);
@@ -100,6 +134,9 @@ function Home() {
                 setYesLogin(isLogin());
             }, 500);
         })();
+        return () => {
+            removeOnHavingNewFile(handleHavingNewFile);
+        };
     }, []);
 
     return (
@@ -120,7 +157,7 @@ function Home() {
                                                 <div>
                                                     <img
                                                         className="rounded-t-lg object-cover w-96 h-72"
-                                                        src={url}
+                                                        src={url.url}
                                                         alt="thumbnails"
                                                     />
                                                 </div>
@@ -160,19 +197,20 @@ function Home() {
                                                             Download
                                                         </button>*/}
                                                     <div className="flex justify-end">
+                                                        {!isLoadingVideo &&
                                                         <button
                                                             className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-100 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
-                                                            onClick={
-                                                                handleWatch
+                                                            onClick={() =>
+                                                                handleWatch(url.id)
                                                             }
                                                         >
                                                             <VideoCameraIcon className="w-5 h-5" />
-                                                        </button>
+                                                        </button>}
                                                         <button
                                                             className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-100 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
                                                             onClick={() =>
                                                                 handleDownload(
-                                                                    url
+                                                                    url.url
                                                                 )
                                                             }
                                                         >
@@ -199,6 +237,7 @@ function Home() {
                                 onClickPause={() => {
                                     setShowModal(false);
                                 }}
+                                videoURL = {playingVideo}
                             />
                         ) : (
                             <></>

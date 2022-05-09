@@ -29,7 +29,8 @@ export const clearAllStates = () => {
 
 const SnapShot = () => {
     const [listSnapURL, setListSnapURL] = useState(list_snap_url);
-    const { saveBlobUrlToFile, setHavingNewFile } = useMatrixClient();
+    const { saveBlobUrlToFile, setHavingNewFile, removeOnHavingNewFile } =
+        useMatrixClient();
 
     const handleHavingNewFile = (sender, room, file) => {
         switch (file.fileType) {
@@ -80,6 +81,10 @@ const SnapShot = () => {
 
     useEffect(() => {
         setHavingNewFile(handleHavingNewFile);
+
+        return () => {
+            removeOnHavingNewFile(handleHavingNewFile);
+        };
     }, []);
 
     return (
@@ -146,7 +151,8 @@ const SnapShot = () => {
 
 const RecordVideo = () => {
     const [listRecVideoURL, setListRecVideoURL] = useState(list_rec_video_url);
-    const { saveBlobUrlToFile, setHavingNewFile } = useMatrixClient();
+    const { saveBlobUrlToFile, setHavingNewFile, removeOnHavingNewFile } =
+        useMatrixClient();
 
     const handleHavingNewFile = (sender, room, file) => {
         const ROOM_ID = localStorage.getItem('currentRoomID');
@@ -207,7 +213,10 @@ const RecordVideo = () => {
 
     useEffect(() => {
         setHavingNewFile(handleHavingNewFile);
-        console.log('LIST VIDEO: ', listRecVideoURL);
+        //console.log('LIST VIDEO: ', listRecVideoURL);
+        return () => {
+            removeOnHavingNewFile(handleHavingNewFile);
+        };
     }, []);
 
     return (
@@ -300,7 +309,7 @@ const RequestGroupList = () => {
     const handleSnapshot = () => {
         setChildComponent(1);
         const ROOM_ID = localStorage.getItem('currentRoomID');
-        console.log('roon',ROOM_ID);
+        console.log('roon', ROOM_ID);
         sendMessageToRoom(
             ROOM_ID,
             `{"type" : "snapshot", "content" : "1", "requestor_id":"0"}`
