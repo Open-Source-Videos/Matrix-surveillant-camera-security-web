@@ -35,33 +35,34 @@ function Home() {
     const [showModal, setShowModal] = useState(false);
 
     const handleHavingNewFile = (sender, room, file) => {
-        console.log('currentRoom.roomId-0');
-        console.log('currentRoom.roomId', currentRoomID);
-        // if (currentRoom.roomId === room) {
-
-        // }
-        switch (file.fileType) {
-            case 'image/png':
-            case 'image/jpeg':
-                // listImageURL.push(file.fileUrl);
-                // setListImageURL([...listImageURL]);
-                list_image_url.push(file.fileUrl);
-                setListImageURL([...list_image_url]);
-                console.log(file.fileUrl);
-                /*sendMessageToRoom(
-                    ROOM_ID, 
-                    `{"type" : "video-send", "content" : "/var/lib/motioneye/Camrea1/02-05-2021/15-25-30.mp4", "requestor_id":"0"}`
-                );*/
-                break;
-            case 'video/mp4':
-                list_video_url.push(file.fileUrl);
-                setListVideoURL([...list_video_url]);
-                // setListVideoURL(file.fileUrl);
-                break;
-            default:
-                saveBlobUrlToFile(file.fileUrl, file.fileName);
-                break;
+      //  console.log('currentRoom.roomId 0',room);
+       // console.log('currentRoom.roomId 1', currentRoomID);
+        if (currentRoomID === room){
+   
+            switch (file.fileType) {
+                case 'image/png':
+                case 'image/jpeg':
+                    // listImageURL.push(file.fileUrl);
+                    // setListImageURL([...listImageURL]);
+                    list_image_url.push(file.fileUrl);
+                    setListImageURL([...list_image_url]);
+                    console.log(file.fileUrl);
+                    /*sendMessageToRoom(
+                        ROOM_ID, 
+                        `{"type" : "video-send", "content" : "/var/lib/motioneye/Camrea1/02-05-2021/15-25-30.mp4", "requestor_id":"0"}`
+                    );*/
+                    break;
+                case 'video/mp4':
+                    list_video_url.push(file.fileUrl);
+                    setListVideoURL([...list_video_url]);
+                    // setListVideoURL(file.fileUrl);
+                    break;
+                default:
+                    saveBlobUrlToFile(file.fileUrl, file.fileName);
+                    break;
+            }
         }
+       
     };
 
     const handleWatch = () => {

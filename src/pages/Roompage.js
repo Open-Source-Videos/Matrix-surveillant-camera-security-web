@@ -4,9 +4,9 @@ import Page403 from './Page403';
 import { useHistory } from 'react-router-dom';
 
 export var currentRoomID = null;
-export const setCurrentRoomID = (roomID) =>{
+export const setCurrentRoomID = (roomID) => {
     currentRoomID = roomID;
-}
+};
 
 const RoomPage = ({
     roomList,
@@ -39,10 +39,10 @@ const RoomPage = ({
         <li
             className="border-gray-400 flex flex-row mb-4"
             onClick={() => {
-                currentRoomID = number;
+                currentRoomID = number.roomId;
                 history.push('/homepage');
                 getHistory(number.roomId, 20);
-                localStorage.setItem('currentRoomID',number.roomId);
+                localStorage.setItem('currentRoomID', number.roomId);
             }}
             key={index}
         >

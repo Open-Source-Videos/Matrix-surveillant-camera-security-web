@@ -66,6 +66,7 @@ function useMatrixClient() {
     const decryptFile = async (sender, room, content, time) => {
         try {
             if (onHavingNewMessage && content.body) {
+               // console.log('currentRoom.roomId 2',room)
                 onHavingNewMessage(sender, room, content.body, time);
             }
 
@@ -108,13 +109,14 @@ function useMatrixClient() {
             if (onHavingNewMessage && e.clearEvent.type === 'm.room.message') {
                 onHavingNewMessage(
                     e.sender.userId,
-                    e.sender.room,
+                    e.sender.roomId,
                     e.clearEvent.content.body,
                     e.event.origin_server_ts
                 );
+               // console.log('currentRoom.roomId 3', e.sender.room);
                 decryptFile(
                     e.sender.userId,
-                    e.sender.room,
+                    e.sender.roomId,
                     e.clearEvent.content,
                     e.event.origin_server_ts
                 );
@@ -141,14 +143,15 @@ function useMatrixClient() {
                         ) {
                             dictTimeStamp[e.event.origin_server_ts] =
                                 e.event.origin_server_ts;
-                            decryptFile(
+                              //  console.log('currentRoom.roomId 4', e);
+                                decryptFile(
                                 e.sender.userId,
-                                e.sender.room,
+                                e.sender.roomId,
                                 decryptMessage.clearEvent.content,
                                 e.event.origin_server_ts
                             );
 
-                            const room = client.getRoom(e.sender.room);
+                            const room = client.getRoom(e.sender.roomId);
                             let found = false;
 
                             if (room && room.timeline) {
@@ -176,7 +179,7 @@ function useMatrixClient() {
                 ) {
                     decryptFile(
                         e.sender.userId,
-                        e.sender.room,
+                        e.sender.roomId,
                         e.event.content,
                         e.event.origin_server_ts
                     );
