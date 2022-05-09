@@ -40,7 +40,7 @@ function Home() {
 
     const handleHavingNewFile = (sender, room, file) => {
         //  console.log('currentRoom.roomId 0',room);
-        // console.log('currentRoom.roomId 1', currentRoomID);
+        console.log('currentRoom.roomId 1', currentRoomID);
         if (currentRoomID === room) {
             switch (file.fileType) {
                 case 'image/png':

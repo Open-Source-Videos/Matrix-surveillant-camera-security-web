@@ -616,7 +616,9 @@ function useMatrixClient() {
 
     const sendMessageToRoom = async (roomId, message) => {
         try {
+          //  console.log('send',didLogin);
             if (didLogin && client) {
+               
                 await client.sendEvent(
                     roomId,
                     'm.room.message',

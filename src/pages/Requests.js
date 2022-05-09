@@ -300,6 +300,7 @@ const RequestGroupList = () => {
     const handleSnapshot = () => {
         setChildComponent(1);
         const ROOM_ID = localStorage.getItem('currentRoomID');
+        console.log('roon',ROOM_ID);
         sendMessageToRoom(
             ROOM_ID,
             `{"type" : "snapshot", "content" : "1", "requestor_id":"0"}`
