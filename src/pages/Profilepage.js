@@ -34,17 +34,19 @@ const ProfileView = ({ avatar, userID, displayName, roomID, roomList }) => {
 
 
 
-     const listItems = roomList.map((number) =>
-         <li>{number.name}</li>
-     );
+    const listItems = roomList.map((number, index) =>
+        <li key={index}>
+            {number.name}
+        </li>
+    );
     return (
         <>
             <main className="profile-page">
-                <section className="relative block" style={{ height: '430px' }}>
+                <section className="relative block" style={{ height: '450px' }}>
                     <div
                         className="absolute top-0 w-full h-full bg-center bg-cover bg-amber-200"
                         style={{
-                            backgroundImage: "url('/profile_page.svg')",
+                            backgroundImage: "url('/profile_cover_page.svg')",
                             backgroundPosition: 'center',
                             backgroundSize: 'contain',
                             backgroundRepeat: 'no-repeat',

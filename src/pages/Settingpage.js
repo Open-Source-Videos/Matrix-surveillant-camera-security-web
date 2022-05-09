@@ -9,11 +9,11 @@ const ProfileView = () => {
     return (
         <>
             <main className="profile-page">
-                <section className="relative block" style={{ height: '500px' }}>
+                <section className="relative block" style={{ height: '450px' }}>
                     <div
                         className="absolute top-0 w-full h-full bg-center bg-cover bg-amber-200"
                         style={{
-                            backgroundImage: "url('/profile_page.svg')",
+                            backgroundImage: "url('/setting_page.svg')",
                             backgroundPosition: 'center',
                             backgroundSize: 'contain',
                             backgroundRepeat: 'no-repeat',
@@ -181,19 +181,11 @@ const ProfileView = () => {
                     </div>
                 </section>
                 <img src={'/wave-haikei.svg'} alt="footer" width={'100%'} />
-                <footer className="relative bg-gray-300 pt-8 pb-6">
-                    <hr className="my-6 border-gray-400" />
-                    <div className="flex flex-wrap items-center md:justify-between justify-center">
+                <footer className="relative pb-4 bg-amber-300">
+                    <div className="flex flex-wrap items-center md:justify-between justify-center ">
                         <div className="w-full md:w-4/12 px-4 mx-auto text-center">
-                            <div className="text-sm text-gray-600 font-semibold py-1">
-                                Open Camera App {new Date().getFullYear()} By{' '}
-                                <a
-                                    href="https://www.creative-tim.com"
-                                    className="text-gray-600 hover:text-gray-900"
-                                >
-                                    Golden Tiger Team
-                                </a>
-                                .
+                            <div className="text-sm text-black font-semibold py-1">
+                                Open Source Security Camera App - 2022
                             </div>
                         </div>
                     </div>
