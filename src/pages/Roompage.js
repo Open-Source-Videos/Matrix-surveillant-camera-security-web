@@ -46,11 +46,11 @@ const RoomPage = ({
             }}
             key={index}
         >
-            <div className="select-none flex flex-1 items-center p-4 transition duration-500 ease-in-out transform hover:-translate-y-2 rounded-2xl border-2 p-6 hover:shadow-2xl border-yellow-400">
-                <div className="flex-1 pl-1 mr-16">
-                    <div className="font-medium">{number.name}</div>
+            <div className="select-none flex flex-1 items-center p-3 transition duration-500 ease-in-out transform hover:-translate-y-2 rounded-2xl border-2 hover:shadow-2xl border-yellow-400">
+                <div className="flex-1 mr-6">
+                    <div className="font-medium text-sm">{number.name}</div>
                 </div>
-                <div className="w-20 text-wrap text-center flex text-white text-bold flex-col rounded-md bg-yellow-400 justify-center items-center ml-10 p-2">
+                <div className="w-20 text-xs text-wrap text-center flex text-white text-bold flex-col rounded-md bg-yellow-400 justify-center items-center ml-6 p-2">
                     Join
                 </div>
             </div>
@@ -64,7 +64,7 @@ const RoomPage = ({
                     <div className="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center mt-5">
                         <div className="relative">
                             <img
-                                alt="..."
+                                alt="Avatar"
                                 src={avarta}
                                 className="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16"
                                 style={{ maxWidth: '150px' }}
@@ -81,12 +81,12 @@ const RoomPage = ({
             </div>
 
             <div className="container mt-2 flex mx-auto w-full items-center justify-center">
-                <ul className="flex flex-col px-2">{listItems}</ul>
+                <ul className="flex flex-col p-0">{listItems}</ul>
             </div>
 
             <div className="container flex mx-auto w-full items-center justify-center">
                 <button
-                    className="mb-20 py-2 px-4 text-yellow-400 font-semibold border-2 p-6 border-yellow-400 rounded hover:bg-yellow-400 hover:text-white hover:border-transparent transition ease-in duration-200 transform hover:-translate-y-1 active:translate-y-0"
+                    className="mb-5 py-2 px-4 text-yellow-400 font-semibold border-2 p-6 border-yellow-400 rounded hover:bg-yellow-400 hover:text-white hover:border-transparent transition ease-in duration-200 transform hover:-translate-y-1 active:translate-y-0"
                     type="button"
                     onClick={() => setShowModal(true)}
                 >
