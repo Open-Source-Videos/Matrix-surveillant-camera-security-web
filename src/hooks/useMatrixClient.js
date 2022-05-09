@@ -18,8 +18,8 @@ var roomList = [];
 var onHavingNewMessage = handleHavingNewMessage;
 var onHavingNewFile = handleHavingNewFile;
 var onLogInResult = handleLoginResult;
-
-var numberHistoricMessages = 10;
+const maxHistory = 10;
+var numberHistoricMessages = maxHistory;
 var avatar = null;
 const loginKey = 'open_source_video';
 
@@ -39,7 +39,7 @@ function useMatrixClient() {
         onHavingNewFile = handleHavingNewFile;
         onLogInResult = handleLoginResult;
 
-        numberHistoricMessages = 5;
+        numberHistoricMessages = maxHistory;
         avatar = null;
     };
 
@@ -100,7 +100,6 @@ function useMatrixClient() {
         } catch (e) {
             console.log('remove local storage', loginKey);
             localStorage.removeItem(loginKey);
-
             resetValues();
         }
     };
@@ -196,6 +195,7 @@ function useMatrixClient() {
 
                 didLogin = true;
                 roomList = await newClient.getRooms();
+
                 //  client = newClient;
 
                 const exportedDevice = await newClient.exportDevice();
@@ -219,9 +219,41 @@ function useMatrixClient() {
                         newClient.accessToken
                     );
                 }
+                try {
+                    //console.log('getmember',client);
+                    for (let i = 0; i < roomList.length; i++) {
+                        const members = roomList[i].getMembers();
+                        for (let j = 0; j < members.length; j++) {
+                            try {
+                                console.log('u=', members[j]);
+                                client.downloadKeys(members[j].userId);
+                            } catch {}
+                        }
+                    }
+                } catch (err) {
+                    console.log('uploadKeys key error', err);
+                }
 
-                //console.log('uploadKey++');
-                //  client.uploadKeys();
+                try {
+                    await newClient.uploadKeys();
+                } catch (err) {
+                    console.log('##error', err);
+                }
+
+                //GetHistory
+                try {
+                    const roomList = await newClient.getRooms();
+                    for (let i = 0; i < roomList.length; i++) {
+                        try {
+                            client.scrollback(
+                                roomList[i],
+                                numberHistoricMessages
+                            );
+                        } catch {}
+                    }
+                } catch (err) {
+                    console.log('##error', err);
+                }
             }
         });
 
@@ -245,19 +277,23 @@ function useMatrixClient() {
 
             if (
                 member.membership === 'join' &&
-                member.userId !== newClient.getUserId()
+                member.userId !== (await newClient.getUserId())
             ) {
                 try {
                     console.log('download keys of user', member.userId);
                     const userKey = await client.downloadKeys([member.userId]);
-
-                    for (const deviceId in userKey[member.userId]) {
-                        console.log(
-                            'set device verified keys of user',
-                            member.userId,
-                            deviceId
-                        );
-                        await client.setDeviceVerified(member.userId, deviceId);
+                    if (userKey) {
+                        for (const deviceId in userKey[member.userId]) {
+                            console.log(
+                                'set device verified keys of user',
+                                member.userId,
+                                deviceId
+                            );
+                            await client.setDeviceVerified(
+                                member.userId,
+                                deviceId
+                            );
+                        }
                     }
                 } catch (error) {
                     console.log('#error', error);
@@ -389,6 +425,7 @@ function useMatrixClient() {
     };
 
     const testLogin = async () => {
+        console.log('Run-here1', didLogin, savedData);
         if (didLogin === false && savedData) {
             let info = JSON.parse(savedData);
 
@@ -406,6 +443,7 @@ function useMatrixClient() {
                 return loginResult;
             }
         }
+        return false;
     };
 
     const logoutMatrixServer = () => {
@@ -434,6 +472,7 @@ function useMatrixClient() {
                 info.exportedDevice,
                 info.accessToken
             );
+            console.log('login result ', loginResult);
 
             if (loginResult) return;
             else {
