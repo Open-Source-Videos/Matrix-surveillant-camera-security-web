@@ -20,9 +20,9 @@ const RoomPage = ({
     const history = useHistory();
     //  const { createRoom, inviteUserToRoom } = useMatrixClient();
 
-    useEffect(() => {
-        console.log('ROOM LIST: ', roomList);
-    }, [roomList]);
+    // useEffect(() => {
+    //     console.log('ROOM LIST: ', roomList);
+    // }, [roomList]);
 
     const handleCreateRoom = async (e) => {
         // e.preventDefault();

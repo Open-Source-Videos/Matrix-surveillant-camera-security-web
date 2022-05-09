@@ -1,26 +1,18 @@
-import React, { 
-    useEffect, 
-    useState,
-	Fragment
-} from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 import '../index.css';
 import useMatrixClient from '../hooks/useMatrixClient';
 import Page403 from './Page403';
-import TopNavigationBar from '../components/TopNavigationBar'
+import TopNavigationBar from '../components/TopNavigationBar';
 import {
-	ChevronDownIcon,
-	CameraIcon,
-	CloudIcon,
-	VideoCameraIcon,
-	CloudDownloadIcon,
-	TrashIcon,
-    ClockIcon
-} from '@heroicons/react/outline'
-import { 
-	Menu, 
-	Transition 
-} from '@headlessui/react';
-
+    ChevronDownIcon,
+    CameraIcon,
+    CloudIcon,
+    VideoCameraIcon,
+    CloudDownloadIcon,
+    TrashIcon,
+    ClockIcon,
+} from '@heroicons/react/outline';
+import { Menu, Transition } from '@headlessui/react';
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ');
@@ -113,13 +105,13 @@ const SnapShot = () => {
                                             Snapshot
                                         </h5>
                                         <div className="flex items-center mt-2.5 mb-5">
-                                            <ClockIcon className="w-4 h-4"/>
+                                            <ClockIcon className="w-4 h-4" />
                                             <span className="text-gray-500 text-xs font-semibold py-0.5 rounded px-2">
                                                 {content.time}
                                             </span>
                                         </div>
                                         <div className="flex justify-end">
-                                            <button 
+                                            <button
                                                 className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-100 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
                                                 onClick={() =>
                                                     handleDownloadImg(
@@ -130,12 +122,10 @@ const SnapShot = () => {
                                             >
                                                 <CloudDownloadIcon className="w-5 h-5" />
                                             </button>
-                                            <button 
+                                            <button
                                                 className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-100 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
                                                 onClick={() =>
-                                                    handleDeleteImg(
-                                                        content.url
-                                                    )
+                                                    handleDeleteImg(content.url)
                                                 }
                                             >
                                                 <TrashIcon className="w-5 h-5" />
@@ -192,20 +182,14 @@ const RecordVideo = () => {
                         }
                         if (found === false) list_rec_video_url.push(content);
 
-                    let content = {
-                        url: file.fileUrl,
-                        type: 'video',
-                        time: local_time,
-                        content: JSON.parse(file.fileName),
-                    };
-                    list_rec_video_url.push(content);
-                    setListRecVideoURL([...list_rec_video_url]);
-                    console.log('file.', file);
-                    console.log('CONTENT: ', content);
-                }
-                break;
-            default:
-                break;
+                        setListRecVideoURL([...list_rec_video_url]);
+                        console.log('file.', file);
+                        console.log('CONTENT: ', content);
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
     };
 
@@ -286,52 +270,17 @@ const RecordVideo = () => {
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="flex items-center justify-center content-center h-screen">
+                                    <div className="flex items-center justify-center content-center h-screen w-full mx-auto">
                                         <div
-                                            className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full m-auto"
+                                            className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full mx-auto items-center justify-center content-center"
                                             role="status"
                                         >
-                                            <source
-                                                src={content.url}
-                                                type="video/mp4"
-                                            />
-                                        </video>
-                                    </div>
-                                    <div className="px-3 pb-3">
-                                        <h5 className="text-lg font-semibold text-gray-900 text-decoration-none px-2 pt-4">
-                                            Recoding Video
-                                        </h5>
-                                        <div className="flex items-center mt-2.5 mb-5">
-                                            <ClockIcon className="w-4 h-4" />
-                                            <span className="text-gray-500 text-xs font-semibold py-0.5 rounded px-2">
-                                                {content.time}
+                                            <span className="visually-hidden">
+                                                Loading...
                                             </span>
                                         </div>
-                                        <div className="flex justify-end">
-                                            <button 
-                                                className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-100 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
-                                                onClick={() =>
-                                                    handleDownloadVideo(
-                                                        content.url,
-                                                        index
-                                                    )
-                                                }
-                                            >
-                                                <CloudDownloadIcon className="w-5 h-5" />
-                                            </button>
-                                            <button 
-                                                className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-100 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
-                                                onClick={() =>
-                                                    handleDeleteRecVideo(
-                                                        content.url
-                                                    )
-                                                }
-                                            >
-                                                <TrashIcon className="w-5 h-5" />
-                                            </button>
-                                        </div>
                                     </div>
-                                </div>
+                                )}
                             </div>
                         );
                     })
@@ -339,20 +288,18 @@ const RecordVideo = () => {
                     <></>
                 )}
             </div>
+            <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
         </main>
     );
 };
 
 const RequestGroupList = () => {
-	let [child_component, setChildComponent] = useState(0);
-	const { 
-		sendMessageToRoom,
-	} = useMatrixClient();
+    let [child_component, setChildComponent] = useState(0);
+    const { sendMessageToRoom } = useMatrixClient();
 
     const handleSnapshot = () => {
-        console.log('teste snapshop');
         setChildComponent(1);
-        const ROOM_ID = localStorage.getItem("currentRoomID");
+        const ROOM_ID = localStorage.getItem('currentRoomID');
         sendMessageToRoom(
             ROOM_ID,
             `{"type" : "snapshot", "content" : "1", "requestor_id":"0"}`
@@ -360,9 +307,8 @@ const RequestGroupList = () => {
     };
 
     const handleRecVideo = () => {
-        console.log('teste videorequest');
         setChildComponent(2);
-        const ROOM_ID = localStorage.getItem("currentRoomID");
+        const ROOM_ID = localStorage.getItem('currentRoomID');
         sendMessageToRoom(
             ROOM_ID,
             `{"type" : "record-video", "content" : "1,2", "requestor_id":"0"}`
@@ -416,50 +362,59 @@ const RequestGroupList = () => {
                         </button>
                     </span>
 
-					{/* Dropdown */}
-					<Menu as="span" className="ml-3 relative sm:hidden">
-						<Menu.Button className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-							More
-							<ChevronDownIcon className="-mr-1 ml-2 h-5 w-5 text-gray-500" aria-hidden="true" />
-						</Menu.Button>
-				
-						<Transition
-							as={Fragment}
-							enter="transition ease-out duration-200"
-							enterFrom="transform opacity-0 scale-95"
-							enterTo="transform opacity-100 scale-100"
-							leave="transition ease-in duration-75"
-							leaveFrom="transform opacity-100 scale-100"
-							leaveTo="transform opacity-0 scale-95"
-						>
-							<Menu.Items className="origin-top-right absolute right-0 mt-2 -mr-1 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-								<Menu.Item>
-									{({ active }) => (
-									<button
-										type="button"
-										onClick={handleSnapshot}
-										className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
-									>
-										Snapshot
-									</button>
-									)}
-								</Menu.Item>
-								<Menu.Item>
-									{({ active }) => (
-									<button
-										type="button"
-										onClick={handleRecVideo}
-										className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
-									>
-										Recording Video
-									</button>
-									)}
-								</Menu.Item>
-							</Menu.Items>
-						</Transition>
-					</Menu>
-				</div>
-			</div>
+                    {/* Dropdown */}
+                    <Menu as="span" className="ml-3 relative sm:hidden">
+                        <Menu.Button className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            More
+                            <ChevronDownIcon
+                                className="-mr-1 ml-2 h-5 w-5 text-gray-500"
+                                aria-hidden="true"
+                            />
+                        </Menu.Button>
+
+                        <Transition
+                            as={Fragment}
+                            enter="transition ease-out duration-200"
+                            enterFrom="transform opacity-0 scale-95"
+                            enterTo="transform opacity-100 scale-100"
+                            leave="transition ease-in duration-75"
+                            leaveFrom="transform opacity-100 scale-100"
+                            leaveTo="transform opacity-0 scale-95"
+                        >
+                            <Menu.Items className="origin-top-right absolute right-0 mt-2 -mr-1 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                <Menu.Item>
+                                    {({ active }) => (
+                                        <button
+                                            type="button"
+                                            onClick={handleSnapshot}
+                                            className={classNames(
+                                                active ? 'bg-gray-100' : '',
+                                                'block px-4 py-2 text-sm text-gray-700'
+                                            )}
+                                        >
+                                            Snapshot
+                                        </button>
+                                    )}
+                                </Menu.Item>
+                                <Menu.Item>
+                                    {({ active }) => (
+                                        <button
+                                            type="button"
+                                            onClick={handleRecVideo}
+                                            className={classNames(
+                                                active ? 'bg-gray-100' : '',
+                                                'block px-4 py-2 text-sm text-gray-700'
+                                            )}
+                                        >
+                                            Recording Video
+                                        </button>
+                                    )}
+                                </Menu.Item>
+                            </Menu.Items>
+                        </Transition>
+                    </Menu>
+                </div>
+            </div>
             <br />
             <>
                 {(() => {
@@ -475,23 +430,19 @@ const RequestGroupList = () => {
 };
 
 const Requests = () => {
-    const {
-        isLogin,
-        testLogin,
-    } = useMatrixClient();
+    const { isLogin, testLogin } = useMatrixClient();
 
     const [yesLogin, setYesLogin] = useState(false);
 
     useEffect(() => {
         (async () => {
-
             if (isLogin() === false) {
-                await testLogin()
+                await testLogin();
             }
-			
-			setTimeout(() => {
-				setYesLogin(isLogin());
-			}, 500);
+
+            setTimeout(() => {
+                setYesLogin(isLogin());
+            }, 500);
         })();
     }, []);
 
