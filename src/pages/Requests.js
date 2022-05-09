@@ -14,6 +14,9 @@ import {
 } from '@heroicons/react/outline';
 import { Menu, Transition } from '@headlessui/react';
 import { currentRoomID, setCurrentRoomID } from './Roompage';
+import { Rings, SpinningCircles, Circles  } from 'svg-loaders-react'
+
+
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ');
 }
@@ -315,14 +318,30 @@ const RecordVideo = () => {
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="flex items-center justify-center content-center h-screen">
-                                        <div
-                                            className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full m-auto"
-                                            role="status"
-                                        >
-                                            <span className="visually-hidden">
-                                                Loading...
-                                            </span>
+                                    <div className="max-w-sm opacity-25 inset-0 z-40 bg-gray-300 rounded-lg shadow-md">
+                                        <div>
+                                            <Circles fill="#f59e0b" strokeOpacity=".1" className="rounded-t-lg w-96 h-72 m-auto bg-gray-200 p-4"/>
+                                        </div>
+                                        <div className="px-3 pb-3">
+                                            <div className="flex items-center px-2 pt-4 mt-1">
+                                                <span className="text-gray-500 text-xs font-semibold py-0.5 rounded px-2 bg-amber-500 w-1/2 h-4"></span>
+                                            </div>
+                                            <div className="flex items-center mt-2.5 mb-5">
+                                                <ClockIcon className="w-4 h-4 mr-2 text-rose-500" />
+                                                <span className="text-gray-500 text-xs font-semibold py-0.5 rounded px-2 bg-amber-500 w-full h-3"></span>
+                                            </div>
+                                            <div className="flex justify-end">
+                                                <button
+                                                    className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-300 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
+                                                >
+                                                    <CloudDownloadIcon className="w-5 h-5" />
+                                                </button>
+                                                <button
+                                                    className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-300 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
+                                                >
+                                                    <TrashIcon className="w-5 h-5" />
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 )}
