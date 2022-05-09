@@ -285,6 +285,7 @@ const RequestGroupList = () => {
 	} = useMatrixClient();
 
     const handleSnapshot = () => {
+        console.log('teste snapshop');
         setChildComponent(1);
         const ROOM_ID = localStorage.getItem("currentRoomID");
         sendMessageToRoom(
@@ -294,6 +295,7 @@ const RequestGroupList = () => {
     };
 
     const handleRecVideo = () => {
+        console.log('teste videorequest');
         setChildComponent(2);
         const ROOM_ID = localStorage.getItem("currentRoomID");
         sendMessageToRoom(
