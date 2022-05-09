@@ -1,18 +1,26 @@
-import React, { useEffect, useState, Fragment } from 'react';
+import React, { 
+    useEffect, 
+    useState,
+	Fragment
+} from 'react';
 import '../index.css';
 import useMatrixClient from '../hooks/useMatrixClient';
 import Page403 from './Page403';
-import TopNavigationBar from '../components/TopNavigationBar';
+import TopNavigationBar from '../components/TopNavigationBar'
 import {
-    ChevronDownIcon,
-    CameraIcon,
-    CloudIcon,
-    VideoCameraIcon,
-    CloudDownloadIcon,
-    TrashIcon,
-    ClockIcon,
-} from '@heroicons/react/outline';
-import { Menu, Transition } from '@headlessui/react';
+	ChevronDownIcon,
+	CameraIcon,
+	CloudIcon,
+	VideoCameraIcon,
+	CloudDownloadIcon,
+	TrashIcon,
+    ClockIcon
+} from '@heroicons/react/outline'
+import { 
+	Menu, 
+	Transition 
+} from '@headlessui/react';
+
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ');
@@ -21,14 +29,11 @@ function classNames(...classes) {
 // Global list
 let list_snap_url = [];
 let list_rec_video_url = [];
-let list_rec_video_url_waiting = [];
-let currentWaiting = 0;
+
 // Clear state when logging out
 export const clearAllStates = () => {
     list_snap_url = [];
     list_rec_video_url = [];
-    list_rec_video_url_waiting = [];
-    currentWaiting = 0;
 };
 
 const SnapShot = () => {
@@ -109,13 +114,13 @@ const SnapShot = () => {
                                             Snapshot
                                         </h5>
                                         <div className="flex items-center mt-2.5 mb-5">
-                                            <ClockIcon className="w-4 h-4" />
+                                            <ClockIcon className="w-4 h-4"/>
                                             <span className="text-gray-500 text-xs font-semibold py-0.5 rounded px-2">
                                                 {content.time}
                                             </span>
                                         </div>
                                         <div className="flex justify-end">
-                                            <button
+                                            <button 
                                                 className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-100 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
                                                 onClick={() =>
                                                     handleDownloadImg(
@@ -126,10 +131,12 @@ const SnapShot = () => {
                                             >
                                                 <CloudDownloadIcon className="w-5 h-5" />
                                             </button>
-                                            <button
+                                            <button 
                                                 className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-100 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
                                                 onClick={() =>
-                                                    handleDeleteImg(content.url)
+                                                    handleDeleteImg(
+                                                        content.url
+                                                    )
                                                 }
                                             >
                                                 <TrashIcon className="w-5 h-5" />
@@ -150,51 +157,35 @@ const SnapShot = () => {
 
 const RecordVideo = () => {
     const [listRecVideoURL, setListRecVideoURL] = useState(list_rec_video_url);
-    const [listRecVideoURWaiting, setListRecVideoURLWaiting] = useState(
-        list_rec_video_url_waiting
-    );
     const { saveBlobUrlToFile, setHavingNewFile } = useMatrixClient();
 
     const handleHavingNewFile = (sender, room, file) => {
-        const ROOM_ID = localStorage.getItem('currentRoomID');
-        if (ROOM_ID === room) {
-            switch (file.fileType) {
-                case 'video/mp4':
-                    if (file.fileName.includes('video-send')) {
-                        let local_time = new Date();
-                        try {
-                            local_time = JSON.parse(
-                                file.fileName
-                            ).content.split(',')[1];
-                            local_time = new Date(local_time);
-                        } catch (e) {
-                            console.log('e');
-                        }
-                        local_time = local_time.toLocaleString();
+        switch (file.fileType) {
+            case 'video/mp4':
+				if (file.fileName.includes("video-send")) {
+					let local_time = new Date();
+					try {
+						local_time = JSON.parse(file.fileName).content.split(',')[1];
+						local_time = new Date(local_time);
+					} catch(e) {
+						console.log("e");
+					}
+					local_time = local_time.toLocaleString();
 
-                        let content = {
-                            url: file.fileUrl,
-                            type: 'video',
-                            time: local_time,
-                            content: JSON.parse(file.fileName),
-                        };
-                        let found = false;
-                        for (let c in list_rec_video_url) {
-                            if (content === '') {
-                                c = content;
-                                found = true;
-                            }
-                        }
-                        if (found === false) list_rec_video_url.push(content);
-
-                        setListRecVideoURL([...list_rec_video_url]);
-                        console.log('file.', file);
-                        console.log('CONTENT: ', content);
-                    }
-                    break;
-                default:
-                    break;
-            }
+                    let content = {
+                        url: file.fileUrl,
+                        type: 'video',
+                        time: local_time,
+                        content: JSON.parse(file.fileName),
+                    };
+                    list_rec_video_url.push(content);
+                    setListRecVideoURL([...list_rec_video_url]);
+                    console.log('file.', file);
+                    console.log('CONTENT: ', content);
+                }
+                break;
+            default:
+                break;
         }
     };
 
@@ -213,15 +204,7 @@ const RecordVideo = () => {
     useEffect(() => {
         setHavingNewFile(handleHavingNewFile);
         console.log('LIST VIDEO: ', listRecVideoURL);
-    }, []);
-
-    useEffect(() => {
-        setHavingNewFile(handleHavingNewFile);
-        console.log('LIST VIDEO: ', listRecVideoURL);
-
-        listRecVideoURL.push('');
-        setListRecVideoURL([...listRecVideoURL]);
-    }, [list_rec_video_url_waiting]);
+    }, [listRecVideoURL]);
 
     return (
         <main>
@@ -233,67 +216,54 @@ const RecordVideo = () => {
                                 className="flex justify-center px-2"
                                 key={index}
                             >
-                                {content !== '' ? (
-                                    <div className="max-w-sm bg-white rounded-lg shadow-md">
-                                        <div>
-                                            <video
-                                                controls
-                                                autoPlay
-                                                className="rounded-t-lg object-cover w-96 h-72"
-                                            >
-                                                <source
-                                                    src={content.url}
-                                                    type="video/mp4"
-                                                />
-                                            </video>
-                                        </div>
-                                        <div className="px-3 pb-3">
-                                            <h5 className="text-lg font-semibold text-gray-900 text-decoration-none px-2 pt-4">
-                                                Recoding Video
-                                            </h5>
-                                            <div className="flex items-center mt-2.5 mb-5">
-                                                <ClockIcon className="w-4 h-4" />
-                                                <span className="text-gray-500 text-xs font-semibold py-0.5 rounded px-2">
-                                                    {content.time}
-                                                </span>
-                                            </div>
-                                            <div className="flex justify-end">
-                                                <button
-                                                    className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-100 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
-                                                    onClick={() =>
-                                                        handleDownloadVideo(
-                                                            content.url,
-                                                            index
-                                                        )
-                                                    }
-                                                >
-                                                    <CloudDownloadIcon className="w-5 h-5" />
-                                                </button>
-                                                <button
-                                                    className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-100 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
-                                                    onClick={() =>
-                                                        handleDeleteRecVideo(
-                                                            content.url
-                                                        )
-                                                    }
-                                                >
-                                                    <TrashIcon className="w-5 h-5" />
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <div className="flex items-center justify-center content-center h-screen">
-                                        <div
-                                            className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full m-auto"
-                                            role="status"
+                                <div className="max-w-sm bg-white rounded-lg shadow-md">
+                                    <div>
+                                        <video
+                                            controls
+                                            autoPlay
+                                            className="rounded-t-lg object-cover w-96 h-72"
                                         >
-                                            <span className="visually-hidden">
-                                                Loading...
+                                            <source
+                                                src={content.url}
+                                                type="video/mp4"
+                                            />
+                                        </video>
+                                    </div>
+                                    <div className="px-3 pb-3">
+                                        <h5 className="text-lg font-semibold text-gray-900 text-decoration-none px-2 pt-4">
+                                            Recoding Video
+                                        </h5>
+                                        <div className="flex items-center mt-2.5 mb-5">
+                                            <ClockIcon className="w-4 h-4" />
+                                            <span className="text-gray-500 text-xs font-semibold py-0.5 rounded px-2">
+                                                {content.time}
                                             </span>
                                         </div>
+                                        <div className="flex justify-end">
+                                            <button 
+                                                className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-100 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
+                                                onClick={() =>
+                                                    handleDownloadVideo(
+                                                        content.url,
+                                                        index
+                                                    )
+                                                }
+                                            >
+                                                <CloudDownloadIcon className="w-5 h-5" />
+                                            </button>
+                                            <button 
+                                                className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-100 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
+                                                onClick={() =>
+                                                    handleDeleteRecVideo(
+                                                        content.url
+                                                    )
+                                                }
+                                            >
+                                                <TrashIcon className="w-5 h-5" />
+                                            </button>
+                                        </div>
                                     </div>
-                                )}
+                                </div>
                             </div>
                         );
                     })
@@ -306,12 +276,15 @@ const RecordVideo = () => {
 };
 
 const RequestGroupList = () => {
-    let [child_component, setChildComponent] = useState(0);
-    const { sendMessageToRoom } = useMatrixClient();
+	let [child_component, setChildComponent] = useState(0);
+	const { 
+		sendMessageToRoom,
+	} = useMatrixClient();
 
     const handleSnapshot = () => {
+        console.log('teste snapshop');
         setChildComponent(1);
-        const ROOM_ID = localStorage.getItem('currentRoomID');
+        const ROOM_ID = localStorage.getItem("currentRoomID");
         sendMessageToRoom(
             ROOM_ID,
             `{"type" : "snapshot", "content" : "1", "requestor_id":"0"}`
@@ -319,14 +292,13 @@ const RequestGroupList = () => {
     };
 
     const handleRecVideo = () => {
+        console.log('teste videorequest');
         setChildComponent(2);
-        const ROOM_ID = localStorage.getItem('currentRoomID');
+        const ROOM_ID = localStorage.getItem("currentRoomID");
         sendMessageToRoom(
             ROOM_ID,
             `{"type" : "record-video", "content" : "1,20", "requestor_id":"0"}`
         );
-        currentWaiting++;
-        list_rec_video_url_waiting.push(currentWaiting);
     };
 
     return (
@@ -375,59 +347,50 @@ const RequestGroupList = () => {
                         </button>
                     </span>
 
-                    {/* Dropdown */}
-                    <Menu as="span" className="ml-3 relative sm:hidden">
-                        <Menu.Button className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                            More
-                            <ChevronDownIcon
-                                className="-mr-1 ml-2 h-5 w-5 text-gray-500"
-                                aria-hidden="true"
-                            />
-                        </Menu.Button>
-
-                        <Transition
-                            as={Fragment}
-                            enter="transition ease-out duration-200"
-                            enterFrom="transform opacity-0 scale-95"
-                            enterTo="transform opacity-100 scale-100"
-                            leave="transition ease-in duration-75"
-                            leaveFrom="transform opacity-100 scale-100"
-                            leaveTo="transform opacity-0 scale-95"
-                        >
-                            <Menu.Items className="origin-top-right absolute right-0 mt-2 -mr-1 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                <Menu.Item>
-                                    {({ active }) => (
-                                        <button
-                                            type="button"
-                                            onClick={handleSnapshot}
-                                            className={classNames(
-                                                active ? 'bg-gray-100' : '',
-                                                'block px-4 py-2 text-sm text-gray-700'
-                                            )}
-                                        >
-                                            Snapshot
-                                        </button>
-                                    )}
-                                </Menu.Item>
-                                <Menu.Item>
-                                    {({ active }) => (
-                                        <button
-                                            type="button"
-                                            onClick={handleRecVideo}
-                                            className={classNames(
-                                                active ? 'bg-gray-100' : '',
-                                                'block px-4 py-2 text-sm text-gray-700'
-                                            )}
-                                        >
-                                            Recording Video
-                                        </button>
-                                    )}
-                                </Menu.Item>
-                            </Menu.Items>
-                        </Transition>
-                    </Menu>
-                </div>
-            </div>
+					{/* Dropdown */}
+					<Menu as="span" className="ml-3 relative sm:hidden">
+						<Menu.Button className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+							More
+							<ChevronDownIcon className="-mr-1 ml-2 h-5 w-5 text-gray-500" aria-hidden="true" />
+						</Menu.Button>
+				
+						<Transition
+							as={Fragment}
+							enter="transition ease-out duration-200"
+							enterFrom="transform opacity-0 scale-95"
+							enterTo="transform opacity-100 scale-100"
+							leave="transition ease-in duration-75"
+							leaveFrom="transform opacity-100 scale-100"
+							leaveTo="transform opacity-0 scale-95"
+						>
+							<Menu.Items className="origin-top-right absolute right-0 mt-2 -mr-1 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+								<Menu.Item>
+									{({ active }) => (
+									<button
+										type="button"
+										onClick={handleSnapshot}
+										className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
+									>
+										Snapshot
+									</button>
+									)}
+								</Menu.Item>
+								<Menu.Item>
+									{({ active }) => (
+									<button
+										type="button"
+										onClick={handleRecVideo}
+										className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
+									>
+										Recording Video
+									</button>
+									)}
+								</Menu.Item>
+							</Menu.Items>
+						</Transition>
+					</Menu>
+				</div>
+			</div>
             <br />
             <>
                 {(() => {
@@ -443,19 +406,23 @@ const RequestGroupList = () => {
 };
 
 const Requests = () => {
-    const { isLogin, testLogin } = useMatrixClient();
+    const {
+        isLogin,
+        testLogin,
+    } = useMatrixClient();
 
     const [yesLogin, setYesLogin] = useState(false);
 
     useEffect(() => {
         (async () => {
-            if (isLogin() === false) {
-                await testLogin();
-            }
 
-            setTimeout(() => {
-                setYesLogin(isLogin());
-            }, 500);
+            if (isLogin() === false) {
+                await testLogin()
+            }
+			
+			setTimeout(() => {
+				setYesLogin(isLogin());
+			}, 500);
         })();
     }, []);
 
