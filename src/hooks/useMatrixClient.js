@@ -17,7 +17,7 @@ onHavingNewFile.push(handleHavingNewFile);
 var onLogInResult = [];
 onLogInResult.push(handleLoginResult);
 
-const maxHistory = 10;
+const maxHistory = 20;
 var numberHistoricMessages = maxHistory;
 var avatar = null;
 const loginKey = 'open_source_video';

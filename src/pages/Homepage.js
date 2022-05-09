@@ -28,7 +28,7 @@ export const clearState = () => {
 };
 
 let sentVideoRequest = localStorage.getItem('sentRequestVideos');
-console.log('\n\n\n\n test =', sentVideoRequest);
+//console.log('\n\n\n\n test =', sentVideoRequest);
 if (sentVideoRequest === null || typeof sentVideoRequest === 'undefined') {
     sentVideoRequest = { test: '' };
 } else {
@@ -38,7 +38,7 @@ if (sentVideoRequest === null || typeof sentVideoRequest === 'undefined') {
 
 function Home() {
     const [listImageURL, setListImageURL] = useState(list_image_url);
-    const [listVideoURL, setListVideoURL] = useState(list_video_url);
+    //  const [listVideoURL, setListVideoURL] = useState(list_video_url);
 
     const {
         isLogin,
@@ -53,13 +53,8 @@ function Home() {
     const [yesLogin, setYesLogin] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [playingVideo, setPlayingVideo] = useState();
-    const [changeType, setChangeType] = useState(false);
-    const [isLoadingVideo, setIsLoadingVideo] = useState(false);
 
     const handleHavingNewFile = (sender, room, file, time) => {
-        console.log('currentRoom.roomId 0', room);
-        console.log('currentRoom.roomId 1', currentRoomID);
-
         if (currentRoomID === room) {
             let localTime = null;
             let json_obj = null;
@@ -104,6 +99,7 @@ function Home() {
                         list_image_url.push(myContent);
                         setListImageURL([...list_image_url]);
                     }
+                    console.log('current_list', list_image_url);
 
                     if (
                         currentRoomID &&
@@ -113,17 +109,10 @@ function Home() {
                     ) {
                         //send request-video message to room
 
-                        console.log(json_obj.content.split(',')[0]);
-                        setIsLoadingVideo(true);
+                        //  setIsLoadingVideo(true);
                         json_obj.type = 'video-request';
                         json_obj.content = json_obj.content.split(',')[0];
                         const message = JSON.stringify(json_obj);
-
-                        console.log(
-                            'send video request ',
-                            currentRoomID,
-                            message
-                        );
 
                         sendMessageToRoom(currentRoomID, message);
                         sentVideoRequest[time] = file;
@@ -137,70 +126,52 @@ function Home() {
                     }
                     break;
                 case 'video/mp4':
-                    console.log('GETTING VIDEO mp4', file);
-                    //json_obj.content = json_obj.content.split(",")[0];
-                    let contentVideo = null;
+                    let imgID = null;
                     try {
                         json_obj = JSON.parse(file.fileName);
-                        console.log('video test', json_obj);
-                        console.log('video content', json_obj.content);
-                        contentVideo = json_obj.content;
+                        imgID = json_obj.content;
                     } catch {
                         json_obj = null;
-                        contentVideo = null;
+                        imgID = null;
                     }
 
                     let mContent = {
                         url: file.fileUrl,
-                        id: contentVideo,
+                        id: imgID,
                         time: localTime,
                         type: 'video',
                     };
-                    console.log('myContent.id', contentVideo);
 
-                    if (contentVideo) updateType(contentVideo);
 
                     list_video_url.push(mContent);
-
-                    setListVideoURL([...list_video_url]);
-                    setIsLoadingVideo(false);
+                    updateType(imgID);
 
                     break;
                 default:
-                    //   saveBlobUrlToFile(file.fileUrl, file.fileName);
                     break;
             }
         }
     };
 
-    const updateType = (imageURL) => {
-        console.log('update...', imageURL);
+    const updateType = (imgID) => {
         let found = false;
-        for (let i = 0; i < listImageURL.length; i++) {
-            if (imageURL === listImageURL[i].id) {
-                //setPlayingVideo(listVideoURL[i].url);
-                //console.log('FINDING>....', listVideoURL[i].url);
-                listImageURL[i].type = 'video';
-                console.log('updated...', imageURL);
-                found = true;
 
+        for (let i = 0; i < list_image_url.length; i++) {
+            if (imgID === list_image_url[i].id) {
+                list_image_url[i].type = 'video';
+                found = true;
                 break;
             }
         }
         if (found) {
-            setChangeType(!changeType);
+            setListImageURL([...list_image_url]);
         }
-        //console.log('cannot find id');
-        // setShowModal(true);
     };
 
-    const handleWatch = (imageURL) => {
-        console.log('WATCHING...', imageURL);
-        console.log('listVideoURL.length', listVideoURL.length);
-        for (let i = 0; i < listVideoURL.length; i++) {
-            if (imageURL === listVideoURL[i].id) {
-                setPlayingVideo(listVideoURL[i].url);
-                console.log('FINDING>....', listVideoURL[i].url);
+    const handleWatch = (imgID) => {
+        for (let i = 0; i < list_video_url.length; i++) {
+            if (imgID === list_video_url[i].id) {
+                setPlayingVideo(list_video_url[i].url);
                 break;
             }
         }
@@ -209,32 +180,32 @@ function Home() {
 
     const handleDelete = async (url, index) => {
         let deleted = false;
+
         for (let i = 0; i < list_image_url.length; i++) {
             if (list_image_url[i].id === url.id) {
-                
                 list_delete.push(list_image_url[i]);
-                list_image_url.splice(i,1);
+                list_image_url.splice(i, 1);
+
                 localStorage.setItem(
                     'deleteMessage',
                     JSON.stringify(list_delete)
                 );
+
                 deleted = true;
                 break;
             }
         }
-        console.log('\n\n\list=', list_image_url);
+
         if (deleted) {
             setListImageURL([...list_image_url]);
         }
-    
     };
 
     const handleDownload = (url, index) => {
         if (url.type === 'image') {
             saveBlobUrlToFile(url.url, 'image'.concat(index).concat('.jpg'));
         } else {
-            for (let video of listVideoURL) {
-                console.log('video = ', video, ', image = ', url.id);
+            for (let video of list_video_url) {
                 if (video.id === url.id) {
                     saveBlobUrlToFile(
                         video.url,
@@ -251,10 +222,7 @@ function Home() {
         (async () => {
             if (isLogin() === false) {
                 setCurrentRoomID(localStorage.getItem('currentRoomID'));
-
-                console.log('currentRoomID=', currentRoomID);
                 await testLogin();
-
                 setTimeout(() => {
                     getHistory(currentRoomID);
                 }, 500);
@@ -327,20 +295,19 @@ function Home() {
                                                             Download
                                                         </button>*/}
                                                     <div className="flex justify-end">
-                                                        {!isLoadingVideo &&
-                                                            url.type ===
-                                                                'video' && (
-                                                                <button
-                                                                    className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-100 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
-                                                                    onClick={() =>
-                                                                        handleWatch(
-                                                                            url.id
-                                                                        )
-                                                                    }
-                                                                >
-                                                                    <VideoCameraIcon className="w-5 h-5" />
-                                                                </button>
-                                                            )}
+                                                        {url.type ===
+                                                            'video' && (
+                                                            <button
+                                                                className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-100 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
+                                                                onClick={() =>
+                                                                    handleWatch(
+                                                                        url.id
+                                                                    )
+                                                                }
+                                                            >
+                                                                <VideoCameraIcon className="w-5 h-5" />
+                                                            </button>
+                                                        )}
                                                         <button
                                                             className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-100 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
                                                             onClick={() =>
