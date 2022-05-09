@@ -270,9 +270,9 @@ const RecordVideo = () => {
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="flex items-center justify-center content-center h-screen">
+                                    <div className="flex items-center justify-center content-center h-screen w-full mx-auto">
                                         <div
-                                            className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full m-auto"
+                                            className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full mx-auto items-center justify-center content-center"
                                             role="status"
                                         >
                                             <span className="visually-hidden">
@@ -288,6 +288,7 @@ const RecordVideo = () => {
                     <></>
                 )}
             </div>
+            <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
         </main>
     );
 };
