@@ -99,6 +99,8 @@ const SnapShot = () => {
                             <div
                                 className="flex justify-center px-2"
                                 key={index}
+                                data-aos="zoom-in-down"
+                                data-aos-duration="1500"
                             >
                                 <div className="max-w-sm bg-white rounded-lg shadow-md">
                                     <div>
@@ -267,6 +269,8 @@ const RecordVideo = () => {
                             <div
                                 className="flex justify-center px-2"
                                 key={index}
+                                data-aos="zoom-in-down"
+                                data-aos-duration="1500"
                             >
                                 {content !== 'empty' ? (
                                     <div className="max-w-sm bg-white rounded-lg shadow-md">
