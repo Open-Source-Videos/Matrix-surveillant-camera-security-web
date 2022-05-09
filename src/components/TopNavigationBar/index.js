@@ -138,13 +138,13 @@ const TopNavigationBar = () => {
 							Profile
 						</a>
 
-                        <a 
+                        {/*<a 
                             href="/setting" 
                             className={splitLocation[1] === "setting" ? tabItem.concat(" bg-gray-700 text-white") : tabItem}
                             onClick={  (e)=>{ handleRouter("/setting",e);} }
                         >
 							Settings
-						</a>
+						</a>*/}
               		</Popover.Group>
 
 					<div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
@@ -221,13 +221,13 @@ const TopNavigationBar = () => {
                                     >
 										<span className={ tabItemMenuText }>Profile</span>
 									</a>
-									<a 
+									{/*<a 
                                         href="/setting"
                                         onClick={ handleRouter }
                                         className={ tabItemMenu }
                                     >
 										<span className={ tabItemMenuText }>Settings</span>
-									</a>
+									</a>*/}
 								</nav>
 							</div>
 						</div>
