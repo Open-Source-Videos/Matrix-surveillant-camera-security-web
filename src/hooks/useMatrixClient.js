@@ -1,11 +1,6 @@
 import axios from 'axios';
 const ROOM_CRYPTO_CONFIG = { algorithm: 'm.megolm.v1.aes-sha2' };
-const handleLoginResult = async (
-    _isLogin,
-    error,
-    exportedDevice,
-    accessToken
-) => {};
+const handleLoginResult = (_isLogin, error, exportedDevice, accessToken) => {};
 
 const handleHavingNewFile = (sender, room, file, time) => {};
 
@@ -15,10 +10,14 @@ var client = null;
 var didLogin = false;
 var roomList = [];
 
-var onHavingNewMessage = handleHavingNewMessage;
-var onHavingNewFile = handleHavingNewFile;
-var onLogInResult = handleLoginResult;
-const maxHistory = 10;
+var onHavingNewMessage = [];
+onHavingNewMessage.push(handleHavingNewMessage);
+var onHavingNewFile = [];
+onHavingNewFile.push(handleHavingNewFile);
+var onLogInResult = [];
+onLogInResult.push(handleLoginResult);
+
+const maxHistory = 20;
 var numberHistoricMessages = maxHistory;
 var avatar = null;
 const loginKey = 'open_source_video';
@@ -26,6 +25,8 @@ const loginKey = 'open_source_video';
 var savedData = localStorage.getItem(loginKey);
 
 var dictTimeStamp = {};
+
+var isTesting = false;
 
 function useMatrixClient() {
     const resetValues = () => {
@@ -35,24 +36,54 @@ function useMatrixClient() {
         savedData = null;
         dictTimeStamp = {};
 
-        onHavingNewMessage = handleHavingNewMessage;
-        onHavingNewFile = handleHavingNewFile;
-        onLogInResult = handleLoginResult;
+        // onHavingNewMessage = handleHavingNewMessage;
+        // onHavingNewFile = handleHavingNewFile;
+        // onLogInResult = handleLoginResult;
+        // onHavingNewMessage = [];
+        // onHavingNewMessage.push(handleHavingNewMessage);
+        // onHavingNewFile = [];
+        // onHavingNewFile.push(handleHavingNewFile);
+        // onLogInResult = [];
+        // onLogInResult.push(handleLoginResult);
 
         numberHistoricMessages = maxHistory;
         avatar = null;
     };
 
+
+
     const setOnLogInResult = (_onLogInResult) => {
-        onLogInResult = _onLogInResult;
+        onLogInResult.push(_onLogInResult);
     };
 
     const setHavingNewFile = (_onHavingNewFile) => {
-        onHavingNewFile = _onHavingNewFile;
+        onHavingNewFile.push(_onHavingNewFile);
     };
 
     const setOnHavingNewMessage = (_onHavingNewMessage) => {
-        onHavingNewMessage = _onHavingNewMessage;
+        onHavingNewMessage.push(_onHavingNewMessage);
+    };
+
+    const removeOnLogInResult = (_onLogInResult) => {
+        const index = onLogInResult.indexOf(_onLogInResult);
+        if (index > -1) {
+            onLogInResult.splice(index, 1);
+        }
+    };
+
+    const removeOnHavingNewFile = (_onHavingNewFile) => {
+        const index = onHavingNewFile.indexOf(_onHavingNewFile);
+        if (index > -1) {
+            onHavingNewFile.splice(index, 1);
+        }
+    };
+
+
+    const removeOnHavingNewMessage = (_onHavingNewMessage) => {
+        const index = onHavingNewMessage.indexOf(_onHavingNewMessage);
+        if (index > -1) {
+            onHavingNewMessage.splice(index, 1);
+        }
     };
 
     const setNumberHistoricMessages = (num) => {
@@ -65,54 +96,74 @@ function useMatrixClient() {
 
     const decryptFile = async (sender, room, content, time) => {
         try {
-            if (onHavingNewMessage && content.body) {
-                // console.log('currentRoom.roomId 2',room)
-                onHavingNewMessage(sender, room, content.body, time);
+            if (onHavingNewMessage.length > 0 && content.body) {
+                
+                for (let __onHavingNewMessage of onHavingNewMessage) {
+                    __onHavingNewMessage(sender, room, content.body, time);
+                }
             }
 
             if (typeof content.file !== 'undefined') {
+                
                 const response = await axios.get(
                     client.mxcUrlToHttp(content.file.url),
                     { responseType: 'arraybuffer' }
                 );
+                
+                
+                let decryptData = null; 
 
-                const decryptData = await decryptAttachment(
+                decryptData = await decryptAttachment(
                     response.data,
                     content.file
                 );
-
+               
                 const blobURL = await window.URL.createObjectURL(
                     new Blob([decryptData]),
                     { type: content.info.mimetype }
                 );
 
-                if (onHavingNewFile)
-                    onHavingNewFile(
-                        sender,
-                        room,
-                        {
-                            fileType: content.info.mimetype,
-                            fileUrl: blobURL,
-                            fileName: content.body,
-                        },
-                        time
-                    );
+                if (onHavingNewFile.length) {
+                    for (let __onHavingNewFile of onHavingNewFile) {
+                        try {
+                            __onHavingNewFile(
+                                sender,
+                                room,
+                                {
+                                    fileType: content.info.mimetype,
+                                    fileUrl: blobURL,
+                                    fileName: content.body,
+                                },
+                                time
+                            );
+                        }catch(e) {
+                            console.log('currentRoom.roomId 4',e)
+                        }
+
+                    }
+                }
             }
         } catch (e) {
-            console.log('remove local storage', loginKey);
+            console.log('#error',e)
             localStorage.removeItem(loginKey);
             resetValues();
         }
     };
     const decapsulateEvent = (e) => {
         if (e.claimedEd25519Key !== null) {
-            if (onHavingNewMessage && e.clearEvent.type === 'm.room.message') {
-                onHavingNewMessage(
-                    e.sender.userId,
-                    e.sender.roomId,
-                    e.clearEvent.content.body,
-                    e.event.origin_server_ts
-                );
+            if (
+                onHavingNewMessage.length > 0 &&
+                e.clearEvent.type === 'm.room.message'
+            ) {
+                for (let __onHavingNewMessage of onHavingNewMessage) {
+                    __onHavingNewMessage(
+                        e.sender.userId,
+                        e.sender.roomId,
+                        e.clearEvent.content.body,
+                        e.event.origin_server_ts
+                    );
+                }
+
                 // console.log('currentRoom.roomId 3', e.sender.room);
                 decryptFile(
                     e.sender.userId,
@@ -196,7 +247,9 @@ function useMatrixClient() {
                     return;
                 }
             } catch (error) {
+
                 console.error('#### ', error);
+                
             }
         }
     };
@@ -227,19 +280,21 @@ function useMatrixClient() {
                         homeServer: newClient.baseUrl,
                     })
                 );
-                //  console.log('have login');
-                if (onLogInResult) {
-                    console.log('return result');
+                
+                if (onLogInResult.length > 0) {
+                 
                     //Return result
-                    onLogInResult(
-                        true,
-                        null,
-                        exportedDevice,
-                        newClient.accessToken
-                    );
+                    for (let __onLogInResult of onLogInResult) {
+                        __onLogInResult(
+                            true,
+                            null,
+                            exportedDevice,
+                            newClient.accessToken
+                        );
+                    }
                 }
                 try {
-                    //console.log('getmember',client);
+                   
                     for (let i = 0; i < roomList.length; i++) {
                         const members = roomList[i].getMembers();
                         for (let j = 0; j < members.length; j++) {
@@ -298,15 +353,12 @@ function useMatrixClient() {
                 member.userId !== (await newClient.getUserId())
             ) {
                 try {
-                    console.log('download keys of user', member.userId);
+                 
                     const userKey = await client.downloadKeys([member.userId]);
+                 
                     if (userKey) {
                         for (const deviceId in userKey[member.userId]) {
-                            console.log(
-                                'set device verified keys of user',
-                                member.userId,
-                                deviceId
-                            );
+                 
                             await client.setDeviceVerified(
                                 member.userId,
                                 deviceId
@@ -388,11 +440,11 @@ function useMatrixClient() {
         );
 
         if (members !== null) {
-            console.log('members =', members);
+        
             let memberkeys = await client.downloadKeys([members]);
 
             if (memberkeys) {
-                for (const userId in memberkeys) {
+                for (const userId of memberkeys) {
                     for (const deviceId in memberkeys[userId]) {
                         await client.setDeviceVerified(userId, deviceId);
                     }
@@ -442,8 +494,9 @@ function useMatrixClient() {
     };
 
     const testLogin = async () => {
-        console.log('Run-here1', didLogin, savedData);
-        if (didLogin === false && savedData) {
+       
+        if (isTesting === false && didLogin === false && savedData) {
+            isTesting = true;
             let info = JSON.parse(savedData);
 
             const loginResult = await loginByAccessToken(
@@ -452,14 +505,17 @@ function useMatrixClient() {
                 info.accessToken
             );
 
-            if (loginResult) return true;
-            else {
-                console.log('remove localstorage', loginKey);
+            if (loginResult) {
+                isTesting = false;
+                return true;
+            } else {
+               
                 localStorage.removeItem(loginKey);
-
+                isTesting = false;
                 return loginResult;
             }
         }
+        isTesting = false;
         return false;
     };
 
@@ -489,11 +545,11 @@ function useMatrixClient() {
                 info.exportedDevice,
                 info.accessToken
             );
-            console.log('login result ', loginResult);
+          
 
             if (loginResult) return;
             else {
-                console.log('remove localstorage', loginKey);
+          
                 localStorage.removeItem(loginKey);
                 resetValues();
             }
@@ -511,7 +567,7 @@ function useMatrixClient() {
 
     const getAvatar = async () => {
         if (client) {
-            // console.log('tritri',client, await getRoomIdByName('Capstone-HelloWorld'));
+           
             var profile = await client.getProfileInfo(
                 await client.getUserId(),
                 'avatar_url'
@@ -607,7 +663,6 @@ function useMatrixClient() {
 
     const inviteUserToRoom = async (userId, roomId) => {
         if (client) {
-            // console.log('invite user ...');
             const result = await client.invite(roomId, userId);
             return result;
         }
@@ -616,7 +671,8 @@ function useMatrixClient() {
 
     const sendMessageToRoom = async (roomId, message) => {
         try {
-            if (didLogin && client) {
+            
+            if (client) {
                 await client.sendEvent(
                     roomId,
                     'm.room.message',
@@ -684,16 +740,11 @@ function useMatrixClient() {
             await newClient.startClient();
 
             setMatrixClientEvents(newClient);
-            //  console.log('Testtest ',newClient);
-            //  console.log('Login successfully by token ',await  newClient.getDevices());
+
             return true;
         } catch (e) {
-            console.log('Login by token fail', e);
-            console.log('remove localstorage', loginKey);
             localStorage.removeItem(loginKey);
-
             resetValues();
-
             return false;
         }
     };
@@ -785,8 +836,6 @@ function useMatrixClient() {
                 stream: stream,
                 name: fileName,
             });
-            //   console.log('\n\n result of upload = ',result);
-            //   console.log('\n\n result of upload = ',client.mxcUrlToHttp(result));
 
             return result;
         }
@@ -828,6 +877,9 @@ function useMatrixClient() {
         banUserFromRoom,
         unbanUserFromRoom,
         forgetRoom,
+        removeOnLogInResult,
+        removeOnHavingNewFile,
+        removeOnHavingNewMessage
     };
 }
 

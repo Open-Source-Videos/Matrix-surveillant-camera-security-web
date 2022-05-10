@@ -15,16 +15,30 @@ import { currentRoomID, setCurrentRoomID } from './Roompage';
 // Global list
 let list_image_url = [];
 let list_video_url = [];
-
+let list_delete = localStorage.getItem('deleteMessage');
+if (list_delete === null) {
+    list_delete = [];
+} else {
+    list_delete = JSON.parse(list_delete);
+}
 // Clear state when logging out
 export const clearState = () => {
     list_image_url = [];
     list_video_url = [];
 };
 
+let sentVideoRequest = localStorage.getItem('sentRequestVideos');
+//console.log('\n\n\n\n test =', sentVideoRequest);
+if (sentVideoRequest === null || typeof sentVideoRequest === 'undefined') {
+    sentVideoRequest = { test: '' };
+} else {
+    console.log(sentVideoRequest);
+    sentVideoRequest = JSON.parse(sentVideoRequest);
+}
+
 function Home() {
     const [listImageURL, setListImageURL] = useState(list_image_url);
-    const [listVideoURL, setListVideoURL] = useState(list_video_url);
+    //  const [listVideoURL, setListVideoURL] = useState(list_video_url);
 
     const {
         isLogin,
@@ -33,64 +47,182 @@ function Home() {
         testLogin,
         setHavingNewFile,
         getHistory,
+        removeOnHavingNewFile,
     } = useMatrixClient();
 
     const [yesLogin, setYesLogin] = useState(false);
     const [showModal, setShowModal] = useState(false);
+    const [playingVideo, setPlayingVideo] = useState();
 
-    const handleHavingNewFile = (sender, room, file) => {
-        //  console.log('currentRoom.roomId 0',room);
-        // console.log('currentRoom.roomId 1', currentRoomID);
+    const handleHavingNewFile = (sender, room, file, time) => {
         if (currentRoomID === room) {
+            let localTime = null;
+            let json_obj = null;
+            let content = null;
+
+            try {
+                localTime = JSON.parse(file.fileName).content.split(',')[1];
+                localTime = new Date(localTime);
+            } catch (e) {
+                console.log('e');
+                localTime = new Date();
+            }
+            localTime = localTime.toLocaleString();
+
             switch (file.fileType) {
                 case 'image/png':
                 case 'image/jpeg':
-                    // listImageURL.push(file.fileUrl);
-                    // setListImageURL([...listImageURL]);
-                    list_image_url.push(file.fileUrl);
-                    setListImageURL([...list_image_url]);
-                    console.log(file.fileUrl);
-                    /*sendMessageToRoom(
-                        ROOM_ID, 
-                        `{"type" : "video-send", "content" : "/var/lib/motioneye/Camrea1/02-05-2021/15-25-30.mp4", "requestor_id":"0"}`
-                    );*/
+                    try {
+                        json_obj = JSON.parse(file.fileName);
+                        content = json_obj.content.replace('.thumb', '');
+                    } catch {
+                        json_obj = null;
+                        content = null;
+                    }
+
+                    let myContent = {
+                        url: file.fileUrl,
+                        id: content,
+                        time: localTime,
+                        type: 'image',
+                    };
+
+                    let addList = true;
+                    for (let image of list_delete) {
+                        if (image.id === myContent.id) {
+                            addList = false;
+                            break;
+                        }
+                    }
+
+                    if (addList) {
+                        list_image_url.push(myContent);
+                        setListImageURL([...list_image_url]);
+                    }
+                    console.log('current_list', list_image_url);
+
+                    if (
+                        currentRoomID &&
+                        typeof sentVideoRequest[time] === 'undefined' &&
+                        json_obj &&
+                        json_obj.type === 'thumbnail'
+                    ) {
+                        //send request-video message to room
+
+                        //  setIsLoadingVideo(true);
+                        json_obj.type = 'video-request';
+                        json_obj.content = json_obj.content.split(',')[0];
+                        const message = JSON.stringify(json_obj);
+
+                        sendMessageToRoom(currentRoomID, message);
+                        sentVideoRequest[time] = file;
+
+                        localStorage.setItem(
+                            'sentRequestVideos',
+                            JSON.stringify({
+                                ...sentVideoRequest,
+                            })
+                        );
+                    }
                     break;
                 case 'video/mp4':
-                    list_video_url.push(file.fileUrl);
-                    setListVideoURL([...list_video_url]);
-                    // setListVideoURL(file.fileUrl);
+                    let imgID = null;
+                    try {
+                        json_obj = JSON.parse(file.fileName);
+                        imgID = json_obj.content;
+                    } catch {
+                        json_obj = null;
+                        imgID = null;
+                    }
+
+                    let mContent = {
+                        url: file.fileUrl,
+                        id: imgID,
+                        time: localTime,
+                        type: 'video',
+                    };
+
+
+                    list_video_url.push(mContent);
+                    updateType(imgID);
+
                     break;
                 default:
-                    saveBlobUrlToFile(file.fileUrl, file.fileName);
                     break;
             }
         }
     };
 
-    const handleWatch = () => {
-        console.log('SEND MESSAGE');
-        /*sendMessageToRoom(
-            ROOM_ID, 
-            `{"type" : "video-send", "content" : "/var/lib/motioneye/Camrea1/02-05-2021/15-25-30.mp4", "requestor_id":"0"}`
-        );*/
+    const updateType = (imgID) => {
+        let found = false;
+
+        for (let i = 0; i < list_image_url.length; i++) {
+            if (imgID === list_image_url[i].id) {
+                list_image_url[i].type = 'video';
+                found = true;
+                break;
+            }
+        }
+        if (found) {
+            setListImageURL([...list_image_url]);
+        }
+    };
+
+    const handleWatch = (imgID) => {
+        for (let i = 0; i < list_video_url.length; i++) {
+            if (imgID === list_video_url[i].id) {
+                setPlayingVideo(list_video_url[i].url);
+                break;
+            }
+        }
         setShowModal(true);
     };
 
+    const handleDelete = async (url, index) => {
+        let deleted = false;
+
+        for (let i = 0; i < list_image_url.length; i++) {
+            if (list_image_url[i].id === url.id) {
+                list_delete.push(list_image_url[i]);
+                list_image_url.splice(i, 1);
+
+                localStorage.setItem(
+                    'deleteMessage',
+                    JSON.stringify(list_delete)
+                );
+
+                deleted = true;
+                break;
+            }
+        }
+
+        if (deleted) {
+            setListImageURL([...list_image_url]);
+        }
+    };
+
     const handleDownload = (url, index) => {
-        saveBlobUrlToFile(url, 'video'.concat(index).concat('.jpg'));
+        if (url.type === 'image') {
+            saveBlobUrlToFile(url.url, 'image'.concat(index).concat('.jpg'));
+        } else {
+            for (let video of list_video_url) {
+                if (video.id === url.id) {
+                    saveBlobUrlToFile(
+                        video.url,
+                        'video'.concat(index).concat('.mp4')
+                    );
+                    break;
+                }
+            }
+        }
     };
 
     useEffect(() => {
+        setHavingNewFile(handleHavingNewFile);
         (async () => {
-            setHavingNewFile(handleHavingNewFile);
-
             if (isLogin() === false) {
                 setCurrentRoomID(localStorage.getItem('currentRoomID'));
-
-                console.log('currentRoomID=', currentRoomID);
                 await testLogin();
-                setHavingNewFile(handleHavingNewFile);
-
                 setTimeout(() => {
                     getHistory(currentRoomID);
                 }, 500);
@@ -100,6 +232,9 @@ function Home() {
                 setYesLogin(isLogin());
             }, 500);
         })();
+        return () => {
+            removeOnHavingNewFile(handleHavingNewFile);
+        };
     }, []);
 
     return (
@@ -109,18 +244,20 @@ function Home() {
                     <TopNavigationBar />
                     <main>
                         <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4 my-5">
-                            {listImageURL.length > 0 ? (
-                                listImageURL.map((url, index) => {
+                            {list_image_url.length > 0 ? (
+                                list_image_url.map((url, index) => {
                                     return (
                                         <div
                                             className="flex justify-center px-2"
                                             key={index}
+                                            data-aos="zoom-in-down"
+                                            data-aos-duration="1500"
                                         >
                                             <div className="max-w-sm bg-white rounded-lg shadow-md">
                                                 <div>
                                                     <img
                                                         className="rounded-t-lg object-cover w-96 h-72"
-                                                        src={url}
+                                                        src={url.url}
                                                         alt="thumbnails"
                                                     />
                                                 </div>
@@ -131,7 +268,7 @@ function Home() {
                                                     <div className="flex items-center mt-2.5 mb-5">
                                                         <ClockIcon className="w-4 h-4" />
                                                         <span className="text-gray-500 text-xs font-semibold py-0.5 rounded px-2">
-                                                            {new Date().toLocaleString()}
+                                                            {url.time}
                                                         </span>
                                                     </div>
                                                     {/*<div className="flex justify-between items-center">*/}
@@ -160,25 +297,39 @@ function Home() {
                                                             Download
                                                         </button>*/}
                                                     <div className="flex justify-end">
-                                                        <button
-                                                            className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-100 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
-                                                            onClick={
-                                                                handleWatch
-                                                            }
-                                                        >
-                                                            <VideoCameraIcon className="w-5 h-5" />
-                                                        </button>
+                                                        {url.type ===
+                                                            'video' && (
+                                                            <button
+                                                                className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-100 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
+                                                                onClick={() =>
+                                                                    handleWatch(
+                                                                        url.id
+                                                                    )
+                                                                }
+                                                            >
+                                                                <VideoCameraIcon className="w-5 h-5" />
+                                                            </button>
+                                                        )}
                                                         <button
                                                             className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-100 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
                                                             onClick={() =>
                                                                 handleDownload(
-                                                                    url
+                                                                    url,
+                                                                    index
                                                                 )
                                                             }
                                                         >
                                                             <CloudDownloadIcon className="w-5 h-5" />
                                                         </button>
-                                                        <button className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-100 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400">
+                                                        <button
+                                                            className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-100 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
+                                                            onClick={() =>
+                                                                handleDelete(
+                                                                    url,
+                                                                    index
+                                                                )
+                                                            }
+                                                        >
                                                             <TrashIcon className="w-5 h-5" />
                                                         </button>
                                                     </div>
@@ -199,6 +350,7 @@ function Home() {
                                 onClickPause={() => {
                                     setShowModal(false);
                                 }}
+                                videoURL={playingVideo}
                             />
                         ) : (
                             <></>

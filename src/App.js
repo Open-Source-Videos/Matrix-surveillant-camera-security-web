@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import Navigation from './navigation';
 import { getStore } from './utils';
 import { ActionCreators } from './actions/profile';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 // import { GlobalContext, initialGlobalState} from './hooks/useMatrixClient'
 import './styles';
@@ -20,6 +22,8 @@ function App() {
     // }
 
     useEffect(() => {
+        AOS.init();
+        AOS.refresh();
         const user = getStore('user');
         if (user) {
             this.props.dispatch(ActionCreators.login(user));

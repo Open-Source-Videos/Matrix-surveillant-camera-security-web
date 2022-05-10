@@ -1,32 +1,56 @@
-import { useState, useEffect, Fragment } from 'react';
+import { 
+    useState, 
+    useEffect, 
+    Fragment 
+} from 'react';
 import useMatrixClient from '../hooks/useMatrixClient';
 import TopNavigationBar from '../components/TopNavigationBar';
 import Page403 from './Page403';
-import { Menu, Transition } from '@headlessui/react'
-import { useHistory } from "react-router-dom";
+import { 
+    Menu, 
+    Transition 
+} from '@headlessui/react'
+import { 
+    useHistory 
+} from "react-router-dom";
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
-  }
+}
 
-const ProfileView = ({ avatar, userID, displayName, roomID, roomList, leaveRoom, forgetRoom, inviteUserToRoom, kickUserFromRoom, banUserFromRoom, unbanUserFromRoom }) => {
-     const [showModal, setShowModal] = useState(false);
-     const [changeName, setShowChangeName] = useState(false);
-     const [isLeave, setAlertLeaveRoom] = useState(false);
-     const [inviteUser, setInviteUser] = useState(false);
-     const [kickUser, setKickUser] = useState(false);
-     const [newName, setChangeName] = useState(null);
-     const [userName, setUserName] = useState(null);
-     const [userNameKick, setUserNameKick] = useState(null);
-     const [banUser, setBanUser] = useState(null);
-     const [unBanUser, setUnbanUser] = useState(null);
-     const [userNameBan, setUserBan] = useState(null);
-     const [unBanUserName, setUnBanUserName] = useState(null);
-     const [reason, setReasonKick] = useState(null);
-     const { setAvatar, setDisplayName } = useMatrixClient();
-     const history = useHistory();
+const ProfileView = ({ 
+    avatar, 
+    userID, 
+    displayName, 
+    roomID, 
+    roomList, 
+    leaveRoom, 
+    forgetRoom, 
+    inviteUserToRoom, 
+    kickUserFromRoom, 
+    banUserFromRoom, 
+    unbanUserFromRoom 
+}) => {
+    const [showModal, setShowModal] = useState(false);
+    const [changeName, setShowChangeName] = useState(false);
+    const [isLeave, setAlertLeaveRoom] = useState(false);
+    const [inviteUser, setInviteUser] = useState(false);
+    const [kickUser, setKickUser] = useState(false);
+    const [newName, setChangeName] = useState(null);
+    const [userName, setUserName] = useState(null);
+    const [userNameKick, setUserNameKick] = useState(null);
+    const [banUser, setBanUser] = useState(null);
+    const [unBanUser, setUnbanUser] = useState(null);
+    const [userNameBan, setUserBan] = useState(null);
+    const [unBanUserName, setUnBanUserName] = useState(null);
+    const [reason, setReasonKick] = useState(null);
+    const {
+        setAvatar, 
+        setDisplayName 
+    } = useMatrixClient();
+    const history = useHistory();
 
-     const handleChangeImage = async (e) =>{
+    const handleChangeImage = async (e) =>{
         console.log('log =',e);
         const reader = new FileReader();
         var file = document.getElementById('imagetest').files[0];
@@ -34,7 +58,7 @@ const ProfileView = ({ avatar, userID, displayName, roomID, roomList, leaveRoom,
         console.log(reader);
         reader.readAsArrayBuffer(file);
         reader.addEventListener('load',(evt)=>{
-           setAvatar(file.name,evt.target.result);
+            setAvatar(file.name,evt.target.result);
         });
     }
 
@@ -46,30 +70,36 @@ const ProfileView = ({ avatar, userID, displayName, roomID, roomList, leaveRoom,
         leaveRoom(e);
         forgetRoom(e);
     }
+
     const handleInviteUser = async (e, e2) => {
         inviteUserToRoom(e, e2);
     }
+
     const handleKickUser = async (e, e2, e3) => {
         kickUserFromRoom(e, e2, e3);
     }
+
     const handleBanUser = async (e, e2, e3) => {
         banUserFromRoom(e, e2, e3);
     }
+
     const handleUnbanUser = async (e, e2) => {
         unbanUserFromRoom(e, e2);
     }
-
-
 
     const listItems = roomList.map((number, index) =>
         <li key={index}>
             {number.name}
         </li>
     );
+
     return (
         <>
             <main className="profile-page">
-                <section className="relative block" style={{ height: '450px' }}>
+                <section 
+                    className="relative block" 
+                    style={{ height: '450px' }}
+                >
                     <div
                         className="absolute top-0 w-full h-full bg-center bg-cover bg-amber-200"
                         style={{
@@ -104,24 +134,21 @@ const ProfileView = ({ avatar, userID, displayName, roomID, roomList, leaveRoom,
                         <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg -mt-64">
                             <div className="px-6">
                                 <div className="flex flex-wrap justify-center">
-                                    
                                     <div className="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center">
                                         <div className="relative ml-16">
-                                            
                                             <img
-                                                alt="..."
+                                                alt="Avatar"
                                                 src={avatar}
                                                 className="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 lg:-ml-16 flex justify-center"
                                                 style={{ maxWidth: '150px' }}
                                             />
-                                            
                                         </div>
                                         <Menu as="div" className="relative mt-14 mx-4">
-                                            <Menu.Button className="flex flex-wrap items-center justify-center  w-10 h-10 text-gray-700 transition-colors duration-150 bg-yellow-300 rounded-full focus:shadow-outline hover:bg-gray-200"
-                                                    type="button"
-                                                    // onClick={() => setShowModal(true)}>
-                                                    >
-                                                        
+                                            <Menu.Button 
+                                                className="flex flex-wrap items-center justify-center  w-10 h-10 text-gray-700 transition-colors duration-150 bg-yellow-300 rounded-full focus:shadow-outline hover:bg-gray-200"
+                                                type="button"
+                                            // onClick={() => setShowModal(true)}>
+                                            >
                                                 <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path></svg>
                                             </Menu.Button >
 
@@ -282,9 +309,7 @@ const ProfileView = ({ avatar, userID, displayName, roomID, roomList, leaveRoom,
                                         </Menu>
                                         {showModal ? (
                                             <>
-                                                <div
-                                                    className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
-                                                >
+                                                <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
                                                     <div className="relative w-auto my-6 mx-auto max-w-3xl">
                                                     {/*content*/}
                                                     <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
@@ -306,12 +331,12 @@ const ProfileView = ({ avatar, userID, displayName, roomID, roomList, leaveRoom,
                                                         {/*body*/}
                                                     
                                                         <div className="relative p-6 flex-auto">
-                                                            <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Change Picture</label>
+                                                            <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Change Picture</label>
                                                             <input type={'file'}  id={'imagetest'} accept={'*'} ></input>
                                                             <div id= {"display-image"}></div>
                                                         </div>
                                                         <div className="relative p-6 flex-auto mb-6">
-                                                            <label for="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Remove Picture</label>
+                                                            <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Remove Picture</label>
                                                             <button className="h-10 w-100 px-5 text-yellow-400 duration-150 border-2 border-yellow-400 rounded-lg focus:shadow-outline hover:bg-yellow-400 hover:text-white">Remove Picture</button>
                                                         </div>
 
@@ -363,7 +388,7 @@ const ProfileView = ({ avatar, userID, displayName, roomID, roomList, leaveRoom,
                                                             {/*body*/}
                                                         
                                                             <div className="relative p-6 flex-auto">
-                                                                <label for="nameText" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Enter the new User Name: </label>
+                                                                <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Enter the new User Name: </label>
                                                                 <input  className="w-100" type={'text'}  id={'nameText'} onChange={event => setChangeName(event.target.value)}></input>
                                                                 
                                                             </div>
@@ -468,7 +493,7 @@ const ProfileView = ({ avatar, userID, displayName, roomID, roomList, leaveRoom,
                                                             {/*body*/}
                                                         
                                                             <div className="relative p-6 flex-auto">
-                                                                <label for="nameText" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Enter the User Id to invite: </label>
+                                                                <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Enter the User Id to invite: </label>
                                                                 <input  className="w-100" type={'text'}  id={'nameText'} onChange={event => setUserName(event.target.value)}></input>
                                                                 
                                                             </div>
@@ -520,13 +545,13 @@ const ProfileView = ({ avatar, userID, displayName, roomID, roomList, leaveRoom,
                                                             {/*body*/}
                                                         
                                                             <div className="relative p-6 flex-auto">
-                                                                <label for="nameText" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Enter the User Id you want to kick: </label>
+                                                                <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Enter the User Id you want to kick: </label>
                                                                 <input  className="w-100" type={'text'}  id={'nameText'} onChange={event => setUserNameKick(event.target.value)}></input>
                                                                 
                                                             </div>
 
                                                             <div className="relative p-6 flex-auto">
-                                                                <label for="nameText" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Reason: </label>
+                                                                <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Reason: </label>
                                                                 <input  className="w-100" type={'text'}  id={'nameText'} onChange={event => setReasonKick(event.target.value)}></input>
                                                                 
                                                             </div>
@@ -577,13 +602,13 @@ const ProfileView = ({ avatar, userID, displayName, roomID, roomList, leaveRoom,
                                                             {/*body*/}
                                                         
                                                             <div className="relative p-6 flex-auto">
-                                                                <label for="nameText" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Enter the User Id you want to band: </label>
+                                                                <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Enter the User Id you want to band: </label>
                                                                 <input  className="w-100" type={'text'}  id={'nameText'} onChange={event => setUserBan(event.target.value)}></input>
                                                                 
                                                             </div>
 
                                                             <div className="relative p-6 flex-auto">
-                                                                <label for="nameText" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Reason: </label>
+                                                                <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Reason: </label>
                                                                 <input  className="w-100" type={'text'}  id={'nameText'} onChange={event => setReasonKick(event.target.value)}></input>
                                                                 
                                                             </div>
@@ -634,7 +659,7 @@ const ProfileView = ({ avatar, userID, displayName, roomID, roomList, leaveRoom,
                                                             {/*body*/}
                                                         
                                                             <div className="relative p-6 flex-auto">
-                                                                <label for="nameText" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Enter the User Id to unban: </label>
+                                                                <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Enter the User Id to unban: </label>
                                                                 <input  className="w-100" type={'text'}  id={'nameText'} onChange={event => setUnBanUserName(event.target.value)}></input>
                                                                 
                                                             </div>
@@ -691,21 +716,7 @@ const ProfileView = ({ avatar, userID, displayName, roomID, roomList, leaveRoom,
                                        {listItems}
                                     </div>
                                 </div>
-                                <div className="mt-10 py-10 border-t border-gray-300 text-center">
-                                    <div className="flex flex-wrap justify-center">
-                                        <div className="w-full lg:w-9/12 px-4">
-                                            <a
-                                                href="#pablo"
-                                                className="font-normal text-pink-500"
-                                                onClick={(e) =>
-                                                    e.preventDefault()
-                                                }
-                                            >
-                                                Show more
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
+                                <div className="mt-10 py-10 border-t border-gray-300 text-center"></div>
                             </div>
                         </div>
                     </div>

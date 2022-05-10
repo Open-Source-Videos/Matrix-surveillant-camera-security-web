@@ -42,7 +42,7 @@ const RoomPage = ({
                 currentRoomID = number.roomId;
                 history.push('/homepage');
                 getHistory(number.roomId, 20);
-                localStorage.setItem('currentRoomID', number.roomId);
+                localStorage.setItem('currentRoomID', currentRoomID);
             }}
             key={index}
         >

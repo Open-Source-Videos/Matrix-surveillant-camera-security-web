@@ -32,10 +32,11 @@ const TopNavigationBar = () => {
     const { pathname } = location;
     const splitLocation = pathname.split("/");
 
-    const handleRouter = (e) => {
+    const handleRouter = (link,e) => {
         e.preventDefault();
-        let link = e.target.href;
+        //let link = e.target.href;
         let target = window.location.origin + "/";
+		console.log('link=',link);
         let p = link?.replace(target, "");
         history.push(p);
     }
@@ -56,10 +57,12 @@ const TopNavigationBar = () => {
 
 	useEffect(() => {
         (async () => {
-            if (isLogin() === false) {
+            
+			if (isLogin() === false) {
                 console.log('Run test login');
                 setYesLogin(await testLogin());
             }
+
             setTimeout(() => {
                 setYesLogin(isLogin());
 				const get_avatar = () => {
@@ -114,7 +117,7 @@ const TopNavigationBar = () => {
 						<a 
                             href="/homepage"
                             className={splitLocation[1] === "homepage" ? tabItem.concat(" bg-gray-700 text-white") : tabItem}
-                            onClick={ handleRouter }
+                            onClick={(e)=>{ handleRouter("/homepage",e);} }
                         >
 							Homepage
 						</a>
@@ -122,7 +125,7 @@ const TopNavigationBar = () => {
                         <a 
                             href="/requests"
                             className={splitLocation[1] === "requests" ? tabItem.concat(" bg-gray-700 text-white") : tabItem}
-                            onClick={ handleRouter }
+                            onClick={ (e)=>{ handleRouter("/requests",e);} }
                         >
 							Requests
 						</a>
@@ -130,18 +133,18 @@ const TopNavigationBar = () => {
                         <a 
                             href="/profile"
                             className={splitLocation[1] === "profile" ? tabItem.concat(" bg-gray-700 text-white") : tabItem}
-                            onClick={ handleRouter }
+                            onClick={  (e)=>{ handleRouter("/profile",e);} }
                         >
 							Profile
 						</a>
 
-                        <a 
+                        {/*<a 
                             href="/setting" 
                             className={splitLocation[1] === "setting" ? tabItem.concat(" bg-gray-700 text-white") : tabItem}
-                            onClick={ handleRouter }
+                            onClick={  (e)=>{ handleRouter("/setting",e);} }
                         >
 							Settings
-						</a>
+						</a>*/}
               		</Popover.Group>
 
 					<div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
@@ -218,13 +221,13 @@ const TopNavigationBar = () => {
                                     >
 										<span className={ tabItemMenuText }>Profile</span>
 									</a>
-									<a 
+									{/*<a 
                                         href="/setting"
                                         onClick={ handleRouter }
                                         className={ tabItemMenu }
                                     >
 										<span className={ tabItemMenuText }>Settings</span>
-									</a>
+									</a>*/}
 								</nav>
 							</div>
 						</div>

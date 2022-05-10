@@ -13,6 +13,9 @@ import {
     ClockIcon,
 } from '@heroicons/react/outline';
 import { Menu, Transition } from '@headlessui/react';
+import { currentRoomID, setCurrentRoomID } from './Roompage';
+import { Rings, SpinningCircles, Circles  } from 'svg-loaders-react'
+
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ');
@@ -29,7 +32,8 @@ export const clearAllStates = () => {
 
 const SnapShot = () => {
     const [listSnapURL, setListSnapURL] = useState(list_snap_url);
-    const { saveBlobUrlToFile, setHavingNewFile } = useMatrixClient();
+    const { saveBlobUrlToFile, setHavingNewFile, removeOnHavingNewFile } =
+        useMatrixClient();
 
     const handleHavingNewFile = (sender, room, file) => {
         switch (file.fileType) {
@@ -80,6 +84,10 @@ const SnapShot = () => {
 
     useEffect(() => {
         setHavingNewFile(handleHavingNewFile);
+
+        return () => {
+            removeOnHavingNewFile(handleHavingNewFile);
+        };
     }, []);
 
     return (
@@ -91,6 +99,8 @@ const SnapShot = () => {
                             <div
                                 className="flex justify-center px-2"
                                 key={index}
+                                data-aos="zoom-in-down"
+                                data-aos-duration="1500"
                             >
                                 <div className="max-w-sm bg-white rounded-lg shadow-md">
                                     <div>
@@ -146,12 +156,47 @@ const SnapShot = () => {
 
 const RecordVideo = () => {
     const [listRecVideoURL, setListRecVideoURL] = useState(list_rec_video_url);
-    const { saveBlobUrlToFile, setHavingNewFile } = useMatrixClient();
+    const { saveBlobUrlToFile,sendMessageToRoom, setHavingNewFile, removeOnHavingNewFile } =
+        useMatrixClient();
 
     const handleHavingNewFile = (sender, room, file) => {
         const ROOM_ID = localStorage.getItem('currentRoomID');
         if (ROOM_ID === room) {
+            let jsonObj = null;
+            let content = null;
+
             switch (file.fileType) {
+                case 'image/png':
+                    case 'image/jpeg':
+                        try {
+                            jsonObj = JSON.parse(file.fileName);
+                            content = jsonObj.content.replace('.thumb', '');
+                        } catch {
+                            jsonObj = null;
+                            content = null;
+                        }
+                            if (
+                            currentRoomID &&
+                            jsonObj &&
+                            jsonObj.type === 'thumbnail'
+                        ) {
+                            //send request-video message to room
+    
+                            console.log(jsonObj.content.split(',')[0]);
+                            jsonObj.type = 'video-request';
+                            jsonObj.content = jsonObj.content.split(',')[0];
+                            const message = JSON.stringify(jsonObj);
+    
+                            console.log(
+                                'send video request ',
+                                currentRoomID,
+                                message
+                            );
+    
+                            sendMessageToRoom(currentRoomID, message);
+
+                        }
+                        break;                
                 case 'video/mp4':
                     if (file.fileName.includes('video-send')) {
                         let local_time = new Date();
@@ -197,6 +242,8 @@ const RecordVideo = () => {
         saveBlobUrlToFile(url, 'record-video('.concat(index).concat(').mp4'));
     };
 
+
+
     const handleDeleteRecVideo = (url) => {
         list_rec_video_url = list_rec_video_url.filter((item) => {
             return item.url !== url;
@@ -207,7 +254,10 @@ const RecordVideo = () => {
 
     useEffect(() => {
         setHavingNewFile(handleHavingNewFile);
-        console.log('LIST VIDEO: ', listRecVideoURL);
+        //console.log('LIST VIDEO: ', listRecVideoURL);
+        return () => {
+            removeOnHavingNewFile(handleHavingNewFile);
+        };
     }, []);
 
     return (
@@ -219,6 +269,8 @@ const RecordVideo = () => {
                             <div
                                 className="flex justify-center px-2"
                                 key={index}
+                                data-aos="zoom-in-down"
+                                data-aos-duration="1500"
                             >
                                 {content !== 'empty' ? (
                                     <div className="max-w-sm bg-white rounded-lg shadow-md">
@@ -270,14 +322,30 @@ const RecordVideo = () => {
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="flex items-center justify-center content-center h-screen w-full mx-auto">
-                                        <div
-                                            className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full mx-auto items-center justify-center content-center"
-                                            role="status"
-                                        >
-                                            <span className="visually-hidden">
-                                                Loading...
-                                            </span>
+                                    <div className="max-w-sm opacity-25 inset-0 z-40 bg-gray-300 rounded-lg shadow-md">
+                                        <div>
+                                            <Circles fill="#f59e0b" strokeOpacity=".1" className="rounded-t-lg w-96 h-72 m-auto bg-gray-200 p-4"/>
+                                        </div>
+                                        <div className="px-3 pb-3">
+                                            <div className="flex items-center px-2 pt-4 mt-1">
+                                                <span className="text-gray-500 text-xs font-semibold py-0.5 rounded px-2 bg-amber-500 w-1/2 h-4"></span>
+                                            </div>
+                                            <div className="flex items-center mt-2.5 mb-5">
+                                                <ClockIcon className="w-4 h-4 mr-2 text-rose-500" />
+                                                <span className="text-gray-500 text-xs font-semibold py-0.5 rounded px-2 bg-amber-500 w-full h-3"></span>
+                                            </div>
+                                            <div className="flex justify-end">
+                                                <button
+                                                    className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-300 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
+                                                >
+                                                    <CloudDownloadIcon className="w-5 h-5" />
+                                                </button>
+                                                <button
+                                                    className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-300 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
+                                                >
+                                                    <TrashIcon className="w-5 h-5" />
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 )}
@@ -300,6 +368,7 @@ const RequestGroupList = () => {
     const handleSnapshot = () => {
         setChildComponent(1);
         const ROOM_ID = localStorage.getItem('currentRoomID');
+        console.log('roon', ROOM_ID);
         sendMessageToRoom(
             ROOM_ID,
             `{"type" : "snapshot", "content" : "1", "requestor_id":"0"}`
@@ -318,101 +387,36 @@ const RequestGroupList = () => {
 
     return (
         <>
-            <div className="lg:flex lg:items-center lg:justify-between px-4">
+            <div className="md:flex md:items-center md:justify-between px-4">
                 <div className="flex-1 min-w-0"></div>
-                <div className="mt-3 flex lg:mt-0 lg:ml-2">
-                    <span className="hidden sm:block">
+                <div className="mt-3 grid md:flex md:mt-0 md:ml-2 justify-center text-center">
+                    <span className="sm:block">
                         <button
                             type="button"
                             onClick={handleSnapshot}
-                            className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            className="w-full justify-center inline-flex items-center px-3 py-2 border border-orange-300 rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
                         >
                             <CameraIcon
-                                className="-ml-1 mr-2 h-5 w-5 text-gray-500"
+                                className="-ml-1 mr-2 h-5 w-5 text-white"
                                 aria-hidden="true"
                             />
                             Snapshot
                         </button>
                     </span>
 
-                    <span className="hidden sm:block ml-2">
+                    <span className="sm:block md:ml-2">
                         <button
                             type="button"
                             onClick={handleRecVideo}
-                            className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            className="w-full justify-center inline-flex items-center px-3 py-2 border border-orange-300 rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
                         >
                             <VideoCameraIcon
-                                className="-ml-1 mr-2 h-5 w-5 text-gray-500"
+                                className="-ml-1 mr-2 h-5 w-5 text-white"
                                 aria-hidden="true"
                             />
                             Record Video
                         </button>
                     </span>
-
-                    <span className="sm:ml-2">
-                        <button
-                            type="button"
-                            className="inline-flex items-center px-3 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                        >
-                            <CloudIcon
-                                className="-ml-1 mr-2 h-5 w-5"
-                                aria-hidden="true"
-                            />
-                            Recordings
-                        </button>
-                    </span>
-
-                    {/* Dropdown */}
-                    <Menu as="span" className="ml-3 relative sm:hidden">
-                        <Menu.Button className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                            More
-                            <ChevronDownIcon
-                                className="-mr-1 ml-2 h-5 w-5 text-gray-500"
-                                aria-hidden="true"
-                            />
-                        </Menu.Button>
-
-                        <Transition
-                            as={Fragment}
-                            enter="transition ease-out duration-200"
-                            enterFrom="transform opacity-0 scale-95"
-                            enterTo="transform opacity-100 scale-100"
-                            leave="transition ease-in duration-75"
-                            leaveFrom="transform opacity-100 scale-100"
-                            leaveTo="transform opacity-0 scale-95"
-                        >
-                            <Menu.Items className="origin-top-right absolute right-0 mt-2 -mr-1 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                <Menu.Item>
-                                    {({ active }) => (
-                                        <button
-                                            type="button"
-                                            onClick={handleSnapshot}
-                                            className={classNames(
-                                                active ? 'bg-gray-100' : '',
-                                                'block px-4 py-2 text-sm text-gray-700'
-                                            )}
-                                        >
-                                            Snapshot
-                                        </button>
-                                    )}
-                                </Menu.Item>
-                                <Menu.Item>
-                                    {({ active }) => (
-                                        <button
-                                            type="button"
-                                            onClick={handleRecVideo}
-                                            className={classNames(
-                                                active ? 'bg-gray-100' : '',
-                                                'block px-4 py-2 text-sm text-gray-700'
-                                            )}
-                                        >
-                                            Recording Video
-                                        </button>
-                                    )}
-                                </Menu.Item>
-                            </Menu.Items>
-                        </Transition>
-                    </Menu>
                 </div>
             </div>
             <br />
