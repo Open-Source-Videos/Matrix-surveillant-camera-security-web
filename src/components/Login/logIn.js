@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
+
 import './style.css';
 import {
     Row,
@@ -27,6 +28,7 @@ export const Login = () => {
     });
     const [errors, setErrors] = useState({});
     const [homeServer, setHomeServer] = useState({});
+    const [problem, setProblem] = useState(false);
 
     const [formSubmitted, setFormSubmitted] = useState(false);
     const history = useHistory();
@@ -142,6 +144,12 @@ export const Login = () => {
         }
     };
 
+    const havingProblem = () => {
+        
+
+    }
+
+
     return (
         <div className="bg-white m-4 rounded">
             <Row>
@@ -252,14 +260,27 @@ export const Login = () => {
                         </FormGroup>
 
                         <div className="text-center">
-                            <Button
+                            {/* <Button
                                 id="button"
                                 type="submit"
                                 bsStyle="primary"
                                 className="border border-dark"
                             >
                                 Login
-                            </Button>
+                            </Button> */}
+                            <button class="relative inline-flex items-center justify-start py-3 pl-4 pr-12 pt-4 mt-4 overflow-hidden font-semibold text-yellow-400 transition-all duration-150 ease-in-out rounded hover:pl-10 hover:pr-6 bg-gray-50 group"
+                                    id="button2"
+                                    type="submit">
+
+                                <span class="absolute bottom-0 left-0 w-full h-1 transition-all duration-150 ease-in-out bg-yellow-300 group-hover:h-full"></span>
+                                <span class="absolute right-0 pr-4 duration-200 ease-out group-hover:translate-x-12">
+                                <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                                </span>
+                                <span class="absolute left-0 pl-2.5 -translate-x-12 group-hover:translate-x-0 ease-out duration-200">
+                                <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                                </span>
+                                <span class="relative w-full text-left transition-colors duration-200 ease-in-out group-hover:text-white">Login</span>
+                            </button>
                         </div>
 
                         <FormGroup className="pt-4 text-center my-2">
@@ -275,17 +296,62 @@ export const Login = () => {
                             >
                                 Sign-up here!
                             </Button>
+                             {/* <div className="text-decoration-none text-sm ps-2">
+                                <button 
+                                        className="bg-black hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                        type="button"
+                                        onClick={() => {
+                                            localStorage.clear();
+
+                                        }}
+                                    >
+                                        Having problem
+                                </button>
+                            </div>  */}
                             <div className="text-decoration-none text-sm ps-2">
-							<button 
-									className="bg-black hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-									type="button"
-                                    onClick={() => {
-                                        localStorage.clear();
-                                    }}
-                                >
-                                    Having problem
-                            </button>
+                                <button className="h-1/2 relative inline-flex items-center px-12 py-3 overflow-hidden text-lg font-medium text-yellow-400 border-2 border-yellow-300 rounded-full hover:text-white group hover:bg-gray-50"
+                                        type="button"
+                                        onClick={() => {
+                                            localStorage.clear();
+                                            setProblem(true);
+                                            // havingProblem();
+                                        }}>
+                                    <span className="absolute left-0 block w-full h-0 transition-all bg-yellow-400 opacity-100 group-hover:h-full top-1/2 group-hover:top-0 duration-400 ease"></span>   
+                                    <span className="relative">Having Problem</span>
+                                </button>
                             </div>
+                            {problem ? (
+                                <>                                
+                                 <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
+                                    <div className="relative w-auto my-6 mx-auto max-w-3xl">
+                                                        {/*content*/}
+                                    <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none"> 
+                                        <div className="py-3 px-5 mb-4 bg-green-100 text-green-900 text-sm rounded-md border border-green-200 flex items-center" role="alert">
+                                            <div className="w-4 mr-2">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
+                                                </svg>
+                                            </div>
+                                            <span>
+                                                Your problem <strong>have been solve </strong> <br/>
+                                                Please <strong>login again!!!</strong> 
+                                            </span>
+                                            
+                                        </div>   
+                                        <button
+                                            className="text-red-500 background-transparent font-bold uppercase pb-4 text-sm outline-none focus:outline-none ease-linear transition-all duration-150"
+                                            type="button"
+                                            onClick={() => setProblem(false)}
+                                            >
+                                            Close
+                                        </button>                                                           
+                                    </div>
+                                 </div>
+                                 </div>                                                                                                  
+                                </>
+                            ): null}
+
+                
                         </FormGroup>
                     </form>
                 </Col>
