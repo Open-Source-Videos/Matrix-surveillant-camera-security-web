@@ -14,15 +14,14 @@ import {
     useHistory
 } from "react-router-dom";
 
-import { ChevronDownIcon } from '@heroicons/react/solid'
 import { FcBusinessman, FcUnlock, FcPlus, FcMinus, FcCancel, FcImport, FcDataBackup, FcServices, FcHome, FcDepartment } from 'react-icons/fc'
 
 
-function classNames(...classes) {
-    return classes.filter(Boolean).join(' ')
-}
+// function classNames(...classes) {
+//     return classes.filter(Boolean).join(' ')
+// }
 
-function ViewActiveIcon(props) {
+const ViewActiveIcon = (props) => {
     return (
       <svg
         {...props}
@@ -40,7 +39,7 @@ function ViewActiveIcon(props) {
     )
   }
 
-  function ViewInactiveIcon(props) {
+  const ViewInactiveIcon = (props) => {
     return (
       <svg
         {...props}
@@ -58,7 +57,7 @@ function ViewActiveIcon(props) {
     )
   }
 
-  function EditInactiveIcon(props) {
+  const  EditInactiveIcon = (props) => {
     return (
       <svg
         {...props}
@@ -76,7 +75,7 @@ function ViewActiveIcon(props) {
     )
   }
 
-  function EditActiveIcon(props) {
+  const EditActiveIcon = (props) => {
     return (
       <svg
         {...props}
@@ -174,7 +173,7 @@ const ProfileView = ({
     const listItems = roomList.map((number, index) =>
         <div className="w-full">
             <div className="shadow-lg px-4 py-6 w-full bg-white dark:bg-gray-700 relative hover:scale-110 duration-200">
-                <p key={index} class="text-yellow-500 text-xl w-max text-gray-700 dark:text-white font-semibold border-b border-gray-200">
+                <p key={index} className="text-yellow-500 text-xl w-max text-gray-700 dark:text-white font-semibold border-b border-gray-200">
                     {number.name}           
                 </p>
                 <div className="flex items-end my-4 ">
@@ -185,13 +184,9 @@ const ProfileView = ({
                         <FcHome size={30}/>
                     </span>
                 </div>
-                {/* <div class="flex items-end my-4 text-sm font-bold flex items-left">
-                        {number.roomId}
-                </div> */}
+              
             </div>
-            {/* <li key={index}>
-                {number.name}
-            </li> */}
+        
         </div>
     );
 
@@ -934,7 +929,7 @@ const ProfileView = ({
                                                         <button className="w-full dark:text-white flex items-center pl-6 p-2 my-3 transition-colors duration-200 justify-start hover:bg-gradient-to-r hover:from-white to-yellow-200 hover:border-r-4 hover:border-yellow-500 hover:dark:from-gray-700 hover:dark:to-gray-800 hover:border-r-4 border-yellow-500"
                                                                 type="button"
                                                                 onClick={() => setShowChangeName(true)}>
-                                                            <span className="text-left ">
+                                                            <span className="text-left">
                                                                 <FcBusinessman size={30}/>
                                                             </span>
                                                             <span className="mx-4 text-md font-normal text-yellow-800 hover:font-bold">

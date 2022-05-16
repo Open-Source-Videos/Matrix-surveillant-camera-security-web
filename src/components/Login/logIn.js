@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
-import { withRouter } from 'react-router-dom';
+import { useHistory, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 
@@ -13,7 +12,6 @@ import {
     ControlLabel,
     Button,
     HelpBlock,
-    Label,
     Image,
 } from 'react-bootstrap';
 import { isEmpty, isLength, isContainWhiteSpace } from '../../pages/Homepage';
@@ -27,16 +25,15 @@ export const Login = () => {
         password: 'G3Vsnzvr',
     });
     const [errors, setErrors] = useState({});
-    const [homeServer, setHomeServer] = useState({});
     const [problem, setProblem] = useState(false);
 
     const [formSubmitted, setFormSubmitted] = useState(false);
     const history = useHistory();
     const {
-        getAvatar,
+       
         setOnLogInResult,
         loginMatrixServer,
-        isLogin,
+       
         testLogin,
     } = useMatrixClient();
 
@@ -48,17 +45,6 @@ export const Login = () => {
             await testLogin();
         })();
 
-        // const saved = localStorage.getItem("matrix_account");
-        // if (saved)
-        // {
-        // 	(async() => {
-        // 		let info = JSON.parse(saved);
-        // 		console.log("My Info", info);
-        // 		await reloginMatrixServer(info.homeServer, info.exportedDevice, info.accessToken );
-        // 	})();
-        // } else {
-        // 	console.log('Set handleLoginResult');
-        // }
     }, []);
 
     const handleInputChange = (event) => {
@@ -144,12 +130,7 @@ export const Login = () => {
         }
     };
 
-    const havingProblem = () => {
-        
-
-    }
-
-
+    
     return (
         <div className="bg-white m-4 rounded">
             <Row>
@@ -296,25 +277,13 @@ export const Login = () => {
                             >
                                 Sign-up here!
                             </Button>
-                             {/* <div className="text-decoration-none text-sm ps-2">
-                                <button 
-                                        className="bg-black hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                        type="button"
-                                        onClick={() => {
-                                            localStorage.clear();
-
-                                        }}
-                                    >
-                                        Having problem
-                                </button>
-                            </div>  */}
                             <div className="text-decoration-none text-sm ps-2">
                                 <button className="h-1/2 relative inline-flex items-center px-12 py-3 overflow-hidden text-lg font-medium text-yellow-400 border-2 border-yellow-300 rounded-full hover:text-white group hover:bg-gray-50"
                                         type="button"
                                         onClick={() => {
                                             localStorage.clear();
                                             setProblem(true);
-                                            // havingProblem();
+                                            
                                         }}>
                                     <span className="absolute left-0 block w-full h-0 transition-all bg-yellow-400 opacity-100 group-hover:h-full top-1/2 group-hover:top-0 duration-400 ease"></span>   
                                     <span className="relative">Having Problem</span>
