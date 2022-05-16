@@ -172,16 +172,16 @@ const ProfileView = ({
     }
 
     const listItems = roomList.map((number, index) =>
-        <div class="w-full">
-            <div class="shadow-lg px-4 py-6 w-full bg-white dark:bg-gray-700 relative hover:scale-110 duration-200">
+        <div className="w-full">
+            <div className="shadow-lg px-4 py-6 w-full bg-white dark:bg-gray-700 relative hover:scale-110 duration-200">
                 <p key={index} class="text-yellow-500 text-xl w-max text-gray-700 dark:text-white font-semibold border-b border-gray-200">
                     {number.name}           
                 </p>
-                <div class="flex items-end my-4 ">
-                    <p class="text-xs text-black dark:text-white font-bold">
+                <div className="flex items-end my-4 ">
+                    <p className="text-xs text-black dark:text-white font-bold">
                         Room ID: {number.roomId} 
                     </p>
-                    <span class="absolute px-2 top-2 right-1">
+                    <span className="absolute px-2 top-2 right-1">
                         <FcHome size={30}/>
                     </span>
                 </div>
