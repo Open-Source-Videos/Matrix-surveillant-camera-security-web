@@ -278,7 +278,7 @@ export const Login = () => {
                                 Sign-up here!
                             </Button>
                             <div className="text-decoration-none text-sm ps-2">
-                                <button className="h-1/2 relative inline-flex items-center px-12 py-3 overflow-hidden text-lg font-medium text-yellow-400 border-2 border-yellow-300 rounded-full hover:text-white group hover:bg-gray-50"
+                                <button className="h-1 relative inline-flex items-center px-12 py-3 overflow-hidden text-lg font-medium text-yellow-400 border-2 border-yellow-300 rounded-full hover:text-white group hover:bg-gray-50"
                                         type="button"
                                         onClick={() => {
                                             localStorage.clear();
