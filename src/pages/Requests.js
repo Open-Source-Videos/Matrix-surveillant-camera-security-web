@@ -4,17 +4,17 @@ import useMatrixClient from '../hooks/useMatrixClient';
 import Page403 from './Page403';
 import TopNavigationBar from '../components/TopNavigationBar';
 import {
-    ChevronDownIcon,
     CameraIcon,
-    CloudIcon,
     VideoCameraIcon,
     CloudDownloadIcon,
     TrashIcon,
     ClockIcon,
+    RefreshIcon
 } from '@heroicons/react/outline';
 import { Menu, Transition } from '@headlessui/react';
 import { currentRoomID, setCurrentRoomID } from './Roompage';
 import { Rings, SpinningCircles, Circles  } from 'svg-loaders-react'
+import { ModalRequest } from "../components/ModalRequest"
 
 
 function classNames(...classes) {
@@ -361,8 +361,74 @@ const RecordVideo = () => {
     );
 };
 
+
+const CamConfig = () => {
+    const [newMessage, setNewMessage] = useState(null)
+    const { 
+        setOnHavingNewMessage, 
+        removeOnHavingNewMessage 
+    } = useMatrixClient();
+
+    const handleHavingNewMessage = (sender, room, message, time) => {
+        const ROOM_ID = localStorage.getItem('currentRoomID');
+        if (ROOM_ID === room) {
+            if (message !== null && message.includes(`"type" : "cam-config"`)) {
+                let cam_config_reply = JSON.parse(message);
+
+                let list_cam = cam_config_reply.content;
+                list_cam = list_cam.substring(1, list_cam.length - 1);
+
+                let arr_list = list_cam.split(', ');
+                let list_obj = []
+
+                for (var i in arr_list) {
+                    let obj = {
+                        "camera" : "Camera " + arr_list[i].replaceAll(`'`, ''),
+                        "camera_num" : parseInt(arr_list[i].split(': ')[0].replaceAll(`'`, ''))
+                    }
+                    list_obj.push(obj)
+                }
+                const cam_config_list = JSON.stringify(list_obj);
+                localStorage.setItem('cam-config', cam_config_list);
+                setNewMessage(list_obj);
+            }
+        }
+    };
+
+    const handleCamConfig = () => {
+        const cam_config_list = JSON.parse(localStorage.getItem('cam-config'));
+        setNewMessage(cam_config_list);
+    }
+
+    useEffect(() => {
+        setOnHavingNewMessage(handleHavingNewMessage);
+        handleCamConfig();
+        return () => {
+            removeOnHavingNewMessage(handleHavingNewMessage);
+        };
+    }, []);
+
+    return (
+        <div className="grid grid-cols-1 divide-y mt-2">
+            {
+                newMessage !== null && (
+                    newMessage.map((item, index) => (
+                        <div 
+                            key={index}
+                            className={"text-sm my-0.5 py-2"}
+                        >
+                            {item.camera}
+                        </div>
+                    ))
+                )
+            }
+        </div>
+    )
+}
+
 const RequestGroupList = () => {
     let [child_component, setChildComponent] = useState(0);
+    const [showModal, setShowModal] = useState(false);
     const { sendMessageToRoom } = useMatrixClient();
 
     const handleSnapshot = () => {
@@ -383,6 +449,15 @@ const RequestGroupList = () => {
             `{"type" : "record-video", "content" : "1,2", "requestor_id":"0"}`
         );
         list_rec_video_url.push('empty');
+    };
+
+    const handleCamConfig = () => {
+        const ROOM_ID = localStorage.getItem('currentRoomID');
+        console.log('roon', ROOM_ID);
+        sendMessageToRoom(
+            ROOM_ID,
+            `{"type" : "cam-config-request", "content" : "", "requestor_id":"0"}`
+        );
     };
 
     return (
@@ -417,6 +492,20 @@ const RequestGroupList = () => {
                             Record Video
                         </button>
                     </span>
+
+                    <span className="sm:block md:ml-2">
+                        <button
+                            type="button"
+                            onClick={() => setShowModal(true)}
+                            className="w-full justify-center inline-flex items-center px-3 py-2 border border-orange-300 rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+                        >
+                            <RefreshIcon
+                                className="-ml-1 mr-2 h-5 w-5 text-white"
+                                aria-hidden="true"
+                            />
+                            Camera Config
+                        </button>
+                    </span>
                 </div>
             </div>
             <br />
@@ -428,6 +517,21 @@ const RequestGroupList = () => {
                         return <RecordVideo />;
                     }
                 })()}
+                {showModal ? (
+                    <ModalRequest
+                        isOpen={showModal}
+                        onClickClose={() => {
+                            setShowModal(false);
+                        }}
+                        dialogTitle={"Camera Configuration"}
+                        dialogBody={
+                            <CamConfig />
+                        }
+                        requestAction={handleCamConfig}
+                    />
+                ) : (
+                    <></>
+                )}
             </>
         </>
     );
