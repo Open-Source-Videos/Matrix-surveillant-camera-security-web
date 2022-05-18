@@ -1,4 +1,8 @@
-import React, { useEffect, useState, Fragment } from 'react';
+import React, { 
+    useEffect, 
+    useState, 
+    Fragment 
+} from 'react';
 import '../index.css';
 import useMatrixClient from '../hooks/useMatrixClient';
 import Page403 from './Page403';
@@ -9,12 +13,19 @@ import {
     CloudDownloadIcon,
     TrashIcon,
     ClockIcon,
-    RefreshIcon
+    RefreshIcon,
+    ExclamationIcon,
+    SelectorIcon
 } from '@heroicons/react/outline';
-import { Menu, Transition } from '@headlessui/react';
-import { currentRoomID, setCurrentRoomID } from './Roompage';
-import { Rings, SpinningCircles, Circles  } from 'svg-loaders-react'
-import { ModalRequest } from "../components/ModalRequest"
+import { CheckIcon } from '@heroicons/react/solid';
+import { 
+    Listbox,
+    Transition
+} from '@headlessui/react';
+import { currentRoomID } from './Roompage';
+import { Circles  } from 'svg-loaders-react';
+import { ModalRequest } from "../components/ModalRequest";
+
 
 
 function classNames(...classes) {
@@ -29,6 +40,7 @@ export const clearAllStates = () => {
     list_snap_url = [];
     list_rec_video_url = [];
 };
+
 
 const SnapShot = () => {
     const [listSnapURL, setListSnapURL] = useState(list_snap_url);
@@ -175,25 +187,19 @@ const RecordVideo = () => {
                             jsonObj = null;
                             content = null;
                         }
-                            if (
-                            currentRoomID &&
-                            jsonObj &&
-                            jsonObj.type === 'thumbnail'
-                        ) {
+                        if (jsonObj && jsonObj.type === 'thumbnail') {
                             //send request-video message to room
-    
-                            console.log(jsonObj.content.split(',')[0]);
                             jsonObj.type = 'video-request';
                             jsonObj.content = jsonObj.content.split(',')[0];
                             const message = JSON.stringify(jsonObj);
     
                             console.log(
                                 'send video request ',
-                                currentRoomID,
+                                ROOM_ID,
                                 message
                             );
     
-                            sendMessageToRoom(currentRoomID, message);
+                            sendMessageToRoom(ROOM_ID, message);
 
                         }
                         break;                
@@ -391,6 +397,7 @@ const CamConfig = () => {
                 const cam_config_list = JSON.stringify(list_obj);
                 localStorage.setItem('cam-config', cam_config_list);
                 setNewMessage(list_obj);
+                window.location.reload()
             }
         }
     };
@@ -428,7 +435,24 @@ const CamConfig = () => {
 
 const RequestGroupList = () => {
     let [child_component, setChildComponent] = useState(0);
-    const [showModal, setShowModal] = useState(false);
+    const [recordingSec, setRecordingSec] = useState(2);
+    const [showModalSnapShot, setShowModalSnapShot] = useState(false);
+    const [showModalRecVideo, setShowModalRecVideo] = useState(false);
+    const [showModalCamConfig, setShowModalCamConfig] = useState(false);
+    const [disable, setDisable] = useState(false);
+    const [camConfig, setCamConfig] = useState(() => {
+        const cam_config_list = JSON.parse(localStorage.getItem('cam-config'));
+        if (cam_config_list === null) {
+            return [
+                {
+                    "camera" : "Unavailable",
+                    "camera_num" : -1
+                }
+            ];
+        }
+        return cam_config_list;
+    });
+    const [selectedCamera, setSelectedCamera] = useState(camConfig[0]);
     const { sendMessageToRoom } = useMatrixClient();
 
     const handleSnapshot = () => {
@@ -437,18 +461,24 @@ const RequestGroupList = () => {
         console.log('roon', ROOM_ID);
         sendMessageToRoom(
             ROOM_ID,
-            `{"type" : "snapshot", "content" : "1", "requestor_id":"0"}`
+            `{"type" : "snapshot", "content" : "${selectedCamera.camera_num}", "requestor_id":"0"}`
         );
+        setShowModalSnapShot(false);
     };
+
+    const handleRecordingTime = (e) => {
+        setRecordingSec(e.target.value);
+    }
 
     const handleRecVideo = () => {
         setChildComponent(2);
         const ROOM_ID = localStorage.getItem('currentRoomID');
         sendMessageToRoom(
             ROOM_ID,
-            `{"type" : "record-video", "content" : "1,2", "requestor_id":"0"}`
+            `{"type" : "record-video", "content" : "${selectedCamera.camera_num},${recordingSec}", "requestor_id":"0"}`
         );
         list_rec_video_url.push('empty');
+        setShowModalRecVideo(false);
     };
 
     const handleCamConfig = () => {
@@ -460,6 +490,21 @@ const RequestGroupList = () => {
         );
     };
 
+
+    useEffect(() => {
+        let cam_config_list = JSON.parse(localStorage.getItem('cam-config'));
+        if (cam_config_list === null) {
+            setCamConfig([
+                {
+                    "camera" : "Unavailable",
+                    "camera_num" : -1
+                }
+            ]);
+        } else {
+            setCamConfig(cam_config_list);
+        }
+    }, [])
+
     return (
         <>
             <div className="md:flex md:items-center md:justify-between px-4">
@@ -468,7 +513,7 @@ const RequestGroupList = () => {
                     <span className="sm:block">
                         <button
                             type="button"
-                            onClick={handleSnapshot}
+                            onClick={() => setShowModalSnapShot(true)}
                             className="w-full justify-center inline-flex items-center px-3 py-2 border border-orange-300 rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
                         >
                             <CameraIcon
@@ -482,7 +527,7 @@ const RequestGroupList = () => {
                     <span className="sm:block md:ml-2">
                         <button
                             type="button"
-                            onClick={handleRecVideo}
+                            onClick={() => setShowModalRecVideo(true)}
                             className="w-full justify-center inline-flex items-center px-3 py-2 border border-orange-300 rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
                         >
                             <VideoCameraIcon
@@ -496,7 +541,7 @@ const RequestGroupList = () => {
                     <span className="sm:block md:ml-2">
                         <button
                             type="button"
-                            onClick={() => setShowModal(true)}
+                            onClick={() => setShowModalCamConfig(true)}
                             className="w-full justify-center inline-flex items-center px-3 py-2 border border-orange-300 rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
                         >
                             <RefreshIcon
@@ -517,17 +562,181 @@ const RequestGroupList = () => {
                         return <RecordVideo />;
                     }
                 })()}
-                {showModal ? (
+                {showModalCamConfig ? (
                     <ModalRequest
-                        isOpen={showModal}
+                        isOpen={showModalCamConfig}
                         onClickClose={() => {
-                            setShowModal(false);
+                            setShowModalCamConfig(false);
                         }}
                         dialogTitle={"Camera Configuration"}
                         dialogBody={
                             <CamConfig />
                         }
                         requestAction={handleCamConfig}
+                    />
+                ) : (
+                    <></>
+                )}
+
+                {showModalSnapShot ? (
+                    <ModalRequest
+                        isOpen={showModalSnapShot}
+                        onClickClose={() => {
+                            setShowModalSnapShot(false);
+                        }}
+                        dialogTitle={"Snapshot Request"}
+                        dialogBody={
+                            <>
+                                { camConfig[0].camera_num !== -1 ? (
+                                    <Listbox 
+                                        value={selectedCamera} 
+                                        onChange={setSelectedCamera}
+                                        as="div"
+                                        className="relative space-y-1"
+                                    >
+                                        <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none border-gray-400 focus-visible:border-rose-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-rose-300 sm:text-sm">
+                                            <span className="block truncate text-black">
+                                                {selectedCamera.camera}
+                                            </span>
+                                            <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center">
+                                                <SelectorIcon
+                                                    className="h-5 w-5 text-black"
+                                                    aria-hidden="true"
+                                                />
+                                            </span>
+                                        </Listbox.Button>
+
+                                        <Listbox.Options className={"p-0 border-1 border-gray-200 rounded-lg mt-3 divide-y"}>
+                                            {camConfig.map((cam, index) => (
+                                                <Listbox.Option 
+                                                    key={index} 
+                                                    value={cam} 
+                                                    as={Fragment}
+                                                    className={({ active }) =>
+                                                        `relative cursor-default select-none p-2.5 rounded-lg hover:bg-gradient-to-r from-orange-400 to-rose-400 text-sm shadow-md ${
+                                                            active ? 'bg-gradient-to-r from-orange-400 to-rose-400 text-white' : 'text-gray-900'
+                                                        }`
+                                                    }
+                                                >
+                                                    {({ selectedCamera }) => (
+                                                        <li>
+                                                            {selectedCamera && <CheckIcon className="w-4 h-4 bg-rose-500"/>}
+                                                            {cam.camera}
+                                                        </li>
+                                                    )}
+                                                </Listbox.Option>
+                                            ))}
+                                        </Listbox.Options>
+                                    </Listbox>
+                                ) :
+                                (
+                                    <button 
+                                        onClick={() => {
+                                            setShowModalSnapShot(false)
+                                            setShowModalCamConfig(true)
+                                        }}
+                                        className="group block max-w-xs mx-auto rounded-lg p-6 bg-neutral-50 ring-1 ring-amber-900/5 shadow-md space-y-3 hover:bg-amber-300 hover:ring-amber-400"
+                                    >
+                                        <div className="flex items-center space-x-3">
+                                            <ExclamationIcon className="h-6 w-6 stroke-amber-500 group-hover:stroke-black"></ExclamationIcon>
+                                            <h3 className="text-slate-900 text-sm font-semibold">Warning</h3>
+                                        </div>
+                                        <p className="text-black text-sm">Your camera is currently not setting up. Please click here to request your camera.</p>
+                                    </button>
+                                )
+                                }
+                            </>
+                        }
+                        requestAction={handleSnapshot}
+                    />
+                ) : (
+                    <></>
+                )}
+
+                {showModalRecVideo ? (
+                    <ModalRequest
+                        isOpen={showModalRecVideo}
+                        onClickClose={() => {
+                            setShowModalRecVideo(false);
+                        }}
+                        dialogTitle={"Recording Video Request"}
+                        dialogBody={
+                            <div className={"mt-3"}>
+                                { camConfig[0].camera_num !== -1 ? (
+                                    <Listbox 
+                                        value={selectedCamera} 
+                                        onChange={setSelectedCamera}
+                                        as="div"
+                                        className="relative space-y-1"
+                                    >
+                                        <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none border-gray-400 focus-visible:border-rose-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-rose-300 sm:text-sm">
+                                            <span className="block truncate text-black">
+                                                {selectedCamera.camera}
+                                            </span>
+                                            <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center">
+                                                <SelectorIcon
+                                                    className="h-5 w-5 text-black"
+                                                    aria-hidden="true"
+                                                />
+                                            </span>
+                                        </Listbox.Button>
+
+                                        <Listbox.Options className={"p-0 border-1 border-gray-200 rounded-lg mt-3 divide-y"}>
+                                            {camConfig.map((cam, index) => (
+                                                <Listbox.Option 
+                                                    key={index} 
+                                                    value={cam} 
+                                                    as={Fragment}
+                                                    className={({ active }) =>
+                                                        `relative cursor-default select-none p-2.5 rounded-lg hover:bg-gradient-to-r from-orange-400 to-rose-400 text-sm shadow-md ${
+                                                            active ? 'bg-gradient-to-r from-orange-400 to-rose-400 text-white' : 'text-gray-900'
+                                                        }`
+                                                    }
+                                                >
+                                                    {({ selectedCamera }) => (
+                                                        <li>
+                                                            {selectedCamera && <CheckIcon className="w-4 h-4 bg-rose-500"/>}
+                                                            {cam.camera}
+                                                        </li>
+                                                    )}
+                                                </Listbox.Option>
+                                            ))}
+                                        </Listbox.Options>
+                                    </Listbox>
+                                ) :
+                                (
+                                    <button 
+                                        onClick={() => {
+                                            setShowModalRecVideo(false)
+                                            setShowModalCamConfig(true)
+                                        }}
+                                        className="group block max-w-xs mx-auto rounded-lg p-6 bg-neutral-50 ring-1 ring-amber-900/5 shadow-md space-y-3 hover:bg-amber-300 hover:ring-amber-400"
+                                    >
+                                        <div className="flex items-center space-x-3">
+                                            <ExclamationIcon className="h-6 w-6 stroke-amber-500 group-hover:stroke-black"></ExclamationIcon>
+                                            <h3 className="text-slate-900 text-sm font-semibold">Warning</h3>
+                                        </div>
+                                        <p className="text-black text-sm">Your camera is currently not setting up. Please click here to request your camera.</p>
+                                    </button>
+                                )
+                                }
+
+                                <label className="block my-3">
+                                    <span className="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
+                                        Input number of recording second(s)
+                                    </span>
+                                    <input 
+                                        type="number" 
+                                        value={recordingSec}
+                                        onChange={handleRecordingTime}
+                                        name="num_second" 
+                                        className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-orange-500 focus:ring-orange-500 block w-full rounded-md sm:text-sm focus:ring-1" 
+                                        placeholder="Input number of recording seconds (0-60)" 
+                                    />
+                                </label>
+                            </div>
+                        }
+                        requestAction={handleRecVideo}
                     />
                 ) : (
                     <></>

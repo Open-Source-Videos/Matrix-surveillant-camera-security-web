@@ -41,7 +41,6 @@ export const ModalRequest = ({
                         onClick={requestAction}
                     >
                         <span className={btn_text_span_outline}>
-                            
                             Request
                         </span>
                     </button>
