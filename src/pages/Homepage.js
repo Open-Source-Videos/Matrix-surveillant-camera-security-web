@@ -10,6 +10,9 @@ import {
     VideoCameraIcon,
     TrashIcon,
 } from '@heroicons/react/outline';
+import {
+    StarIcon,
+} from '@heroicons/react/solid';
 import { currentRoomID, setCurrentRoomID } from './Roompage';
 
 // Global list
@@ -72,9 +75,35 @@ function Home() {
             switch (file.fileType) {
                 case 'image/png':
                 case 'image/jpeg':
+                    let type_image = "image";
+                    let title = "Title"
+
                     try {
                         json_obj = JSON.parse(file.fileName);
                         content = json_obj.content.replace('.thumb', '');
+                        if (json_obj.type.includes("thumbnail")) {
+                            type_image = "thumbnail";
+                            let content_extract = json_obj.content.split(',')[0];
+                            let camera = content_extract.split('/')[4];
+                            camera = camera.substring(6, camera.length);
+                            const list_camera = JSON.parse(localStorage.getItem('cam-config'));
+                            for (var i = 0; i < list_camera.length; i++) {
+                                if (list_camera[i].camera_num === parseInt(camera)) {
+                                    title = list_camera[i].camera;
+                                    break;
+                                }
+                            }
+                        } else if (json_obj.type.includes("snapshot")) {
+                            type_image = "snapshot";
+                            let camera = json_obj.content.split(',')[0];
+                            const list_camera = JSON.parse(localStorage.getItem('cam-config'));
+                            for (var i = 0; i < list_camera.length; i++) {
+                                if (list_camera[i].camera_num === parseInt(camera)) {
+                                    title = list_camera[i].camera
+                                    break;
+                                }
+                            }
+                        }
                     } catch {
                         json_obj = null;
                         content = null;
@@ -84,7 +113,8 @@ function Home() {
                         url: file.fileUrl,
                         id: content,
                         time: localTime,
-                        type: 'image',
+                        type: type_image,
+                        title: title
                     };
 
                     let addList = true;
@@ -108,8 +138,6 @@ function Home() {
                         json_obj.type === 'thumbnail'
                     ) {
                         //send request-video message to room
-
-                        //  setIsLoadingVideo(true);
                         json_obj.type = 'video-request';
                         json_obj.content = json_obj.content.split(',')[0];
                         const message = JSON.stringify(json_obj);
@@ -253,7 +281,7 @@ function Home() {
                                             data-aos="zoom-in-down"
                                             data-aos-duration="1500"
                                         >
-                                            <div className="max-w-sm bg-white rounded-lg shadow-md">
+                                            <div className="max-w-sm bg-white rounded-lg shadow-md shadow-neumorphism">
                                                 <div>
                                                     <img
                                                         className="rounded-t-lg object-cover w-96 h-72"
@@ -262,40 +290,24 @@ function Home() {
                                                     />
                                                 </div>
                                                 <div className="px-3 pb-3">
-                                                    <h5 className="text-lg font-semibold text-gray-900 text-decoration-none px-2 pt-4">
-                                                        Thumbnails
-                                                    </h5>
-                                                    <div className="flex items-center mt-2.5 mb-5">
-                                                        <ClockIcon className="w-4 h-4" />
-                                                        <span className="text-gray-500 text-xs font-semibold py-0.5 rounded px-2">
+                                                    <div className="flex items-center mt-3">
+                                                        <StarIcon className="w-3 h-3 text-rose-500" />
+                                                        <span className="text-gray-600 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-sm capitalize">
+                                                            {url.type}
+                                                        </span>
+                                                    </div>
+
+                                                    <div className="text-lg font-semibold text-gray-900 text-decoration-none px-2 py-1">
+                                                        {url.title}
+                                                    </div>
+                                                    
+                                                    <div className="flex items-center mt-2.5 mb-4 italic">
+                                                        <ClockIcon className="w-3 h-3" />
+                                                        <span className="text-gray-500 text-xs font-semibold py-1 rounded px-2">
                                                             {url.time}
                                                         </span>
                                                     </div>
-                                                    {/*<div className="flex justify-between items-center">*/}
-                                                    {/*<button
-                                                            onClick={
-                                                                handleWatch
-                                                            }
-                                                            className="w-full text-gray-600 bg-gradient-to-tl from-amber-200 to-amber-300 font-medium rounded-lg text-sm px-3 py-2.5 text-center mx-2"
-                                                        >
-                                                            <span>
-                                                                <PlayIcon className="inline-block w-5 h-5 pb-1 mr-1 -ml-1" />
-                                                            </span>
-                                                            Watch
-                                                        </button>
-                                                        <button
-                                                            onClick={() =>
-                                                                handleDownload(
-                                                                    url
-                                                                )
-                                                            }
-                                                            className="w-full text-white bg-gradient-to-r from-orange-400 to-rose-400 font-medium rounded-lg text-sm px-3 py-2.5 text-center mx-2"
-                                                        >
-                                                            <span>
-                                                                <CloudDownloadIcon className="inline-block w-5 h-5 pb-1 mr-1 -ml-1" />
-                                                            </span>
-                                                            Download
-                                                        </button>*/}
+
                                                     <div className="flex justify-end">
                                                         {url.type ===
                                                             'video' && (

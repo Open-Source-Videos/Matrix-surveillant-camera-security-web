@@ -15,14 +15,16 @@ import {
     ClockIcon,
     RefreshIcon,
     ExclamationIcon,
-    SelectorIcon
+    SelectorIcon,
+    ClipboardListIcon
 } from '@heroicons/react/outline';
-import { CheckIcon } from '@heroicons/react/solid';
 import { 
-    Listbox,
-    Transition
+    CheckIcon,
+    StarIcon
+} from '@heroicons/react/solid';
+import { 
+    Listbox
 } from '@headlessui/react';
-import { currentRoomID } from './Roompage';
 import { Circles  } from 'svg-loaders-react';
 import { ModalRequest } from "../components/ModalRequest";
 
@@ -44,8 +46,7 @@ export const clearAllStates = () => {
 
 const SnapShot = () => {
     const [listSnapURL, setListSnapURL] = useState(list_snap_url);
-    const { saveBlobUrlToFile, setHavingNewFile, removeOnHavingNewFile } =
-        useMatrixClient();
+    const { saveBlobUrlToFile, setHavingNewFile, removeOnHavingNewFile } = useMatrixClient();
 
     const handleHavingNewFile = (sender, room, file) => {
         switch (file.fileType) {
@@ -53,11 +54,18 @@ const SnapShot = () => {
             case 'image/jpeg':
                 if (file.fileName.includes('snapshot')) {
                     let local_time = new Date();
+                    let title = null;
                     try {
-                        local_time = JSON.parse(file.fileName).content.split(
-                            ','
-                        )[1];
+                        local_time = JSON.parse(file.fileName).content.split(',')[1];
                         local_time = new Date(local_time);
+                        const camera = JSON.parse(file.fileName).content.split(',')[0];
+                        const list_camera = JSON.parse(localStorage.getItem('cam-config'));
+                        for (var i = 0; i < list_camera.length; i++) {
+                            if (list_camera[i].camera_num === parseInt(camera)) {
+                                title = list_camera[i].camera
+                                break;
+                            }
+                        }
                     } catch (e) {
                         console.log('e');
                     }
@@ -66,6 +74,7 @@ const SnapShot = () => {
                     let content = {
                         url: file.fileUrl,
                         type: 'snapshot',
+                        title: title,
                         time: local_time,
                         contents: JSON.parse(file.fileName),
                     };
@@ -114,7 +123,7 @@ const SnapShot = () => {
                                 data-aos="zoom-in-down"
                                 data-aos-duration="1500"
                             >
-                                <div className="max-w-sm bg-white rounded-lg shadow-md">
+                                <div className="max-w-sm bg-white rounded-lg shadow-md shadow-neumorphism">
                                     <div>
                                         <img
                                             className="rounded-t-lg object-cover w-96 h-72"
@@ -123,12 +132,20 @@ const SnapShot = () => {
                                         />
                                     </div>
                                     <div className="px-3 pb-3">
-                                        <h5 className="text-lg font-semibold text-gray-900 text-decoration-none px-2 pt-4">
-                                            Snapshot
-                                        </h5>
-                                        <div className="flex items-center mt-2.5 mb-5">
-                                            <ClockIcon className="w-4 h-4" />
-                                            <span className="text-gray-500 text-xs font-semibold py-0.5 rounded px-2">
+                                        <div className="flex items-center mt-3">
+                                            <StarIcon className="w-3 h-3 text-rose-500" />
+                                            <span className="text-gray-600 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-sm capitalize">
+                                                {content.type}
+                                            </span>
+                                        </div>
+
+                                        <div className="text-lg font-semibold text-gray-900 text-decoration-none px-2 py-1">
+                                            {content.title}
+                                        </div>
+                                        
+                                        <div className="flex items-center mt-2.5 mb-4 italic">
+                                            <ClockIcon className="w-3 h-3" />
+                                            <span className="text-gray-500 text-xs font-semibold py-1 rounded px-2">
                                                 {content.time}
                                             </span>
                                         </div>
@@ -206,11 +223,20 @@ const RecordVideo = () => {
                 case 'video/mp4':
                     if (file.fileName.includes('video-send')) {
                         let local_time = new Date();
+                        let title = null;
                         try {
-                            local_time = JSON.parse(
-                                file.fileName
-                            ).content.split(',')[1];
+                            local_time = JSON.parse(file.fileName).content.split(',')[1];
                             local_time = new Date(local_time);
+                            let content_extract = JSON.parse(file.fileName).content.split(',')[0];
+                            let camera = content_extract.split('/')[4];
+                            camera = camera.substring(6, camera.length);
+                            const list_camera = JSON.parse(localStorage.getItem('cam-config'));
+                            for (var i = 0; i < list_camera.length; i++) {
+                                if (list_camera[i].camera_num === parseInt(camera)) {
+                                    title = list_camera[i].camera;
+                                    break;
+                                }
+                            }
                         } catch (e) {
                             console.log('e');
                         }
@@ -218,7 +244,8 @@ const RecordVideo = () => {
 
                         let content = {
                             url: file.fileUrl,
-                            type: 'video',
+                            type: 'video request',
+                            title: title,
                             time: local_time,
                             content: JSON.parse(file.fileName),
                         };
@@ -227,15 +254,12 @@ const RecordVideo = () => {
                             if (list_rec_video_url[i] === 'empty') {
                                 list_rec_video_url[i] = content;
                                 found = true;
-                                console.log('replace++');
                                 break;
                             }
                         }
                         if (found === false) list_rec_video_url.push(content);
 
                         setListRecVideoURL([...list_rec_video_url]);
-                        console.log('file.', file);
-                        console.log('CONTENT: ', content);
                     }
                     break;
                 default:
@@ -260,7 +284,6 @@ const RecordVideo = () => {
 
     useEffect(() => {
         setHavingNewFile(handleHavingNewFile);
-        //console.log('LIST VIDEO: ', listRecVideoURL);
         return () => {
             removeOnHavingNewFile(handleHavingNewFile);
         };
@@ -279,7 +302,7 @@ const RecordVideo = () => {
                                 data-aos-duration="1500"
                             >
                                 {content !== 'empty' ? (
-                                    <div className="max-w-sm bg-white rounded-lg shadow-md">
+                                    <div className="max-w-sm bg-white rounded-lg shadow-md shadow-neumorphism">
                                         <div>
                                             <video
                                                 controls
@@ -293,12 +316,20 @@ const RecordVideo = () => {
                                             </video>
                                         </div>
                                         <div className="px-3 pb-3">
-                                            <h5 className="text-lg font-semibold text-gray-900 text-decoration-none px-2 pt-4">
-                                                Recoding Video
-                                            </h5>
-                                            <div className="flex items-center mt-2.5 mb-5">
-                                                <ClockIcon className="w-4 h-4" />
-                                                <span className="text-gray-500 text-xs font-semibold py-0.5 rounded px-2">
+                                            <div className="flex items-center mt-3">
+                                                <StarIcon className="w-3 h-3 text-rose-500" />
+                                                <span className="text-gray-600 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-sm capitalize">
+                                                    {content.type}
+                                                </span>
+                                            </div>
+
+                                            <div className="text-lg font-semibold text-gray-900 text-decoration-none px-2 py-1">
+                                                {content.title}
+                                            </div>
+                                            
+                                            <div className="flex items-center mt-2.5 mb-4 italic">
+                                                <ClockIcon className="w-3 h-3" />
+                                                <span className="text-gray-500 text-xs font-semibold py-1 rounded px-2">
                                                     {content.time}
                                                 </span>
                                             </div>
@@ -328,7 +359,7 @@ const RecordVideo = () => {
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="max-w-sm opacity-25 inset-0 z-40 bg-gray-300 rounded-lg shadow-md">
+                                    <div className="max-w-sm opacity-25 inset-0 z-40 bg-gray-300 rounded-lg shadow-md shadow-neumorphism animate-pulse">
                                         <div>
                                             <Circles fill="#f59e0b" strokeOpacity=".1" className="rounded-t-lg w-96 h-72 m-auto bg-gray-200 p-4"/>
                                         </div>
@@ -362,7 +393,6 @@ const RecordVideo = () => {
                     <></>
                 )}
             </div>
-            {/*<div className="opacity-25 fixed inset-0 z-40 bg-black"></div>*/}
         </main>
     );
 };
@@ -439,7 +469,7 @@ const RequestGroupList = () => {
     const [showModalSnapShot, setShowModalSnapShot] = useState(false);
     const [showModalRecVideo, setShowModalRecVideo] = useState(false);
     const [showModalCamConfig, setShowModalCamConfig] = useState(false);
-    const [disable, setDisable] = useState(false);
+    const [showModalListRecording, setShowModalListRecording] = useState(false);
     const [camConfig, setCamConfig] = useState(() => {
         const cam_config_list = JSON.parse(localStorage.getItem('cam-config'));
         if (cam_config_list === null) {
@@ -551,6 +581,20 @@ const RequestGroupList = () => {
                             Camera Config
                         </button>
                     </span>
+
+                    <span className="sm:block md:ml-2">
+                        <button
+                            type="button"
+                            onClick={() => setShowModalListRecording(true)}
+                            className="w-full justify-center inline-flex items-center px-3 py-2 border border-orange-300 rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+                        >
+                            <ClipboardListIcon
+                                className="-ml-1 mr-2 h-5 w-5 text-white"
+                                aria-hidden="true"
+                            />
+                            List Recording
+                        </button>
+                    </span>
                 </div>
             </div>
             <br />
@@ -562,6 +606,7 @@ const RequestGroupList = () => {
                         return <RecordVideo />;
                     }
                 })()}
+
                 {showModalCamConfig ? (
                     <ModalRequest
                         isOpen={showModalCamConfig}
@@ -571,6 +616,57 @@ const RequestGroupList = () => {
                         dialogTitle={"Camera Configuration"}
                         dialogBody={
                             <CamConfig />
+                        }
+                        requestAction={handleCamConfig}
+                    />
+                ) : (
+                    <></>
+                )}
+
+                {showModalListRecording ? (
+                    <ModalRequest
+                        isOpen={showModalListRecording}
+                        onClickClose={() => {
+                            setShowModalListRecording(false);
+                        }}
+                        dialogTitle={"List of recorded videos"}
+                        dialogBody={
+                            <>
+                                <div daterangepicker={"true"} className="grid grid-cols-1 items-center">
+                                    <div className="relative w-full my-2">
+                                        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                            <svg 
+                                                className="w-5 h-5 text-gray-500 dark:text-gray-400" 
+                                                fill="currentColor" 
+                                                viewBox="0 0 20 20" 
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path 
+                                                    fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" 
+                                                    clip-rule="evenodd"
+                                                ></path>
+                                            </svg>
+                                        </div>
+                                        <input name="start" type="text" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date start" />
+                                    </div>
+                                    <div className="relative w-full my-2">
+                                        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                            <svg 
+                                                className="w-5 h-5 text-gray-500 dark:text-gray-400" 
+                                                fill="currentColor" 
+                                                viewBox="0 0 20 20" 
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path 
+                                                    fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" 
+                                                    clip-rule="evenodd"
+                                                ></path>
+                                            </svg>
+                                        </div>
+                                        <input name="end" type="text" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date end" />
+                                    </div>
+                                </div>
+                            </>
                         }
                         requestAction={handleCamConfig}
                     />
