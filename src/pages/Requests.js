@@ -30,9 +30,9 @@ import { ModalRequest } from "../components/ModalRequest";
 import DateTimePicker from 'react-datetime-picker'
 
 
-function classNames(...classes) {
-    return classes.filter(Boolean).join(' ');
-}
+// function classNames(...classes) {
+//     return classes.filter(Boolean).join(' ');
+// }
 
 // Global list
 let list_snap_url = [];
@@ -111,7 +111,7 @@ const SnapShot = () => {
         return () => {
             removeOnHavingNewFile(handleHavingNewFile);
         };
-    }, []);
+    }, [removeOnHavingNewFile, setHavingNewFile]);
 
     return (
         <main>
@@ -204,7 +204,7 @@ const RecordVideo = () => {
                             content = jsonObj.content.replace('.thumb', '');
                         } catch {
                             jsonObj = null;
-                            content = null;
+                            // content = null;
                         }
                         if (jsonObj && jsonObj.type === 'thumbnail') {
                             //send request-video message to room
@@ -289,7 +289,7 @@ const RecordVideo = () => {
         return () => {
             removeOnHavingNewFile(handleHavingNewFile);
         };
-    }, []);
+    }, [handleHavingNewFile, removeOnHavingNewFile, setHavingNewFile]);
 
     return (
         <main>
@@ -413,9 +413,9 @@ const ListRecording = () => {
         saveBlobUrlToFile,
         sendMessageToRoom, 
         setHavingNewFile, 
-        removeOnHavingNewFile, 
+        // removeOnHavingNewFile, 
         setOnHavingNewMessage, 
-        removeOnHavingNewMessage 
+        // removeOnHavingNewMessage 
     } = useMatrixClient();
 
 
@@ -507,7 +507,7 @@ const ListRecording = () => {
     useEffect(() => {
         setHavingNewFile(handleHavingNewFile);
         setOnHavingNewMessage(handleHavingNewMessage);
-    }, []);
+    }, [handleHavingNewMessage, setHavingNewFile, setOnHavingNewMessage]);
 
     return (
         <main>
@@ -669,7 +669,7 @@ const CamConfig = () => {
         return () => {
             removeOnHavingNewMessage(handleHavingNewMessage);
         };
-    }, []);
+    }, [removeOnHavingNewMessage, setOnHavingNewMessage]);
 
     return (
         <div className="grid grid-cols-1 divide-y mt-2">
@@ -1101,7 +1101,7 @@ const Requests = () => {
                 setYesLogin(isLogin());
             }, 500);
         })();
-    }, []);
+    }, [isLogin, testLogin]);
 
     return (
         <>
