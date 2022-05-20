@@ -249,16 +249,16 @@ export const Login = () => {
                             >
                                 Login
                             </Button> */}
-                            <button className="relative inline-flex items-center justify-start py-3 pl-4 pr-12 pt-4 mt-4 overflow-hidden font-semibold text-yellow-400 transition-all duration-150 ease-in-out rounded hover:pl-10 hover:pr-6 bg-gray-50 group"
+                            <button className="h-4 relative inline-flex items-center justify-start py-3 pl-4 pr-12 pt-4 mt-4 overflow-hidden font-semibold text-black transition-all duration-150 ease-in-out rounded hover:pl-10 hover:pr-6 bg-gray-50 group"
                                     id="button2"
                                     type="submit">
 
-                                <span className="absolute bottom-0 left-0 w-full h-1 transition-all duration-150 ease-in-out bg-yellow-400 group-hover:h-full"></span>
+                                <span className="absolute bottom-0 left-0 w-full h-1 transition-all duration-150 ease-in-out bg-black group-hover:h-full"></span>
                                 <span className="absolute right-0 pr-4 duration-200 ease-out group-hover:translate-x-12">
-                                <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                                <svg className="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                                 </span>
                                 <span className="absolute left-0 pl-2.5 -translate-x-12 group-hover:translate-x-0 ease-out duration-200">
-                                <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                                 </span>
                                 <span className="relative w-full text-left transition-colors duration-200 ease-in-out group-hover:text-white">Login</span>
                             </button>
@@ -277,8 +277,24 @@ export const Login = () => {
                             >
                                 Sign-up here!
                             </Button>
-                            <div className="text-decoration-none text-sm ps-2">
-                                <button className="h-1 relative inline-flex items-center px-12 py-3 overflow-hidden text-lg font-medium text-yellow-400 border-2 border-yellow-300 rounded-full hover:text-white group hover:bg-gray-50"
+                            <br/>
+                            <ControlLabel>Having problem?</ControlLabel>
+                            <Button
+                                id="sign_up"
+                                title="Sign_up"
+                                className="text-decoration-none text-sm ps-2"
+                                type="button"
+                                        onClick={() => {
+                                            localStorage.clear();
+                                            setProblem(true);
+                                            
+                                        }}
+                            >
+                                Click here!
+                            </Button>
+                            {/* <div className="text-decoration-none text-sm ps-2">
+                                <p>Having problem?</p>
+                                <button
                                         type="button"
                                         onClick={() => {
                                             localStorage.clear();
@@ -288,7 +304,7 @@ export const Login = () => {
                                     <span className="absolute left-0 block w-full h-0 transition-all bg-yellow-400 opacity-100 group-hover:h-full top-1/2 group-hover:top-0 duration-400 ease"></span>   
                                     <span className="relative">Having Problem</span>
                                 </button>
-                            </div>
+                            </div> */}
                             {problem ? (
                                 <>                                
                                  <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
@@ -302,7 +318,7 @@ export const Login = () => {
                                                 </svg>
                                             </div>
                                             <span>
-                                                Your problem <strong>have been solve </strong> <br/>
+                                                Your problem <strong>have been solved </strong> <br/>
                                                 Please <strong>login again!!!</strong> 
                                             </span>
                                             

@@ -622,6 +622,21 @@ function useMatrixClient() {
         return null;
     };
 
+    const getListPeopleById = async(id) => {
+        if (client) {
+            const rooms = await client.getRooms();
+            var people = [];
+            
+            for (let i = 0; i < rooms.length; i++) {
+                if (rooms[i].roomId === id) {
+                    people =  rooms[i].getMembers();
+                }
+            }
+            return people.length;
+        }
+        return null;
+    };
+
     // const getHistory = async (roomID, limit = 30) => {
     //     try {
     //         if (didLogin && client) {
@@ -880,6 +895,7 @@ function useMatrixClient() {
         setAvatar2,
 
         getMatrixRooms,
+        getListPeopleById,
         getHistory,
         getAvatar,
         getDisplayName,
