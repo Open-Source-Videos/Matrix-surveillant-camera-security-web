@@ -37,10 +37,12 @@ function classNames(...classes) {
 // Global list
 let list_snap_url = [];
 let list_rec_video_url = [];
+let list_recording = [];
 // Clear state when logging out
 export const clearAllStates = () => {
     list_snap_url = [];
     list_rec_video_url = [];
+    list_recording = [];
 };
 
 
@@ -398,6 +400,230 @@ const RecordVideo = () => {
 };
 
 
+
+
+
+
+
+
+
+const ListRecording = () => {
+    const [listRecordingURL, setListRecordingURL] = useState(list_recording);
+    const { 
+        saveBlobUrlToFile,
+        sendMessageToRoom, 
+        setHavingNewFile, 
+        removeOnHavingNewFile, 
+        setOnHavingNewMessage, 
+        removeOnHavingNewMessage 
+    } = useMatrixClient();
+
+
+    const handleHavingNewMessage = (sender, room, message, time) => {
+        const ROOM_ID = localStorage.getItem('currentRoomID');
+        if (ROOM_ID === room) {
+            if (message !== null && message.includes(`"type" : "list-recording-reply"`)) {
+                let list_recording_reply = JSON.parse(message);
+                let list_content = list_recording_reply.content;
+                list_content = list_content.replaceAll(`'`, `"`);
+                let list_content_recordings = JSON.parse(list_content).recordings;
+                console.log("Recording:" , list_content_recordings);
+                for (let i = 0; i < list_content_recordings.length; i++) {
+                    sendMessageToRoom(
+                        ROOM_ID,
+                        `{"type" : "video-request", "content" : "${list_content_recordings[i][0]}", "requestor_id":"0"}`
+                    );
+                }
+            }
+        }
+    };
+
+    const handleHavingNewFile = (sender, room, file) => {
+        const ROOM_ID = localStorage.getItem('currentRoomID');
+        if (ROOM_ID === room) {
+            switch (file.fileType) {            
+                case 'video/mp4':
+                    if (file.fileName.includes('video-send')) {
+                        let local_time = new Date();
+                        let title = null;
+                        try {
+                            local_time = JSON.parse(file.fileName).content.split(',')[1];
+                            local_time = new Date(local_time);
+                            let content_extract = JSON.parse(file.fileName).content.split(',')[0];
+                            let camera = content_extract.split('/')[4];
+                            camera = camera.substring(6, camera.length);
+                            const list_camera = JSON.parse(localStorage.getItem('cam-config'));
+                            for (var i = 0; i < list_camera.length; i++) {
+                                if (list_camera[i].camera_num === parseInt(camera)) {
+                                    title = list_camera[i].camera;
+                                    break;
+                                }
+                            }
+                        } catch (e) {
+                            console.log('e');
+                        }
+                        local_time = local_time.toLocaleString();
+
+                        let content = {
+                            url: file.fileUrl,
+                            type: 'list recording',
+                            title: title,
+                            time: local_time,
+                            content: JSON.parse(file.fileName),
+                        };
+                        let found = false;
+                        for (let i = 0; i < list_rec_video_url.length; i++) {
+                            if (list_rec_video_url[i] === 'empty') {
+                                list_rec_video_url[i] = content;
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (found === false) list_rec_video_url.push(content);
+
+                        setListRecordingURL([...list_rec_video_url]);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
+    const handleDownloadVideo = (url, index) => {
+        saveBlobUrlToFile(url, 'list-recording('.concat(index).concat(').mp4'));
+    };
+
+
+
+    const handleDeleteRecVideo = (url) => {
+        list_recording = list_recording.filter((item) => {
+            return item.url !== url;
+        });
+        setListRecordingURL([...list_recording]);
+        console.log('DELETE:', listRecordingURL.includes(url));
+    };
+
+    useEffect(() => {
+        setHavingNewFile(handleHavingNewFile);
+        setOnHavingNewMessage(handleHavingNewMessage);
+    }, []);
+
+    return (
+        <main>
+            <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4 my-5">
+                {listRecordingURL.length > 0 ? (
+                    listRecordingURL.map((content, index) => {
+                        return (
+                            <div
+                                className="flex justify-center px-2"
+                                key={index}
+                                data-aos="zoom-in-down"
+                                data-aos-duration="1500"
+                            >
+                                {content !== 'empty' ? (
+                                    <div className="max-w-sm bg-white rounded-lg shadow-md shadow-neumorphism">
+                                        <div>
+                                            <video
+                                                controls
+                                                autoPlay
+                                                className="rounded-t-lg object-cover w-96 h-72"
+                                            >
+                                                <source
+                                                    src={content.url}
+                                                    type="video/mp4"
+                                                />
+                                            </video>
+                                        </div>
+                                        <div className="px-3 pb-3">
+                                            <div className="flex items-center mt-3">
+                                                <StarIcon className="w-3 h-3 text-rose-500" />
+                                                <span className="text-gray-600 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-sm capitalize">
+                                                    {content.type}
+                                                </span>
+                                            </div>
+
+                                            <div className="text-lg font-semibold text-gray-900 text-decoration-none px-2 py-1">
+                                                {content.title}
+                                            </div>
+                                            
+                                            <div className="flex items-center mt-2.5 mb-4 italic">
+                                                <ClockIcon className="w-3 h-3" />
+                                                <span className="text-gray-500 text-xs font-semibold py-1 rounded px-2">
+                                                    {content.time}
+                                                </span>
+                                            </div>
+                                            <div className="flex justify-end">
+                                                <button
+                                                    className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-100 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
+                                                    onClick={() =>
+                                                        handleDownloadVideo(
+                                                            content.url,
+                                                            index
+                                                        )
+                                                    }
+                                                >
+                                                    <CloudDownloadIcon className="w-5 h-5" />
+                                                </button>
+                                                <button
+                                                    className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-100 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
+                                                    onClick={() =>
+                                                        handleDeleteRecVideo(
+                                                            content.url
+                                                        )
+                                                    }
+                                                >
+                                                    <TrashIcon className="w-5 h-5" />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="max-w-sm opacity-25 inset-0 z-40 bg-gray-300 rounded-lg shadow-md shadow-neumorphism animate-pulse">
+                                        <div>
+                                            <Circles fill="#f59e0b" strokeOpacity=".1" className="rounded-t-lg w-96 h-72 m-auto bg-gray-200 p-4"/>
+                                        </div>
+                                        <div className="px-3 pb-3">
+                                            <div className="flex items-center px-2 pt-4 mt-1">
+                                                <span className="text-gray-500 text-xs font-semibold py-0.5 rounded px-2 bg-amber-500 w-1/2 h-4"></span>
+                                            </div>
+                                            <div className="flex items-center mt-2.5 mb-5">
+                                                <ClockIcon className="w-4 h-4 mr-2 text-rose-500" />
+                                                <span className="text-gray-500 text-xs font-semibold py-0.5 rounded px-2 bg-amber-500 w-full h-3"></span>
+                                            </div>
+                                            <div className="flex justify-end">
+                                                <button
+                                                    className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-300 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
+                                                >
+                                                    <CloudDownloadIcon className="w-5 h-5" />
+                                                </button>
+                                                <button
+                                                    className="inline-flex items-center justify-center w-10 h-10 mr-2 p-2 text-gray-600 transition-colors duration-250 bg-amber-300 rounded-full focus:shadow-outline hover:text-white hover:bg-gradient-to-r from-orange-400 to-rose-400"
+                                                >
+                                                    <TrashIcon className="w-5 h-5" />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        );
+                    })
+                ) : (
+                    <></>
+                )}
+            </div>
+        </main>
+    );
+};
+
+
+
+
+
+
+
+
 const CamConfig = () => {
     const [newMessage, setNewMessage] = useState(null)
     const { 
@@ -626,7 +852,7 @@ const RequestGroupList = () => {
                     } else if (child_component === 2) {
                         return <RecordVideo />;
                     } else if (child_component === 3) {
-                        return <div>List Recordings</div>;
+                        return <ListRecording />;
                     }
                 })()}
 
