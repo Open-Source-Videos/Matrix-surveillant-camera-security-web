@@ -28,7 +28,7 @@ import {
 } from '@heroicons/react/outline';
 import { HomeIcon } from '@heroicons/react/solid';
 
-
+const bg_gradient = " bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-200 ";
 
 const ProfileView = ({
     avatar,
@@ -109,55 +109,51 @@ const ProfileView = ({
     }
 
     const listMembers = (members) => {
-            const items = [];
-            for(const element of members){
-                items.push(          
-                    
-                        <li className="">
-                            <button
-                                className="w-full rounded-t text-xs bg-gray-200 hover:bg-rose-400  hover:text-white py-2 px-4 block whitespace-no-wrap"
-                                type="button">
-                                {element.name}
-                            </button>
-                        </li>
-                    
-                )
-            }   
-            return (
-                <ul className="absolute hidden text-gray-700 pt-1 group-hover:block">
-                    {items}
-                </ul>
-            )     
+        const items = [];
+        for(let element of members){
+            items.push(          
+                
+                    <li className="" key={element.name}>
+                        <button
+                            className="w-full rounded-t text-xs bg-gray-200 hover:bg-rose-400  hover:text-white py-2 px-4 block whitespace-no-wrap"
+                            type="button">
+                            {element.name}
+                        </button>
+                    </li>
+                
+            )
+        }   
+        return (
+            <ul className="absolute hidden text-gray-700 pt-1 group-hover:block">
+                {items}
+            </ul>
+        )     
     }
 
 
-    const listItems = roomList.map((number) =>
-         <div className="w-full px-2">
-             <button className="z=50 hover:z-50 shadow-md px-4 py-6 w-full bg-white dark:bg-gray-700 relative hover:scale-110 duration-200">
-                 <p className="p-2 text-rose-400 text-l w-max text-gray-700 dark:text-white font-semibold border-b border-gray-200">
+    const listItems = roomList.map((number, index) =>
+        <div className="w-full px-2" key={index}>
+            <div className="z=50 hover:z-50 shadow-md px-4 py-6 w-full bg-white dark:bg-gray-700 relative hover:scale-110 duration-200">
+                <p className="p-2 text-rose-400 text-l w-max text-gray-700 dark:text-white font-semibold border-b border-gray-200">
                     {number.name}           
                 </p>
-                 <div className="flex items-end my-4 ">
+                <div className="flex items-end my-4 ">
                     <div className="group inline-block relative">
-                        <button className="p-2 text-xs dark:text-white font-bold hover:text-rose-400">
+                        <div className= {`"p-2 text-xs dark:text-white font-bold hover:text-rose-400"`} >
                              People: {number.getMembers().length}  
-                        </button>
-                        
+                        </div>
                         {listMembers(number.getMembers())}
                     </div>
 
                     <span className="absolute px-2 top-2 right-1">
                         <HomeIcon
-                                className="mx-1 h-7 w-7 text-rose-400"
-                                aria-hidden="true"
-                                stroke="currentColor" strokeWidth="2"
-                        
+                            className="mx-1 h-7 w-7 text-rose-400"
+                            aria-hidden="true"
+                            stroke="currentColor" strokeWidth="2"
                         />
-                   </span>
-                </div>
-              
-             </button>
-        
+                    </span>
+                </div>        
+             </div> 
          </div>
     );
 

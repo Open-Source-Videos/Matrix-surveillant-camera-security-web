@@ -15,18 +15,6 @@ import Profile from '../pages/Profilepage';
 import Setting from '../pages/Settingpage';
 import Requests from '../pages/Requests';
 import RoomPage from '../pages/Roompage';
-//import { getStore } from '../utils';
-
-
-/*function AuthenticatedRoute ({component: Component, ...rest}) {
-  return (
-    <Route
-      {...rest}
-      render={(props) => getStore('user') ? <Component {...props} />
-        : <Redirect to={{pathname: '/login', state: {from: props.location}}} />}
-    />
-  )
-}*/
 
 class Navigation extends Component {
 	render() {

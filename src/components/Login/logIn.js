@@ -76,7 +76,6 @@ export const Login = () => {
         }
 
         if (isEmpty(errors)) {
-            //setHomeServer(formData.homeserver);
             return true;
         } else {
             return errors;
@@ -94,17 +93,7 @@ export const Login = () => {
         console.log('exportedDevice = ', exportedDevice);
         console.log('accessToken = ', accessToken);
 
-        if (_isLogin) {
-            // if (exportedDevice && accessToken) {
-            // 	localStorage.setItem("matrix_account", JSON.stringify({exportedDevice,accessToken, homeServer: formData.homeserver}));
-            // 	(async()=>{
-
-            // 		//@test007:pdxinfosec.org To Test
-            // 		let profileAvatar = await getAvatar(exportedDevice.userId)
-            // 		console.log("profileAvatar", profileAvatar)
-            // 	})();
-
-            // }
+        if (_isLogin) {    
             history.push('/room');
         } else {
             alert('Failed to sign in...');
@@ -241,24 +230,16 @@ export const Login = () => {
                         </FormGroup>
 
                         <div className="text-center">
-                            {/* <Button
-                                id="button"
-                                type="submit"
-                                bsStyle="primary"
-                                className="border border-dark"
-                            >
-                                Login
-                            </Button> */}
                             <button className="h-4 relative inline-flex items-center justify-start py-3 pl-4 pr-12 pt-4 mt-4 overflow-hidden font-semibold text-black transition-all duration-150 ease-in-out rounded hover:pl-10 hover:pr-6 bg-gray-50 group"
                                     id="button2"
                                     type="submit">
 
                                 <span className="absolute bottom-0 left-0 w-full h-1 transition-all duration-150 ease-in-out bg-black group-hover:h-full"></span>
                                 <span className="absolute right-0 pr-4 duration-200 ease-out group-hover:translate-x-12">
-                                <svg className="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                                <svg className="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                                 </span>
                                 <span className="absolute left-0 pl-2.5 -translate-x-12 group-hover:translate-x-0 ease-out duration-200">
-                                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                                 </span>
                                 <span className="relative w-full text-left transition-colors duration-200 ease-in-out group-hover:text-white">Login</span>
                             </button>
@@ -280,41 +261,29 @@ export const Login = () => {
                             <br/>
                             <ControlLabel>Having problem?</ControlLabel>
                             <Button
-                                id="sign_up"
-                                title="Sign_up"
+                                id="problem"
+                                title="problem"
                                 className="text-decoration-none text-sm ps-2"
                                 type="button"
                                         onClick={() => {
                                             localStorage.clear();
                                             setProblem(true);
-                                            
+                           
                                         }}
                             >
                                 Click here!
                             </Button>
-                            {/* <div className="text-decoration-none text-sm ps-2">
-                                <p>Having problem?</p>
-                                <button
-                                        type="button"
-                                        onClick={() => {
-                                            localStorage.clear();
-                                            setProblem(true);
-                                            
-                                        }}>
-                                    <span className="absolute left-0 block w-full h-0 transition-all bg-yellow-400 opacity-100 group-hover:h-full top-1/2 group-hover:top-0 duration-400 ease"></span>   
-                                    <span className="relative">Having Problem</span>
-                                </button>
-                            </div> */}
+                 
                             {problem ? (
                                 <>                                
                                  <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
                                     <div className="relative w-auto my-6 mx-auto max-w-3xl">
-                                                        {/*content*/}
+                                                       
                                     <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none"> 
                                         <div className="py-3 px-5 mb-4 bg-green-100 text-green-900 text-sm rounded-md border border-green-200 flex items-center" role="alert">
                                             <div className="w-4 mr-2">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
                                                 </svg>
                                             </div>
                                             <span>
