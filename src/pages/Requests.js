@@ -27,7 +27,7 @@ import {
 } from '@headlessui/react';
 import { Circles  } from 'svg-loaders-react';
 import { ModalRequest } from "../components/ModalRequest";
-
+import DateTimePicker from 'react-datetime-picker'
 
 
 function classNames(...classes) {
@@ -465,6 +465,8 @@ const CamConfig = () => {
 
 const RequestGroupList = () => {
     let [child_component, setChildComponent] = useState(0);
+    const [startingTimePicker, setStartingTimePicker] = useState(new Date());
+    const [endingTimePicker, setEndingTimePicker] = useState(new Date());
     const [recordingSec, setRecordingSec] = useState(2);
     const [showModalSnapShot, setShowModalSnapShot] = useState(false);
     const [showModalRecVideo, setShowModalRecVideo] = useState(false);
@@ -510,6 +512,23 @@ const RequestGroupList = () => {
         list_rec_video_url.push('empty');
         setShowModalRecVideo(false);
     };
+
+    const handleListRecording = () => {
+        console.log("Starting time: ", startingTimePicker, typeof(startingTimePicker));
+        console.log("ISO: ", startingTimePicker.toISOString());
+        console.log("ISO: ", startingTimePicker.toString());
+        console.log("Ending time: ", endingTimePicker, typeof(endingTimePicker));
+        console.log("ISO: ", endingTimePicker.toISOString());
+    };
+
+    const ISODateTime = (dt) => {
+        return dt.getFullYear() +
+        '-' + (parseInt(dt.getMonth()) + 1).toLocaleString() +
+        '-' + dt.getDate() +
+        'T' + dt.getHours() +
+        ':' + dt.getMinutes() +
+        ':' + dt.getSeconds();
+    }
 
     const handleCamConfig = () => {
         const ROOM_ID = localStorage.getItem('currentRoomID');
@@ -632,43 +651,38 @@ const RequestGroupList = () => {
                         dialogTitle={"List of recorded videos"}
                         dialogBody={
                             <>
-                                <div daterangepicker={"true"} className="grid grid-cols-1 items-center">
-                                    <div className="relative w-full my-2">
-                                        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                            <svg 
-                                                className="w-5 h-5 text-gray-500 dark:text-gray-400" 
-                                                fill="currentColor" 
-                                                viewBox="0 0 20 20" 
-                                                xmlns="http://www.w3.org/2000/svg"
-                                            >
-                                                <path 
-                                                    fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" 
-                                                    clip-rule="evenodd"
-                                                ></path>
-                                            </svg>
-                                        </div>
-                                        <input name="start" type="text" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date start" />
-                                    </div>
-                                    <div className="relative w-full my-2">
-                                        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                            <svg 
-                                                className="w-5 h-5 text-gray-500 dark:text-gray-400" 
-                                                fill="currentColor" 
-                                                viewBox="0 0 20 20" 
-                                                xmlns="http://www.w3.org/2000/svg"
-                                            >
-                                                <path 
-                                                    fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" 
-                                                    clip-rule="evenodd"
-                                                ></path>
-                                            </svg>
-                                        </div>
-                                        <input name="end" type="text" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date end" />
-                                    </div>
+                                <div className="grid grid-cols-1 items-center mt-3">
+                                    <label className="block my-1">
+                                        <span className="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
+                                            Starting Time
+                                        </span>
+                                        <DateTimePicker 
+                                            onChange={setStartingTimePicker} 
+                                            value={startingTimePicker} 
+                                            className={"text-gray-900 text-xs sm:text-sm rounded-lg h-9 w-full my-2"}
+                                            format="y-MM-dd hh:mm:ss a"
+                                            autoFocus={false}
+                                            maxDate={new Date()}
+                                        />
+                                    </label>
+
+                                    <label className="block my-1">
+                                        <span className="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
+                                            Ending Time
+                                        </span>
+                                        <DateTimePicker 
+                                            onChange={setEndingTimePicker} 
+                                            value={endingTimePicker} 
+                                            className={"text-gray-900 text-xs sm:text-sm rounded-lg h-9 w-full my-2"}
+                                            format="y-MM-dd hh:mm:ss a"
+                                            autoFocus={false}
+                                            maxDate={new Date()}
+                                        />
+                                    </label>
                                 </div>
                             </>
                         }
-                        requestAction={handleCamConfig}
+                        requestAction={handleListRecording}
                     />
                 ) : (
                     <></>
