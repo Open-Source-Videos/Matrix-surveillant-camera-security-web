@@ -14,7 +14,6 @@ import {
     useHistory
 } from "react-router-dom";
 
-import { FcBusinessman, FcUnlock, FcPlus, FcMinus, FcCancel, FcImport, FcDataBackup, FcServices, FcHome, FcDepartment } from 'react-icons/fc'
 import {
     ChevronDownIcon,
     OfficeBuildingIcon,
@@ -23,82 +22,13 @@ import {
     ExclamationCircleIcon,
     IdentificationIcon,
     LogoutIcon,
-    LoginIcon,
-    ShieldCheckIcon
+    ShieldCheckIcon,
+    EyeIcon,
+    PencilIcon,
 } from '@heroicons/react/outline';
+import { HomeIcon } from '@heroicons/react/solid';
 
 
-const ViewActiveIcon = (props) => {
-    return (
-      <svg
-        {...props}
-        viewBox="0 0 20 20"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M10,6.978c-1.666,0-3.022,1.356-3.022,3.022S8.334,13.022,10,13.022s3.022-1.356,3.022-3.022S11.666,6.978,10,6.978M10,12.267c-1.25,0-2.267-1.017-2.267-2.267c0-1.25,1.016-2.267,2.267-2.267c1.251,0,2.267,1.016,2.267,2.267C12.267,11.25,11.251,12.267,10,12.267 M18.391,9.733l-1.624-1.639C14.966,6.279,12.563,5.278,10,5.278S5.034,6.279,3.234,8.094L1.609,9.733c-0.146,0.147-0.146,0.386,0,0.533l1.625,1.639c1.8,1.815,4.203,2.816,6.766,2.816s4.966-1.001,6.767-2.816l1.624-1.639C18.536,10.119,18.536,9.881,18.391,9.733 M16.229,11.373c-1.656,1.672-3.868,2.594-6.229,2.594s-4.573-0.922-6.23-2.594L2.41,10l1.36-1.374C5.427,6.955,7.639,6.033,10,6.033s4.573,0.922,6.229,2.593L17.59,10L16.229,11.373z"
-          fill="white"
-          stroke="yellow-400"
-          strokeWidth="2"
-        />
-      </svg>
-    )
-  }
-
-  const ViewInactiveIcon = (props) => {
-    return (
-      <svg
-        {...props}
-        viewBox="0 0 20 20"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M10,6.978c-1.666,0-3.022,1.356-3.022,3.022S8.334,13.022,10,13.022s3.022-1.356,3.022-3.022S11.666,6.978,10,6.978M10,12.267c-1.25,0-2.267-1.017-2.267-2.267c0-1.25,1.016-2.267,2.267-2.267c1.251,0,2.267,1.016,2.267,2.267C12.267,11.25,11.251,12.267,10,12.267 M18.391,9.733l-1.624-1.639C14.966,6.279,12.563,5.278,10,5.278S5.034,6.279,3.234,8.094L1.609,9.733c-0.146,0.147-0.146,0.386,0,0.533l1.625,1.639c1.8,1.815,4.203,2.816,6.766,2.816s4.966-1.001,6.767-2.816l1.624-1.639C18.536,10.119,18.536,9.881,18.391,9.733 M16.229,11.373c-1.656,1.672-3.868,2.594-6.229,2.594s-4.573-0.922-6.23-2.594L2.41,10l1.36-1.374C5.427,6.955,7.639,6.033,10,6.033s4.573,0.922,6.229,2.593L17.59,10L16.229,11.373z"
-          fill="white"
-          stroke="#f2b400"
-          strokeWidth="1"
-        />
-      </svg>
-    )
-  }
-
-  const  EditInactiveIcon = (props) => {
-    return (
-      <svg
-        {...props}
-        viewBox="0 0 20 20"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M4 13V16H7L16 7L13 4L4 13Z"
-          fill="white"
-          stroke="#f2b400"
-          strokeWidth="2"
-        />
-      </svg>
-    )
-  }
-
-  const EditActiveIcon = (props) => {
-    return (
-      <svg
-        {...props}
-        viewBox="0 0 20 20"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M4 13V16H7L16 7L13 4L4 13Z"
-          fill="yellow-400"
-          stroke="white"
-          strokeWidth="1"
-        />
-      </svg>
-    )
-  }
 
 const ProfileView = ({
     avatar,
@@ -178,22 +108,55 @@ const ProfileView = ({
         unbanUserFromRoom(e, e2);
     }
 
-    const listItems = roomList.map((number, index) =>
-         <div className="w-full md:w-3/4">
-             <div className="shadow-md px-4 py-6 w-full bg-white dark:bg-gray-700 relative hover:scale-110 duration-200">
-                 <p key={index} className="text-yellow-500 text-l w-max text-gray-700 dark:text-white font-semibold border-b border-gray-200">
+    const listMembers = (members) => {
+            const items = [];
+            for(const element of members){
+                items.push(          
+                    
+                        <li className="">
+                            <button
+                                className="w-full rounded-t text-xs bg-gray-200 hover:bg-rose-400  hover:text-white py-2 px-4 block whitespace-no-wrap"
+                                type="button">
+                                {element.name}
+                            </button>
+                        </li>
+                    
+                )
+            }   
+            return (
+                <ul className="absolute hidden text-gray-700 pt-1 group-hover:block">
+                    {items}
+                </ul>
+            )     
+    }
+
+
+    const listItems = roomList.map((number) =>
+         <div className="w-full px-2">
+             <button className="z=50 hover:z-50 shadow-md px-4 py-6 w-full bg-white dark:bg-gray-700 relative hover:scale-110 duration-200">
+                 <p className="p-2 text-rose-400 text-l w-max text-gray-700 dark:text-white font-semibold border-b border-gray-200">
                     {number.name}           
                 </p>
                  <div className="flex items-end my-4 ">
-                    <p className="text-xs text-black dark:text-white font-bold">
-                         People: {number.getMembers().length} 
-                    </p>
+                    <div className="group inline-block relative">
+                        <button className="p-2 text-xs dark:text-white font-bold hover:text-rose-400">
+                             People: {number.getMembers().length}  
+                        </button>
+                        
+                        {listMembers(number.getMembers())}
+                    </div>
+
                     <span className="absolute px-2 top-2 right-1">
-                        <FcHome size={30}/>
+                        <HomeIcon
+                                className="mx-1 h-7 w-7 text-rose-400"
+                                aria-hidden="true"
+                                stroke="currentColor" strokeWidth="2"
+                        
+                        />
                    </span>
                 </div>
               
-             </div>
+             </button>
         
          </div>
     );
@@ -241,7 +204,7 @@ const ProfileView = ({
                         <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg -mt-64">
                             <div className="px-6">
                                 <div className="flex flex-wrap justify-center">
-                                    <div class="w-full lg:w-4/12 px-4 lg:order-1">
+                                    <div className="w-full lg:w-4/12 px-4 lg:order-1">
                                     </div>
                                     <div className="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center">
                                         <div className="relative ml-16">
@@ -278,21 +241,18 @@ const ProfileView = ({
                                                     {({ active }) => (
                                                         <button
                                                         className={`${
-                                                            active ? 'bg-yellow-400 text-white' : 'text-gray-900'
+                                                            active ? ' bg-gradient-to-r from-orange-400 to-rose-400 text-white duration-200 hover:bg-gradient-to-r hover:from-orange-400 to-rose-400 hover:border-r-4 hover:border-rose-700 hover:text-white hover:font-bold' : 'text-gray-900'
                                                           } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                                                         type="button"
                                                         onClick={() => setViewProfile(true)}
                                                         >
                                                             {active ? (
-                                                                <ViewActiveIcon
-                                                                    className="mr-2 h-5 w-5"
-                                                                    aria-hidden="true"
-                                                                />
+                                                                <EyeIcon 
+                                                                    className="ml-1 mr-1 h-5 w-5 hover:text-white"
+                                                                    aria-hidden="true"/>
                                                                 ) : (
-                                                                <ViewInactiveIcon
-                                                                    className="mr-2 h-5 w-5"
-                                                                    aria-hidden="true"
-                                                                />
+                                                                <EyeIcon 
+                                                                    className="ml-1 mr-1 h-5 w-5 hover:text-white"/>
                                                                 )}
                                                         View Profile Picture
                                                         </button>
@@ -302,21 +262,20 @@ const ProfileView = ({
                                                     {({ active }) => (
                                                         <button
                                                         className={`${
-                                                            active ? 'bg-yellow-400 text-white' : 'text-gray-900'
+                                                            active ? 'bg-gradient-to-r from-orange-400 to-rose-400 text-white duration-200 hover:bg-gradient-to-r hover:from-orange-400 to-rose-400 hover:border-r-4 hover:border-rose-700 hover:text-white hover:font-bold' : 'text-gray-900'
                                                           } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                                                         type="button"
                                                         onClick={() => setShowModal(true)}
                                                         >
                                                             {active ? (
-                                                                <EditActiveIcon
-                                                                    className="mr-2 h-5 w-5"
+                                                                <PencilIcon
+                                                                    className="ml-1 mr-1 h-5 w-5 hover:text-white"
                                                                     aria-hidden="true"
                                                                 />
                                                                 ) : (
-                                                                <EditInactiveIcon
-                                                                    className="mr-2 h-5 w-5"
-                                                                    aria-hidden="true"
-                                                                />
+                                                                    <PencilIcon
+                                                                        className="ml-1 mr-1 h-5 w-5 hover:text-white"
+                                                                    />
                                                                 )}
                                                         Update Profile Picture
                                                         </button>
@@ -817,8 +776,8 @@ const ProfileView = ({
                                                 </>
                                             ) : null}
                                     </div>
-                                    <div class="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center ">
-                                        <div class="py-6 px-3 mt-32 sm:mt-0 hidden md:block">
+                                    <div className="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center ">
+                                        <div className="py-6 px-3 mt-32 sm:mt-0 hidden lg:block">
                                             <Menu as="div" className="relative mx-4">
                                             <Menu.Button
                                                 className="w-1/2 justify-center inline-flex items-center px-3 py-2 border border-orange-300 rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500" 
@@ -840,7 +799,7 @@ const ProfileView = ({
                                                 leaveFrom="transform opacity-100 scale-100"
                                                 leaveTo="transform opacity-0 scale-95"
                                             >
-                                                <Menu.Items className="origin-top-right absolute right-0 mt-2 w-30 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                                <Menu.Items className="z-20 origin-top-right absolute right-0 mt-2 w-30 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
                                                 <div className="py-1">
                                                         <Menu.Item>
                                                             <button className="w-full flex items-center pl-6 p-2 my-1 duration-200 justify-start hover:bg-gradient-to-r hover:from-orange-400 to-rose-400 hover:border-r-4 hover:border-rose-700 hover:text-white hover:font-bold"
@@ -944,7 +903,7 @@ const ProfileView = ({
                                     </div>
                                 </div>
                                
-                                <div class="text-center mt-6">               
+                                <div className="text-center mt-6">               
                                     <h3 className="text-4xl font-semibold leading-normal text-gray-800 flex items-center justify-center pt-2">
                                                     {displayName}
                                     </h3>
@@ -1081,7 +1040,7 @@ const ProfileView = ({
                                                                             <button className="flex items-center justify-between px-4 py-6 space-x-4 ">
                                                                                 <div className="flex items-center ">
                                                     
-                                                                                    <p className="text-md text-yellow-500 dark:text-white ml-2 font-semibold border-b border-gray-200 ">
+                                                                                    <p className="text-md text-rose-400 dark:text-white ml-2 font-semibold border-b border-gray-200 ">
                                                                                         Current Room
                                                                                     </p>
                                                                                 </div>
@@ -1099,7 +1058,7 @@ const ProfileView = ({
                                                                 <div className="flex items-center w-full md:w-1/2 space-x-4">
                                                                 <div className="w-1/2 ">
                                                                     <button className="shadow-md px-4 py-6 w-full bg-white dark:bg-gray-700 relative hover:scale-110 duration-300">
-                                                                        <p className="text-yellow-500 text-md font-semibold">
+                                                                        <p className="text-rose-400 text-md font-semibold">
                                                                             User ID
                                                                         </p>
                                                                         <p className="text-sm text-black dark:text-white font-bold ">
@@ -1109,7 +1068,7 @@ const ProfileView = ({
                                                                 </div>
                                                                 <div className="w-1/2">
                                                                     <div className="shadow-md px-4 py-6 w-full bg-white dark:bg-gray-700 relative hover:scale-110 duration-300">
-                                                                        <p className="text-yellow-500 text-md font-semibold">
+                                                                        <p className="text-rose-400 text-md font-semibold">
                                                                             People
                                                                         </p>
                                                                         <p className="text-lg text-black dark:text-white font-bold">
