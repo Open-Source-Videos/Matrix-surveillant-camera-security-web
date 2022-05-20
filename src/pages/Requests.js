@@ -514,21 +514,23 @@ const RequestGroupList = () => {
     };
 
     const handleListRecording = () => {
-        console.log("Starting time: ", startingTimePicker, typeof(startingTimePicker));
-        console.log("ISO: ", startingTimePicker.toISOString());
-        console.log("ISO: ", startingTimePicker.toString());
-        console.log("Ending time: ", endingTimePicker, typeof(endingTimePicker));
-        console.log("ISO: ", endingTimePicker.toISOString());
-    };
+        setChildComponent(3);
+        let start_time = new Date(startingTimePicker.toString().split('GMT')[0]+' UTC').toISOString();
+        start_time = start_time.toString().split('.')[0];
 
-    const ISODateTime = (dt) => {
-        return dt.getFullYear() +
-        '-' + (parseInt(dt.getMonth()) + 1).toLocaleString() +
-        '-' + dt.getDate() +
-        'T' + dt.getHours() +
-        ':' + dt.getMinutes() +
-        ':' + dt.getSeconds();
-    }
+        let end_time = new Date(endingTimePicker.toString().split('GMT')[0]+' UTC').toISOString();
+        end_time = end_time.toString().split('.')[0];
+        console.log("Starting Time: ", start_time);
+        console.log("Ending Time: ", end_time);
+
+        const ROOM_ID = localStorage.getItem('currentRoomID');
+        sendMessageToRoom(
+            ROOM_ID,
+            `{"type" : "list-recordings", "content" : "${start_time}, ${end_time}", "requestor_id":"0"}`
+        );
+
+        setShowModalListRecording(false);
+    };
 
     const handleCamConfig = () => {
         const ROOM_ID = localStorage.getItem('currentRoomID');
@@ -623,6 +625,8 @@ const RequestGroupList = () => {
                         return <SnapShot />;
                     } else if (child_component === 2) {
                         return <RecordVideo />;
+                    } else if (child_component === 3) {
+                        return <div>List Recordings</div>;
                     }
                 })()}
 
