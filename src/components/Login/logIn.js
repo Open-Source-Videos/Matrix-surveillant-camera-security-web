@@ -45,7 +45,7 @@ export const Login = () => {
             await testLogin();
         })();
 
-    }, []);
+    }, [setOnLogInResult, testLogin]);
 
     const handleInputChange = (event) => {
         const target = event.target;
