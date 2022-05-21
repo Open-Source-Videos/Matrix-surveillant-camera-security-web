@@ -56,7 +56,7 @@ export const Login = () => {
         setFormData(formData);
     };
 
-    const validateLoginForm = (e) => {
+    const validateLoginForm = () => {
         if (isEmpty(formData.homeserver)) {
             errors.homeserver = "Homeserver can't be blank";
         }
