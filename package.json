@@ -6,7 +6,7 @@
   "dependencies": {
     "@headlessui/react": "^1.6.0",
     "@heroicons/react": "^1.0.6",
-    "@material-ui/icons": "^4.11.3",
+   
     "@react-icons/all-files": "^4.1.0",
     "@tailwindcss/forms": "^0.5.1",
     "@testing-library/jest-dom": "^5.16.4",
@@ -29,7 +29,7 @@
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^5.0.1",
-    "react-user-profile": "^1.0.3",
+   
     "redux": "^4.1.2",
     "redux-thunk": "^2.4.1",
     "styled-components": "^5.3.5",
