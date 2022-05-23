@@ -194,7 +194,7 @@ const RoomSelect = () => {
         getHistory,
     } = useMatrixClient();
     const [yesLogin, setYesLogin] = useState(false);
-    // const [roomID, setRoomID] = useState(null);
+    
     const [avatar, setAvatar] = useState(null);
     const [roomList, setRoomList] = useState([]);
     const [displayName, setDisplayName] = useState(null);

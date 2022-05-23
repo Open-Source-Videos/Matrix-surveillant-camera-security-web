@@ -1,4 +1,4 @@
-import { useState } from 'react'
+
 import { Dialog } from '@headlessui/react'
 
 export const ModalRequest = ({
@@ -8,9 +8,7 @@ export const ModalRequest = ({
     dialogBody,
     requestAction
 }) => {
-    // let [isOpen, setIsOpen] = useState(true)
-    /*open={isOpen} 
-    onClose={() => setIsOpen(false)}*/
+    
 
     const bg_gradient = " bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-200 ";
     const btn_class_primary= "m-2 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-100 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"

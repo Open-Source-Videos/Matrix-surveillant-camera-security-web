@@ -133,13 +133,13 @@ const ProfileView = ({
 
     const listItems = roomList.map((number, index) =>
         <div className="w-full px-2" key={index}>
-            <div className="z=50 hover:z-50 shadow-md px-4 py-6 w-full bg-white dark:bg-gray-700 relative hover:scale-110 duration-200">
-                <p className="p-2 text-rose-400 text-l w-max text-gray-700 dark:text-white font-semibold border-b border-gray-200">
+            <div className="z=50 hover:z-50 shadow-md px-4 py-6 w-full bg-white relative hover:scale-110 duration-200">
+                <p className="p-2 text-rose-400 text-l w-max text-gray-700 font-semibold border-b border-gray-200">
                     {number.name}           
                 </p>
                 <div className="flex items-end my-4 ">
                     <div className="group inline-block relative">
-                        <div className= {`"p-2 text-xs dark:text-white font-bold hover:text-rose-400"`} >
+                        <div className= {`"p-2 text-xs font-bold hover:text-rose-400"`} >
                              People: {number.getMembers().length}  
                         </div>
                         {listMembers(number.getMembers())}
