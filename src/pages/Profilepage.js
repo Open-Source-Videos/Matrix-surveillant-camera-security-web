@@ -108,27 +108,27 @@ const ProfileView = ({
         unbanUserFromRoom(e, e2);
     }
 
-    // const listMembers = (members) => {
-    //     const items = [];
-    //     for(let element of members){
-    //         items.push(          
+    const listMembers = (members) => {
+        const items = [];
+        for(let element of members){
+            items.push(          
                 
-    //                 <li className="" key={element.name}>
-    //                     <button
-    //                         className="w-full rounded-t text-xs bg-gray-200 hover:bg-rose-400  hover:text-white py-2 px-4 block whitespace-no-wrap"
-    //                         type="button">
-    //                         {element.name}
-    //                     </button>
-    //                 </li>
+                    <li className="" key={element.name}>
+                        <button
+                            className="w-full rounded-t text-xs bg-gray-200 hover:bg-rose-400  hover:text-white py-2 px-4 block whitespace-no-wrap"
+                            type="button">
+                            {element.name}
+                        </button>
+                    </li>
                 
-    //         )
-    //     }   
-    //     return (
-    //         <ul className="absolute hidden text-gray-700 pt-1 group-hover:block">
-    //             {items}
-    //         </ul>
-    //     )     
-    // }
+            )
+        }   
+        return (
+            <ul className="absolute hidden text-gray-700 pt-1 group-hover:block">
+                {items}
+            </ul>
+        )     
+    }
 
 
     const listItems = roomList.map((number, index) =>
@@ -142,7 +142,7 @@ const ProfileView = ({
                         <div className= {`"p-2 text-xs font-bold hover:text-rose-400"`} >
                              People: {number.getMembers().length}  
                         </div>
-                        {/* {listMembers(number.getMembers())} */}
+                        {listMembers(number.getMembers())}
                     </div>
 
                     <span className="absolute px-2 top-2 right-1">
