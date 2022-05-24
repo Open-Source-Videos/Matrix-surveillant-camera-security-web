@@ -211,13 +211,11 @@ const RoomSelect = () => {
                         try {
                             // let room_id = await getRoomIdByName('Capstone-HelloWorld');
                             let matrixRoom = await getMatrixRooms();
-
                             let profileAvatar = await getAvatar();
                             let display_name = await getDisplayName();
                             setDisplayName(display_name);
                             // setRoomID(room_id);
                             setRoomList(matrixRoom);
-
                             if (
                                 profileAvatar === null ||
                                 profileAvatar === ''
