@@ -31,19 +31,19 @@ import { HomeIcon } from '@heroicons/react/solid';
 // const bg_gradient = " bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-200";
 
 const ProfileView = ({
-    avatar,
-    userID,
-    displayName,
-    roomID,
-    roomList,
-    peopleList,
-    leaveRoom,
-    forgetRoom,
-    inviteUserToRoom,
-    kickUserFromRoom,
-    banUserFromRoom,
-    unbanUserFromRoom,
-    roomName
+    // avatar,
+    // userID,
+    // displayName,
+    // roomID,
+    // roomList,
+    // peopleList,
+    // leaveRoom,
+    // forgetRoom,
+    // inviteUserToRoom,
+    // kickUserFromRoom,
+    // banUserFromRoom,
+    // unbanUserFromRoom,
+    // roomName
 }) => {
     const [viewProfile, setViewProfile] = useState(false);
     const [showModal, setShowModal] = useState(false);
@@ -1179,43 +1179,43 @@ const Profile = () => {
             }
             setTimeout(() => {
                 setYesLogin(isLogin());
-				const get_avatar = () => {
-					(async () => {
-						try {
-							let profileAvatar = await getAvatar();
-							let display_name = await getDisplayName();
-							let room_id = localStorage.getItem("currentRoomID");
-							let user_ID = await getUserId();
-							let matrixRoom = await getMatrixRooms();
-                            let room_name = await getRoomNameById(room_id);
-                            let people_list = await getListPeopleById(room_id);
+				// const get_avatar = () => {
+				// 	(async () => {
+				// 		try {
+				// 			let profileAvatar = await getAvatar();
+				// 			let display_name = await getDisplayName();
+				// 			let room_id = localStorage.getItem("currentRoomID");
+				// 			let user_ID = await getUserId();
+				// 			let matrixRoom = await getMatrixRooms();
+                //             let room_name = await getRoomNameById(room_id);
+                //             let people_list = await getListPeopleById(room_id);
 
-							setUserId(user_ID);
-							setDisplayName(display_name);
-							setRoomID(room_id);
-							setRoomList(matrixRoom);
-                            setRoomName(room_name);
-                            setPeopleList(people_list);
+				// 			setUserId(user_ID);
+				// 			setDisplayName(display_name);
+				// 			setRoomID(room_id);
+				// 			setRoomList(matrixRoom);
+                //             setRoomName(room_name);
+                //             setPeopleList(people_list);
 
-							if (profileAvatar === null || profileAvatar === '') {
-								setAvatar(null);
-							} else {
-								setAvatar(profileAvatar);
-							}
-						} catch (e) {
-							console.log('error', e);
-							setAvatar(null);
-							setUserId(null);
-							setDisplayName(null);
-							setRoomID(null);
-							setRoomList(null);
-                            setRoomName(null);
-                            setPeopleList(null);
-						}
-					})();
-				};
+				// 			if (profileAvatar === null || profileAvatar === '') {
+				// 				setAvatar(null);
+				// 			} else {
+				// 				setAvatar(profileAvatar);
+				// 			}
+				// 		} catch (e) {
+				// 			console.log('error', e);
+				// 			setAvatar(null);
+				// 			setUserId(null);
+				// 			setDisplayName(null);
+				// 			setRoomID(null);
+				// 			setRoomList(null);
+                //             setRoomName(null);
+                //             setPeopleList(null);
+				// 		}
+				// 	})();
+				// };
 
-				get_avatar();
+				// get_avatar();
             }, 500);
         })();
 
@@ -1229,35 +1229,35 @@ const Profile = () => {
                     <TopNavigationBar />
                     {avatar ? (
                         <ProfileView
-                            avatar={avatar}
-                            userID={userID}
-                            displayName={displayName}
-                            roomID={roomID}
-                            roomList={roomList}
-                            peopleList={peopleList}
-                            leaveRoom = {leaveRoom}
-                            forgetRoom = {forgetRoom}
-                            inviteUserToRoom={inviteUserToRoom}
-                            kickUserFromRoom={kickUserFromRoom}
-                            banUserFromRoom={banUserFromRoom}
-                            unbanUserFromRoom={unbanUserFromRoom}
-                            roomName = {roomName}
+                            // avatar={avatar}
+                            // userID={userID}
+                            // displayName={displayName}
+                            // roomID={roomID}
+                            // roomList={roomList}
+                            // peopleList={peopleList}
+                            // leaveRoom = {leaveRoom}
+                            // forgetRoom = {forgetRoom}
+                            // inviteUserToRoom={inviteUserToRoom}
+                            // kickUserFromRoom={kickUserFromRoom}
+                            // banUserFromRoom={banUserFromRoom}
+                            // unbanUserFromRoom={unbanUserFromRoom}
+                            // roomName = {roomName}
                         />
                     ) : (
                         <ProfileView
-                            avatar={'logo_profile_static_avatar.svg'}
-                            userID={userID}
-                            displayName={displayName}
-                            roomID={roomID}
-                            roomList={roomList}
-                            peopleList={peopleList}
-                            leaveRoom = {leaveRoom}
-                            forgetRoom = {forgetRoom}
-                            inviteUserToRoom={inviteUserToRoom}
-                            kickUserFromRoom={kickUserFromRoom}
-                            banUserFromRoom={banUserFromRoom}
-                            unbanUserFromRoom={unbanUserFromRoom}
-                            roomName = {roomName}
+                            // avatar={'logo_profile_static_avatar.svg'}
+                            // userID={userID}
+                            // displayName={displayName}
+                            // roomID={roomID}
+                            // roomList={roomList}
+                            // peopleList={peopleList}
+                            // leaveRoom = {leaveRoom}
+                            // forgetRoom = {forgetRoom}
+                            // inviteUserToRoom={inviteUserToRoom}
+                            // kickUserFromRoom={kickUserFromRoom}
+                            // banUserFromRoom={banUserFromRoom}
+                            // unbanUserFromRoom={unbanUserFromRoom}
+                            // roomName = {roomName}
                         />
                     )}
                 </div>
