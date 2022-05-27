@@ -1046,7 +1046,7 @@ const ProfileView = ({
                                             </header>
                                             
 
-                                            <div className="overflow-auto pb-24 px-4 md:px-6 my-5 pt-5">
+                                            {/* <div className="overflow-auto pb-24 px-4 md:px-6 my-5 pt-5">
                                                             <h1 className="text-4xl font-semibold text-gray-800">
                                                                 Welcome, {displayName}
                                                             </h1>
@@ -1115,13 +1115,13 @@ const ProfileView = ({
                                                             onClick={() => history.push('/room')}
                                                             className="w-1/7 justify-center inline-flex items-center px-3 py-2 border border-orange-300 rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
                                                         >
-                                                            {/* <OfficeBuildingIcon
+                                                                <OfficeBuildingIcon
                                                                 className="-ml-1 mr-2 h-5 w-5 text-white"
                                                                 aria-hidden="true"
-                                                            /> */}
+                                                            /> 
                                                             Change Room
                                                         </button>
-                                        </div>
+                                        </div> */}
                                     </div>
                                 </div>
                             </div>
