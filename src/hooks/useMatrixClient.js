@@ -596,18 +596,18 @@ function useMatrixClient() {
         return '-';
     };
 
-    const getRoomIdByName = async (name) => {
-        if (client) {
-            const rooms = await client.getRooms();
+    // const getRoomIdByName = async (name) => {
+    //     if (client) {
+    //         const rooms = await client.getRooms();
 
-            for (let i = 0; i < rooms.length; i++) {
-                if (rooms[i].name === name) {
-                    return rooms[i].roomId;
-                }
-            }
-        }
-        return null;
-    };
+    //         for (let i = 0; i < rooms.length; i++) {
+    //             if (rooms[i].name === name) {
+    //                 return rooms[i].roomId;
+    //             }
+    //         }
+    //     }
+    //     return null;
+    // };
 
     const getRoomNameById = async (id) => {
         if (client) {
@@ -900,7 +900,7 @@ function useMatrixClient() {
         getAvatar,
         getDisplayName,
         getUserId,
-        getRoomIdByName,
+        // getRoomIdByName,
         getRoomNameById,
         createRoom,
 
