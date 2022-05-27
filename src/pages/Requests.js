@@ -201,7 +201,7 @@ const RecordVideo = () => {
                     case 'image/jpeg':
                         try {
                             jsonObj = JSON.parse(file.fileName);
-                            // content = jsonObj.content.replace('.thumb', '');
+                            content = jsonObj.content.replace('.thumb', '');
                         } catch {
                             jsonObj = null;
                             // content = null;
@@ -289,7 +289,7 @@ const RecordVideo = () => {
         return () => {
             removeOnHavingNewFile(handleHavingNewFile);
         };
-    }, [removeOnHavingNewFile, setHavingNewFile]);
+    }, [handleHavingNewFile, removeOnHavingNewFile, setHavingNewFile]);
 
     return (
         <main>
@@ -507,7 +507,7 @@ const ListRecording = () => {
     useEffect(() => {
         setHavingNewFile(handleHavingNewFile);
         setOnHavingNewMessage(handleHavingNewMessage);
-    }, [setHavingNewFile, setOnHavingNewMessage]);
+    }, [handleHavingNewMessage, setHavingNewFile, setOnHavingNewMessage]);
 
     return (
         <main>
