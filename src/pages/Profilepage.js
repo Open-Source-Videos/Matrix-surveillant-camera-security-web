@@ -14,19 +14,19 @@ import {
     useHistory
 } from "react-router-dom";
 
-// import {
-//     ChevronDownIcon,
-//     OfficeBuildingIcon,
-//     DocumentAddIcon,
-//     DocumentRemoveIcon,
-//     ExclamationCircleIcon,
-//     IdentificationIcon,
-//     LogoutIcon,
-//     ShieldCheckIcon,
-//     EyeIcon,
-//     PencilIcon,
-// } from '@heroicons/react/outline';
-// import { HomeIcon } from '@heroicons/react/solid';
+import {
+    ChevronDownIcon,
+    OfficeBuildingIcon,
+    DocumentAddIcon,
+    DocumentRemoveIcon,
+    ExclamationCircleIcon,
+    IdentificationIcon,
+    LogoutIcon,
+    ShieldCheckIcon,
+    EyeIcon,
+    PencilIcon,
+} from '@heroicons/react/outline';
+import { HomeIcon } from '@heroicons/react/solid';
 
 // const bg_gradient = " bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-200";
 
@@ -146,11 +146,11 @@ const ProfileView = ({
                     </div>
 
                     <span className="absolute px-2 top-2 right-1">
-                        {/* <HomeIcon
+                        <HomeIcon
                             className="mx-1 h-7 w-7 text-rose-400"
                             aria-hidden="true"
                             stroke="currentColor" strokeWidth="2"
-                        /> */}
+                        />
                     </span>
                 </div>        
              </div> 
@@ -195,7 +195,7 @@ const ProfileView = ({
                         </svg>
                     </div>
                 </section>
-                <section className="relative py-10 bg-white">
+                {/* <section className="relative py-10 bg-white">
                     <div className="container mx-auto px-4">
                         <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg -mt-64">
                             <div className="px-6">
@@ -242,14 +242,14 @@ const ProfileView = ({
                                                         type="button"
                                                         onClick={() => setViewProfile(true)}
                                                         >
-                                                            {/* {active ? (
+                                                            {active ? (
                                                                 <EyeIcon 
                                                                     className="ml-1 mr-1 h-5 w-5 hover:text-white"
                                                                     aria-hidden="true"/>
                                                                 ) : (
                                                                 <EyeIcon 
                                                                     className="ml-1 mr-1 h-5 w-5 hover:text-white"/>
-                                                                )} */}
+                                                                )}
                                                         View Profile Picture
                                                         </button>
                                                     )}
@@ -263,7 +263,7 @@ const ProfileView = ({
                                                         type="button"
                                                         onClick={() => setShowModal(true)}
                                                         >
-                                                            {/* {active ? (
+                                                            {active ? (
                                                                 <PencilIcon
                                                                     className="ml-1 mr-1 h-5 w-5 hover:text-white"
                                                                     aria-hidden="true"
@@ -272,7 +272,7 @@ const ProfileView = ({
                                                                     <PencilIcon
                                                                         className="ml-1 mr-1 h-5 w-5 hover:text-white"
                                                                     />
-                                                                )} */}
+                                                                )}
                                                         Update Profile Picture
                                                         </button>
                                                     )}
@@ -287,16 +287,16 @@ const ProfileView = ({
                                             <>
                                                 <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
                                                     <div className="relative w-auto my-6 mx-auto min-w-2xl max-w-4xl">
-                                                    {/*content*/}
+                                                  
                                                     <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-                                                        {/*header*/}
+                                                        
                                                         <div className="mt-4 flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                                                            {/* <img className="mr-5 h-12 w-auto" src="icons8-tiger-96.png" alt="Workflow"></img> */}
+                                                            
                                                             <h3 className="mx-auto text-3xl font-semibold">
                                                                 Profile Picture
                                                             </h3>
                                                         </div>
-                                                        {/*body*/}
+                                                        
 
                                                         <div className="relative m-auto ">
                                                             <img
@@ -308,7 +308,7 @@ const ProfileView = ({
 
 
 
-                                                        {/*footer*/}
+                                                       
                                                         <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                                                         <button
                                                             className="w-1/2 bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-200  m-2 relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-medium text-orange-500 rounded-lg group group-hover:from-orange-400 group-hover:to-rose-400 hover:text-white focus:ring-4 focus:outline-none focus:ring-rose-200"
@@ -333,11 +333,11 @@ const ProfileView = ({
                                             <>
                                                 <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
                                                     <div className="relative w-auto my-6 mx-auto max-w-3xl">
-                                                    {/*content*/}
+                                                   
                                                     <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-                                                        {/*header*/}
+                                                      
                                                         <div className="mt-4 flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                                                            {/* <img className="mr-5 h-12 w-auto" src="icons8-tiger-96.png" alt="Workflow"></img> */}
+                                                          
                                                             <h3 className="mx-auto pl-10 text-3xl font-semibold">
                                                                 Edit Avatar
                                                             </h3>
@@ -350,7 +350,7 @@ const ProfileView = ({
                                                                 </span>
                                                             </button>
                                                         </div>
-                                                        {/*body*/}
+                                                    
 
                                                         <div className="relative p-6 flex-auto">
                                                             <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900">Change Picture</label>
@@ -373,7 +373,7 @@ const ProfileView = ({
 
 
 
-                                                        {/*footer*/}
+                                                      
                                                         <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                                                         <button
                                                             className="w-1/2 m-2 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-100 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
@@ -408,17 +408,17 @@ const ProfileView = ({
                                                         className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
                                                     >
                                                         <div className="relative w-auto my-6 mx-auto max-w-3xl">
-                                                        {/*content*/}
+                                                     
                                                         <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-                                                            {/*header*/}
+                                                        
                                                             <div className="mt-4 flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                                                            {/* <img className="mr-5 h-12 w-auto" src="icons8-tiger-96.png" alt="Workflow"></img> */}
+                                                            
                                                             <h3 className="mx-auto text-3xl font-semibold">
                                                                 Change Name
                                                             </h3>
 
                                                         </div>
-                                                            {/*body*/}
+                                                       
 
                                                             <div className="relative p-6 flex-auto">
                                                                 <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900">Please enter the new user name that you want to change: </label>
@@ -427,7 +427,7 @@ const ProfileView = ({
                                                             </div>
 
 
-                                                            {/*footer*/}
+                                                       
                                                             <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                                                             <button
                                                                 className="w-1/2 m-2 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-100 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
@@ -462,17 +462,17 @@ const ProfileView = ({
                                                         className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
                                                     >
                                                         <div className="relative w-auto my-6 mx-auto max-w-3xl">
-                                                        {/*content*/}
+                                               
                                                         <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-                                                            {/*header*/}
+                                            
                                                             <div className="mt-4 flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                                                            {/* <img className="mr-5 h-12 w-auto" src="icons8-tiger-96.png" alt="Workflow"></img> */}
+                                                           
                                                             <h3 className="mx-auto text-3xl font-semibold">
                                                                 Leave Room
                                                             </h3>
 
                                                         </div>
-                                                            {/*body*/}
+                                                       
 
                                                             <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
                                                                 <strong className="font-bold">Alert! </strong>
@@ -483,7 +483,7 @@ const ProfileView = ({
                                                             </div>
 
 
-                                                            {/*footer*/}
+                                                           
                                                             <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                                                             <button
                                                                 className="w-1/2 m-2 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-100 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
@@ -519,17 +519,17 @@ const ProfileView = ({
                                                         className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
                                                     >
                                                         <div className="relative w-auto my-6 mx-auto max-w-3xl">
-                                                        {/*content*/}
+                                                       
                                                         <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-                                                            {/*header*/}
+                                                          
                                                             <div className="mt-4 flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                                                            {/* <img className="mr-5 h-12 w-auto" src="icons8-tiger-96.png" alt="Workflow"></img> */}
+                                                          
                                                             <h3 className="mx-auto text-3xl font-semibold">
                                                                 Invite User
                                                             </h3>
 
                                                         </div>
-                                                            {/*body*/}
+                                                      
 
                                                             <div className="relative p-6 flex-auto">
                                                                 <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900">Enter the User Id that you want to invite to room: </label>
@@ -538,7 +538,7 @@ const ProfileView = ({
                                                             </div>
 
 
-                                                            {/*footer*/}
+                                                        
                                                             <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                                                             <button
                                                                 className="w-1/2 m-2 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-100 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
@@ -574,18 +574,17 @@ const ProfileView = ({
                                                         className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
                                                     >
                                                         <div className="relative w-auto my-6 mx-auto max-w-3xl">
-                                                        {/*content*/}
+                                            
                                                         <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-                                                            {/*header*/}
+                                           
                                                             <div className="mt-4 flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                                                            {/* <img className="mr-5 h-12 w-auto" src="icons8-tiger-96.png" alt="Workflow"></img> */}
+                                                            
                                                             <h3 className="mx-auto text-3xl font-semibold">
                                                                 Kick User
                                                             </h3>
 
                                                         </div>
-                                                            {/*body*/}
-
+                                                   
                                                             <div className="relative p-6 flex-auto">
                                                                 <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900">Enter the User Id that you want to kick from this room: </label>
                                                                 <input  className="w-100" type={'text'}  id={'nameText'} onChange={event => setUserNameKick(event.target.value)}></input>
@@ -599,7 +598,7 @@ const ProfileView = ({
                                                             </div>
 
 
-                                                            {/*footer*/}
+                                                         
                                                             <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                                                             <button
                                                                 className="w-1/2 m-2 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-100 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
@@ -634,17 +633,17 @@ const ProfileView = ({
                                                         className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
                                                     >
                                                         <div className="relative w-auto my-6 mx-auto max-w-3xl">
-                                                        {/*content*/}
+                                                   
                                                         <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-                                                            {/*header*/}
+                                                       
                                                             <div className="mt-4 flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                                                            {/* <img className="mr-5 h-12 w-auto" src="icons8-tiger-96.png" alt="Workflow"></img> */}
+                                                           
                                                             <h3 className=" mx-auto  text-3xl font-semibold">
                                                                 Ban User
                                                             </h3>
 
                                                         </div>
-                                                            {/*body*/}
+                                                          
 
                                                             <div className="relative p-6 flex-auto">
                                                                 <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900">Enter the User Id who you want to band from this room:</label>
@@ -659,7 +658,7 @@ const ProfileView = ({
                                                             </div>
 
 
-                                                            {/*footer*/}
+                                                       
                                                             <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                                                             <button
                                                                 className="w-1/2 m-2 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-100 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
@@ -694,17 +693,17 @@ const ProfileView = ({
                                                         className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
                                                     >
                                                         <div className="relative w-auto my-6 mx-auto max-w-3xl">
-                                                        {/*content*/}
+                                                   
                                                         <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-                                                            {/*header*/}
+                                                    
                                                             <div className="mt-4 flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                                                            {/* <img className="mr-5 h-12 w-auto" src="icons8-tiger-96.png" alt="Workflow"></img> */}
+                                                          
                                                             <h3 className="mx-auto text-3xl font-semibold">
                                                                 Unban User
                                                             </h3>
 
                                                         </div>
-                                                            {/*body*/}
+                                                    
 
                                                             <div className="relative p-6 flex-auto">
                                                                 <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900">Enter the User Id to unban: </label>
@@ -713,7 +712,7 @@ const ProfileView = ({
                                                             </div>
 
 
-                                                            {/*footer*/}
+                                                        
                                                             <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                                                             <button
                                                                 className="w-1/2 m-2 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-100 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
@@ -748,9 +747,9 @@ const ProfileView = ({
                                                         className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
                                                     >
                                                         <div className="relative w-auto my-6 mx-auto max-w-3xl">
-                                                        {/*content*/}
+                                                   
                                                         <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-                                                            {/*header*/}
+                                                     
                                                             <div className="mt-4 flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
                                                             <img className="mr-5 h-12 w-auto" src="icons8-tiger-96.png" alt="Workflow"></img>
                                                             <h3 className="text-3xl font-semibold">
@@ -758,7 +757,7 @@ const ProfileView = ({
                                                             </h3>
 
                                                         </div>
-                                                            {/*body*/}
+                                                  
 
                                                             <div className="relative p-6 flex-auto">
                                                                 <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900 ">Enter your current password: </label>
@@ -771,7 +770,7 @@ const ProfileView = ({
                                                             </div>
 
 
-                                                            {/*footer*/}
+                                                 
                                                             <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                                                             <button
                                                                 className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
@@ -805,10 +804,10 @@ const ProfileView = ({
                                                 type="button"
                                             >
                                                 Setting
-                                                {/* <ChevronDownIcon
+                                                <ChevronDownIcon
                                                     className="ml-2 -mr-1 h-5 w-5 text-violet-200 hover:text-violet-100"
                                                     aria-hidden="true"
-                                                /> */}
+                                                />
                                             </Menu.Button >
 
                                             <Transition
@@ -827,10 +826,10 @@ const ProfileView = ({
                                                                     type="button"
                                                                     onClick={() => setShowChangeName(true)}>
                                                                 <div className="text-left hover:text-white">
-                                                                {/* <IdentificationIcon
+                                                                <IdentificationIcon
                                                                     className="ml-1 mr-1 h-5 w-5 hover:text-white"
                                                                     aria-hidden="true"
-                                                                /> */}
+                                                                />
                                                                 </div>
                                                                 <span className="mx-4 text-sm font-normal">
                                                                     Change Name
@@ -843,10 +842,10 @@ const ProfileView = ({
                                                                     type="button"
                                                                     onClick={() => setInviteUser(true)}>
                                                                 <span className="text-left">
-                                                                {/* <DocumentAddIcon
+                                                                <DocumentAddIcon
                                                                     className="ml-1 mr-1 h-5 w-5 hover:text-white"
                                                                     aria-hidden="true"
-                                                                /> */}
+                                                                />
                                                                 </span>
                                                                 <span className="mx-4 text-sm font-normal">
                                                                     Invite User
@@ -858,10 +857,10 @@ const ProfileView = ({
                                                                     type="button"
                                                                     onClick={() => setKickUser(true)}>
                                                                 <span className="text-left">
-                                                                    {/* <DocumentRemoveIcon
+                                                                    <DocumentRemoveIcon
                                                                         className="ml-1 mr-1 h-5 w-5 hover:text-white"
                                                                         aria-hidden="true"
-                                                                    /> */}
+                                                                    />
                                                                 </span>
                                                                 <span className="mx-4 text-sm font-normal">
                                                                     Kick Users
@@ -873,10 +872,10 @@ const ProfileView = ({
                                                                     type="button"
                                                                     onClick={() => setBanUser(true)}>
                                                                 <span className="text-left">
-                                                                    {/* <ExclamationCircleIcon
+                                                                    <ExclamationCircleIcon
                                                                         className="ml-1 mr-1 h-5 w-5 hover:text-white"
                                                                         aria-hidden="true"
-                                                                    /> */}
+                                                                    />
                                                                 </span>
                                                                 <span className="mx-4 text-sm font-normal">
                                                                     Ban Users
@@ -888,10 +887,10 @@ const ProfileView = ({
                                                                     type="button"
                                                                     onClick={() => setUnbanUser(true)}>
                                                                 <span className="text-left">
-                                                                    {/* <ShieldCheckIcon
+                                                                    <ShieldCheckIcon
                                                                         className="ml-1 mr-1 h-5 w-5 hover:text-white"
                                                                         aria-hidden="true"
-                                                                    /> */}
+                                                                    />
                                                                 </span>
                                                                 <span className="mx-4 text-sm font-normal">
                                                                     Unban Users
@@ -903,10 +902,10 @@ const ProfileView = ({
                                                                     type="button"
                                                                     onClick={() => setAlertLeaveRoom(true)}>
                                                                 <span className="text-left">
-                                                                    {/* <LogoutIcon
+                                                                    <LogoutIcon
                                                                         className="ml-1 mr-1 h-5 w-5 hover:text-white"
                                                                         aria-hidden="true"
-                                                                    /> */}
+                                                                    />
                                                                 </span>
                                                                 <span className="mx-4 text-sm font-normal">
                                                                     Leave Room
@@ -934,7 +933,7 @@ const ProfileView = ({
                                     <div className="flex items-start justify-between">
                                        
                                         <div className="flex flex-col w-full md:space-y-4">
-                                            {/* <header className="w-full h-16 z-40 flex items-center justify-between"> */}
+                                         
                                             <header>
                                                 <Menu as ="div" className="block lg:hidden ml-6">
             
@@ -953,10 +952,10 @@ const ProfileView = ({
                                                                     type="button"
                                                                     onClick={() => setShowChangeName(true)}>
                                                                 <div className="text-left hover:text-white">
-                                                                {/* <IdentificationIcon
+                                                                <IdentificationIcon
                                                                     className="ml-1 mr-1 h-5 w-5 hover:text-white"
                                                                     aria-hidden="true"
-                                                                /> */}
+                                                                />
                                                                 </div>
                                                                 <span className="mx-4 text-sm font-normal">
                                                                     Change Name
@@ -969,10 +968,10 @@ const ProfileView = ({
                                                                     type="button"
                                                                     onClick={() => setInviteUser(true)}>
                                                                 <span className="text-left">
-                                                                {/* <DocumentAddIcon
+                                                                <DocumentAddIcon
                                                                     className="ml-1 mr-1 h-5 w-5 hover:text-white"
                                                                     aria-hidden="true"
-                                                                /> */}
+                                                                />
                                                                 </span>
                                                                 <span className="mx-4 text-sm font-normal">
                                                                     Invite User
@@ -984,10 +983,10 @@ const ProfileView = ({
                                                                     type="button"
                                                                     onClick={() => setKickUser(true)}>
                                                                 <span className="text-left">
-                                                                    {/* <DocumentRemoveIcon
+                                                                    <DocumentRemoveIcon
                                                                         className="ml-1 mr-1 h-5 w-5 hover:text-white"
                                                                         aria-hidden="true"
-                                                                    /> */}
+                                                                    />
                                                                 </span>
                                                                 <span className="mx-4 text-sm font-normal">
                                                                     Kick Users
@@ -999,10 +998,10 @@ const ProfileView = ({
                                                                     type="button"
                                                                     onClick={() => setBanUser(true)}>
                                                                 <span className="text-left">
-                                                                    {/* <ExclamationCircleIcon
+                                                                    <ExclamationCircleIcon
                                                                         className="ml-1 mr-1 h-5 w-5 hover:text-white"
                                                                         aria-hidden="true"
-                                                                    /> */}
+                                                                    />
                                                                 </span>
                                                                 <span className="mx-4 text-sm font-normal">
                                                                     Ban Users
@@ -1014,10 +1013,10 @@ const ProfileView = ({
                                                                     type="button"
                                                                     onClick={() => setUnbanUser(true)}>
                                                                 <span className="text-left">
-                                                                    {/* <ShieldCheckIcon
+                                                                    <ShieldCheckIcon
                                                                         className="ml-1 mr-1 h-5 w-5 hover:text-white"
                                                                         aria-hidden="true"
-                                                                    /> */}
+                                                                    />
                                                                 </span>
                                                                 <span className="mx-4 text-sm font-normal">
                                                                     Unban Users
@@ -1029,10 +1028,10 @@ const ProfileView = ({
                                                                     type="button"
                                                                     onClick={() => setAlertLeaveRoom(true)}>
                                                                 <span className="text-left">
-                                                                    {/* <LogoutIcon
+                                                                    <LogoutIcon
                                                                         className="ml-1 mr-1 h-5 w-5 hover:text-white"
                                                                         aria-hidden="true"
-                                                                    /> */}
+                                                                    />
                                                                 </span>
                                                                 <span className="mx-4 text-sm font-normal">
                                                                     Leave Room
@@ -1046,7 +1045,7 @@ const ProfileView = ({
                                             </header>
                                             
 
-                                            {/* <div className="overflow-auto pb-24 px-4 md:px-6 my-5 pt-5">
+                                            <div className="overflow-auto pb-24 px-4 md:px-6 my-5 pt-5">
                                                             <h1 className="text-4xl font-semibold text-gray-800">
                                                                 Welcome, {displayName}
                                                             </h1>
@@ -1115,19 +1114,19 @@ const ProfileView = ({
                                                             onClick={() => history.push('/room')}
                                                             className="w-1/7 justify-center inline-flex items-center px-3 py-2 border border-orange-300 rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
                                                         >
-                                                                <OfficeBuildingIcon
+                                                            <OfficeBuildingIcon
                                                                 className="-ml-1 mr-2 h-5 w-5 text-white"
                                                                 aria-hidden="true"
-                                                            /> 
+                                                            />
                                                             Change Room
                                                         </button>
-                                        </div> */}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </section>
+                </section> */}
 
 
 
