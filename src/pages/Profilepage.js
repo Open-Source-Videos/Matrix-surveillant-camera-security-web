@@ -353,12 +353,12 @@ const ProfileView = ({
                                                         {/*body*/}
 
                                                         <div className="relative p-6 flex-auto">
-                                                            <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Change Picture</label>
+                                                            <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900">Change Picture</label>
                                                             <input type={'file'}  id={'imagetest'} accept={'*'} ></input>
                                                             <div id= {"display-image"}></div>
                                                         </div>
                                                         <div className="relative p-6 flex-auto mb-6">
-                                                            <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Remove Picture</label>
+                                                            <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900">Remove Picture</label>
                                                             <button
                                                                 className="w-full bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-200  m-2 relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-medium text-orange-500 rounded-lg group group-hover:from-orange-400 group-hover:to-rose-400 hover:text-white focus:ring-4 focus:outline-none focus:ring-rose-200"
                                                                 type="button"
@@ -421,7 +421,7 @@ const ProfileView = ({
                                                             {/*body*/}
 
                                                             <div className="relative p-6 flex-auto">
-                                                                <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Please enter the new user name that you want to change: </label>
+                                                                <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900">Please enter the new user name that you want to change: </label>
                                                                 <input  className="w-100" type={'text'}  id={'nameText'} onChange={event => setChangeName(event.target.value)}></input>
 
                                                             </div>
@@ -532,7 +532,7 @@ const ProfileView = ({
                                                             {/*body*/}
 
                                                             <div className="relative p-6 flex-auto">
-                                                                <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Enter the User Id that you want to invite to room: </label>
+                                                                <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900">Enter the User Id that you want to invite to room: </label>
                                                                 <input  className="w-100" type={'text'}  id={'nameText'} onChange={event => setUserName(event.target.value)}></input>
 
                                                             </div>
@@ -587,13 +587,13 @@ const ProfileView = ({
                                                             {/*body*/}
 
                                                             <div className="relative p-6 flex-auto">
-                                                                <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Enter the User Id that you want to kick from this room: </label>
+                                                                <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900">Enter the User Id that you want to kick from this room: </label>
                                                                 <input  className="w-100" type={'text'}  id={'nameText'} onChange={event => setUserNameKick(event.target.value)}></input>
 
                                                             </div>
 
                                                             <div className="relative p-6 flex-auto">
-                                                                <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Reason: </label>
+                                                                <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900">Reason: </label>
                                                                 <input  className="w-100" type={'text'}  id={'nameText'} onChange={event => setReasonKick(event.target.value)}></input>
 
                                                             </div>
@@ -647,13 +647,13 @@ const ProfileView = ({
                                                             {/*body*/}
 
                                                             <div className="relative p-6 flex-auto">
-                                                                <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Enter the User Id who you want to band from this room:</label>
+                                                                <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900">Enter the User Id who you want to band from this room:</label>
                                                                 <input  className="w-100" type={'text'}  id={'nameText'} onChange={event => setUserBan(event.target.value)}></input>
 
                                                             </div>
 
                                                             <div className="relative p-6 flex-auto">
-                                                                <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Reason: </label>
+                                                                <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900">Reason: </label>
                                                                 <input  className="w-100" type={'text'}  id={'nameText'} onChange={event => setReasonKick(event.target.value)}></input>
 
                                                             </div>
@@ -707,7 +707,7 @@ const ProfileView = ({
                                                             {/*body*/}
 
                                                             <div className="relative p-6 flex-auto">
-                                                                <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Enter the User Id to unban: </label>
+                                                                <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900">Enter the User Id to unban: </label>
                                                                 <input  className="w-100" type={'text'}  id={'nameText'} onChange={event => setUnBanUserName(event.target.value)}></input>
 
                                                             </div>
@@ -761,12 +761,12 @@ const ProfileView = ({
                                                             {/*body*/}
 
                                                             <div className="relative p-6 flex-auto">
-                                                                <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Enter your current password: </label>
+                                                                <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900 ">Enter your current password: </label>
                                                                 <input  className="w-100" type={'password'}  id={'nameText'} onChange={event => setChangeName(event.target.value)}></input>
                                                             </div>
 
                                                             <div className="relative p-6 flex-auto">
-                                                                <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Enter your new password: </label>
+                                                                <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900 ">Enter your new password: </label>
                                                                 <input  className="w-100" type={'password'}  id={'nameText'} onChange={event => setChangeName(event.target.value)}></input>
                                                             </div>
 
@@ -1047,7 +1047,7 @@ const ProfileView = ({
                                             
 
                                             <div className="overflow-auto pb-24 px-4 md:px-6 my-5 pt-5">
-                                                            <h1 className="text-4xl font-semibold text-gray-800 dark:text-white">
+                                                            <h1 className="text-4xl font-semibold text-gray-800">
                                                                 Welcome, {displayName}
                                                             </h1>
                                                             <h2 className="text-sm text-gray-400">
@@ -1056,18 +1056,18 @@ const ProfileView = ({
                                                         
                                                             <div className="z-0 flex my-6 items-center w-full space-y-4 md:space-x-4 md:space-y-0 flex-col md:flex-row">
                                                                 <div className="w-full md:w-5/12 mx-6" >
-                                                                    <div className="shadow-md w-full bg-white dark:bg-gray-700 relative overflow-hidden hover:scale-110 duration-200">
+                                                                    <div className="shadow-md w-full bg-white relative overflow-hidden hover:scale-110 duration-200">
                                                                         <div className="w-full h-full block">
                                                                             <button className="flex items-center justify-between px-4 py-6 space-x-4 ">
                                                                                 <div className="flex items-center ">
                                                     
-                                                                                    <p className="text-md text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-rose-400 dark:text-white ml-2 font-semibold border-b border-gray-200">
+                                                                                    <p className="text-md text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-rose-400 ml-2 font-semibold border-b border-gray-200">
                                                                                         Current Room
                                                                                     </p>
                                                                                 </div>
-                                                                                <div className="border-b border-gray-200 mt-6 md:mt-0 text-black dark:text-white font-bold text-md">
+                                                                                <div className="border-b border-gray-200 mt-6 md:mt-0 text-black  font-bold text-md">
 
-                                                                                    <span className="text-sm text-black dark:text-white font-bold">
+                                                                                    <span className="text-sm text-black  font-bold">
                                                                                         {roomName}
                                                                                     </span>
                                                                                 </div>
@@ -1078,21 +1078,21 @@ const ProfileView = ({
                                                                 </div>
                                                                 <div className="flex items-center w-full md:w-1/2 space-x-4">
                                                                 <div className="w-1/2 ">
-                                                                    <button className="shadow-md px-4 py-6 w-full bg-white dark:bg-gray-700 relative hover:scale-110 duration-300">
+                                                                    <button className="shadow-md px-4 py-6 w-full bg-white relative hover:scale-110 duration-300">
                                                                         <p className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-rose-400 text-md font-semibold">
                                                                             User ID
                                                                         </p>
-                                                                        <p className="text-sm text-black dark:text-white font-bold ">
+                                                                        <p className="text-sm text-black font-bold ">
                                                                             {userID}
                                                                         </p>
                                                                     </button>
                                                                 </div>
                                                                 <div className="w-1/2">
-                                                                    <div className="shadow-md px-4 py-6 w-full bg-white dark:bg-gray-700 relative hover:scale-110 duration-300">
+                                                                    <div className="shadow-md px-4 py-6 w-full bg-white relative hover:scale-110 duration-300">
                                                                         <p className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-rose-400 text-md font-semibold">
                                                                             People
                                                                         </p>
-                                                                        <p className="text-lg text-black dark:text-white font-bold">
+                                                                        <p className="text-lg text-black font-bold">
                                                                             {peopleList}
                                                                         </p>
                                                                         
