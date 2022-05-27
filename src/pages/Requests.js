@@ -201,7 +201,7 @@ const RecordVideo = () => {
                     case 'image/jpeg':
                         try {
                             jsonObj = JSON.parse(file.fileName);
-                            content = jsonObj.content.replace('.thumb', '');
+                            // content = jsonObj.content.replace('.thumb', '');
                         } catch {
                             jsonObj = null;
                             // content = null;
@@ -284,12 +284,12 @@ const RecordVideo = () => {
         console.log('DELETE:', listRecVideoURL.includes(url));
     };
 
-    useEffect(() => {
-        setHavingNewFile(handleHavingNewFile);
-        return () => {
-            removeOnHavingNewFile(handleHavingNewFile);
-        };
-    }, [handleHavingNewFile, removeOnHavingNewFile, setHavingNewFile]);
+    // useEffect(() => {
+    //     setHavingNewFile(handleHavingNewFile);
+    //     return () => {
+    //         removeOnHavingNewFile(handleHavingNewFile);
+    //     };
+    // }, [handleHavingNewFile, removeOnHavingNewFile, setHavingNewFile]);
 
     return (
         <main>
