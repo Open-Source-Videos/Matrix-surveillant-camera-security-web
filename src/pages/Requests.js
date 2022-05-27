@@ -284,12 +284,12 @@ const RecordVideo = () => {
         console.log('DELETE:', listRecVideoURL.includes(url));
     };
 
-    useEffect(() => {
-        setHavingNewFile(handleHavingNewFile);
-        return () => {
-            removeOnHavingNewFile(handleHavingNewFile);
-        };
-    }, [handleHavingNewFile, removeOnHavingNewFile, setHavingNewFile]);
+    // useEffect(() => {
+    //     setHavingNewFile(handleHavingNewFile);
+    //     return () => {
+    //         removeOnHavingNewFile(handleHavingNewFile);
+    //     };
+    // }, [handleHavingNewFile, removeOnHavingNewFile, setHavingNewFile]);
 
     return (
         <main>
@@ -504,10 +504,10 @@ const ListRecording = () => {
         console.log('DELETE:', listRecordingURL.includes(url));
     };
 
-    useEffect(() => {
-        setHavingNewFile(handleHavingNewFile);
-        setOnHavingNewMessage(handleHavingNewMessage);
-    }, [handleHavingNewMessage, setHavingNewFile, setOnHavingNewMessage]);
+    // useEffect(() => {
+    //     setHavingNewFile(handleHavingNewFile);
+    //     setOnHavingNewMessage(handleHavingNewMessage);
+    // }, [handleHavingNewMessage, setHavingNewFile, setOnHavingNewMessage]);
 
     return (
         <main>

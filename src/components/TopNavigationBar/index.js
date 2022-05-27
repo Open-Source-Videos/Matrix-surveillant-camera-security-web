@@ -84,7 +84,7 @@ const TopNavigationBar = () => {
 				get_avatar();
 			}, 500);
 		})();
-		}, [avatar, isLogin, testLogin]);
+		}, [avatar, isLogin, testLogin, getAvatar]);
 
 
 	return (
