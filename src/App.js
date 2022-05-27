@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect} from 'react';
 import { connect } from 'react-redux';
 // import Header from './components/Header/Header';
 // import Footer from './components/Footer';

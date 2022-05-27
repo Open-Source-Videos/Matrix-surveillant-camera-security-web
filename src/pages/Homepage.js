@@ -97,9 +97,9 @@ function Home() {
                             type_image = "snapshot";
                             let camera = json_obj.content.split(',')[0];
                             const list_camera = JSON.parse(localStorage.getItem('cam-config'));
-                            for (var i = 0; i < list_camera.length; i++) {
-                                if (list_camera[i].camera_num === parseInt(camera)) {
-                                    title = list_camera[i].camera
+                            for (var j = 0; j < list_camera.length; j++) {
+                                if (list_camera[j].camera_num === parseInt(camera)) {
+                                    title = list_camera[j].camera
                                     break;
                                 }
                             }
