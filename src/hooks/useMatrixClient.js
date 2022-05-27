@@ -371,9 +371,9 @@ function useMatrixClient() {
             }
         });
 
-        newClient.on('Room.receipt', async (event, room) => {});
+        // newClient.on('Room.receipt', async (event, room) => {});
 
-        newClient.on('Event.decrypted', async (e) => {
+        // newClient.on('Event.decrypted', async (e) => {
             // try {
             //     if (e.clearEvent && e.sender && e.event.origin_server_ts) {
             //         console.log('message', e);
@@ -431,7 +431,7 @@ function useMatrixClient() {
             // } catch (e) {
             //     console.log('#error =', e);
             // }
-        });
+        // });
     };
 
     // const verifyAllDevicesInRoom = async (room) => {

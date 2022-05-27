@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useHistory, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-
 import './style.css';
 import {
     Row,
