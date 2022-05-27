@@ -23,7 +23,7 @@
     "react-date-picker": "^8.4.0",
     "react-datetime-picker": "^3.5.0",
     "react-dom": "^18.0.0",
-     
+    "react-icons": "^4.3.1",
     "react-redux": "^7.2.8",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
