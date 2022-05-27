@@ -291,8 +291,8 @@ const ProfileView = ({
                                                     <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                                                         {/*header*/}
                                                         <div className="mt-4 flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                                                            <img className="mr-5 h-12 w-auto" src="icons8-tiger-96.png" alt="Workflow"></img>
-                                                            <h3 className="text-3xl font-semibold">
+                                                            {/* <img className="mr-5 h-12 w-auto" src="icons8-tiger-96.png" alt="Workflow"></img> */}
+                                                            <h3 className="mx-auto text-3xl font-semibold">
                                                                 Profile Picture
                                                             </h3>
                                                         </div>
@@ -337,8 +337,8 @@ const ProfileView = ({
                                                     <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                                                         {/*header*/}
                                                         <div className="mt-4 flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                                                            <img className="mr-5 h-12 w-auto" src="icons8-tiger-96.png" alt="Workflow"></img>
-                                                            <h3 className="text-3xl font-semibold">
+                                                            {/* <img className="mr-5 h-12 w-auto" src="icons8-tiger-96.png" alt="Workflow"></img> */}
+                                                            <h3 className="mx-auto pl-10 text-3xl font-semibold">
                                                                 Edit Avatar
                                                             </h3>
                                                             <button
@@ -412,8 +412,8 @@ const ProfileView = ({
                                                         <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                                                             {/*header*/}
                                                             <div className="mt-4 flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                                                            <img className="mr-5 h-12 w-auto" src="icons8-tiger-96.png" alt="Workflow"></img>
-                                                            <h3 className="text-3xl font-semibold">
+                                                            {/* <img className="mr-5 h-12 w-auto" src="icons8-tiger-96.png" alt="Workflow"></img> */}
+                                                            <h3 className="mx-auto text-3xl font-semibold">
                                                                 Change Name
                                                             </h3>
 
@@ -421,7 +421,7 @@ const ProfileView = ({
                                                             {/*body*/}
 
                                                             <div className="relative p-6 flex-auto">
-                                                                <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Enter the new User Name: </label>
+                                                                <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Please enter the new user name that you want to change: </label>
                                                                 <input  className="w-100" type={'text'}  id={'nameText'} onChange={event => setChangeName(event.target.value)}></input>
 
                                                             </div>
@@ -466,8 +466,8 @@ const ProfileView = ({
                                                         <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                                                             {/*header*/}
                                                             <div className="mt-4 flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                                                            <img className="mr-5 h-12 w-auto" src="icons8-tiger-96.png" alt="Workflow"></img>
-                                                            <h3 className="text-3xl font-semibold">
+                                                            {/* <img className="mr-5 h-12 w-auto" src="icons8-tiger-96.png" alt="Workflow"></img> */}
+                                                            <h3 className="mx-auto text-3xl font-semibold">
                                                                 Leave Room
                                                             </h3>
 
@@ -523,8 +523,8 @@ const ProfileView = ({
                                                         <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                                                             {/*header*/}
                                                             <div className="mt-4 flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                                                            <img className="mr-5 h-12 w-auto" src="icons8-tiger-96.png" alt="Workflow"></img>
-                                                            <h3 className="text-3xl font-semibold">
+                                                            {/* <img className="mr-5 h-12 w-auto" src="icons8-tiger-96.png" alt="Workflow"></img> */}
+                                                            <h3 className="mx-auto text-3xl font-semibold">
                                                                 Invite User
                                                             </h3>
 
@@ -532,7 +532,7 @@ const ProfileView = ({
                                                             {/*body*/}
 
                                                             <div className="relative p-6 flex-auto">
-                                                                <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Enter the User Id to invite: </label>
+                                                                <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Enter the User Id that you want to invite to room: </label>
                                                                 <input  className="w-100" type={'text'}  id={'nameText'} onChange={event => setUserName(event.target.value)}></input>
 
                                                             </div>
@@ -578,8 +578,8 @@ const ProfileView = ({
                                                         <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                                                             {/*header*/}
                                                             <div className="mt-4 flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                                                            <img className="mr-5 h-12 w-auto" src="icons8-tiger-96.png" alt="Workflow"></img>
-                                                            <h3 className="mr-5 pr-5 text-3xl font-semibold">
+                                                            {/* <img className="mr-5 h-12 w-auto" src="icons8-tiger-96.png" alt="Workflow"></img> */}
+                                                            <h3 className="mx-auto text-3xl font-semibold">
                                                                 Kick User
                                                             </h3>
 
@@ -638,8 +638,8 @@ const ProfileView = ({
                                                         <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                                                             {/*header*/}
                                                             <div className="mt-4 flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                                                            <img className="mr-5 h-12 w-auto" src="icons8-tiger-96.png" alt="Workflow"></img>
-                                                            <h3 className=" mr-5 pr-5 text-3xl font-semibold">
+                                                            {/* <img className="mr-5 h-12 w-auto" src="icons8-tiger-96.png" alt="Workflow"></img> */}
+                                                            <h3 className=" mx-auto  text-3xl font-semibold">
                                                                 Ban User
                                                             </h3>
 
@@ -698,8 +698,8 @@ const ProfileView = ({
                                                         <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                                                             {/*header*/}
                                                             <div className="mt-4 flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                                                            <img className="mr-5 h-12 w-auto" src="icons8-tiger-96.png" alt="Workflow"></img>
-                                                            <h3 className="text-3xl font-semibold">
+                                                            {/* <img className="mr-5 h-12 w-auto" src="icons8-tiger-96.png" alt="Workflow"></img> */}
+                                                            <h3 className="mx-auto text-3xl font-semibold">
                                                                 Unban User
                                                             </h3>
 
@@ -1152,7 +1152,6 @@ const Profile = () => {
         getAvatar,
         testLogin,
         getDisplayName,
-        // getRoomIdByName,
         getUserId,
         getMatrixRooms,
         leaveRoom,
@@ -1162,7 +1161,7 @@ const Profile = () => {
         banUserFromRoom,
         unbanUserFromRoom,
         getRoomNameById,
-        // getListPeopleById,
+        getListPeopleById,
     } = useMatrixClient();
     const [yesLogin, setYesLogin] = useState(false);
     const [avatar, setAvatar] = useState(null);
@@ -1190,14 +1189,14 @@ const Profile = () => {
 							let user_ID = await getUserId();
 							let matrixRoom = await getMatrixRooms();
                             let room_name = await getRoomNameById(room_id);
-                            // let people_list = await getListPeopleById(room_id);
+                            let people_list = await getListPeopleById(room_id);
 
 							setUserId(user_ID);
 							setDisplayName(display_name);
 							setRoomID(room_id);
 							setRoomList(matrixRoom);
                             setRoomName(room_name);
-                            // setPeopleList(people_list);
+                            setPeopleList(people_list);
 
 							if (profileAvatar === null || profileAvatar === '') {
 								setAvatar(null);
@@ -1212,7 +1211,7 @@ const Profile = () => {
 							setRoomID(null);
 							setRoomList(null);
                             setRoomName(null);
-                            // setPeopleList(null);
+                            setPeopleList(null);
 						}
 					})();
 				};
@@ -1222,7 +1221,7 @@ const Profile = () => {
         })();
 
 
-    }, [avatar, getAvatar, isLogin,getDisplayName, getMatrixRooms, getUserId, testLogin, getRoomNameById]);
+    }, [avatar, getAvatar, isLogin,getDisplayName, getMatrixRooms, getUserId, testLogin, getRoomNameById, getListPeopleById]);
 
     return (
         <>
@@ -1236,7 +1235,7 @@ const Profile = () => {
                             displayName={displayName}
                             roomID={roomID}
                             roomList={roomList}
-                            peopleList={null}
+                            peopleList={peopleList}
                             leaveRoom = {leaveRoom}
                             forgetRoom = {forgetRoom}
                             inviteUserToRoom={inviteUserToRoom}
@@ -1252,7 +1251,7 @@ const Profile = () => {
                             displayName={displayName}
                             roomID={roomID}
                             roomList={roomList}
-                            peopleList={null}
+                            peopleList={peopleList}
                             leaveRoom = {leaveRoom}
                             forgetRoom = {forgetRoom}
                             inviteUserToRoom={inviteUserToRoom}

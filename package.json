@@ -18,7 +18,7 @@
     "clsx": "^1.1.1",
     "flowbite": "^1.4.2",
     "ionicons": "^6.0.1",
-    "react": "^18.0.0",
+    "react": "^18.1.0",
     "react-bootstrap": "^0.32.4",
     "react-date-picker": "^8.4.0",
     "react-datetime-picker": "^3.5.0",
@@ -61,6 +61,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.4",
+    "install-peers": "^1.0.4",
     "postcss": "^8.4.12",
     "tailwindcss": "^3.0.24"
   }
