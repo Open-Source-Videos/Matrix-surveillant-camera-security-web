@@ -28,7 +28,7 @@ import {
 } from '@heroicons/react/outline';
 import { HomeIcon } from '@heroicons/react/solid';
 
-// const bg_gradient = " bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-200 ";
+// const bg_gradient = " bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-200";
 
 const ProfileView = ({
     avatar,
@@ -115,7 +115,7 @@ const ProfileView = ({
                 
                     <li className="" key={element.name}>
                         <button
-                            className="w-full rounded-t text-xs bg-gray-200 hover:bg-rose-400  hover:text-white py-2 px-4 block whitespace-no-wrap"
+                            className="w-full rounded-t text-xs bg-gray-200 hover:bg-gradient-to-r from-orange-400 to-rose-400  hover:text-white py-2 px-4 block whitespace-no-wrap"
                             type="button">
                             {element.name}
                         </button>
@@ -134,7 +134,7 @@ const ProfileView = ({
     const listItems = roomList.map((number, index) =>
         <div className="w-full px-2" key={index}>
             <div className="z=50 hover:z-50 shadow-md px-4 py-6 w-full bg-white relative hover:scale-110 duration-200">
-                <p className="p-2 text-rose-400 text-l w-max text-gray-700 font-semibold border-b border-gray-200">
+                <p className="p-2 text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-200 text-l w-max font-semibold border-b border-gray-200">
                     {number.name}           
                 </p>
                 <div className="flex items-end my-4 ">
@@ -311,11 +311,13 @@ const ProfileView = ({
                                                         {/*footer*/}
                                                         <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                                                         <button
-                                                            className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                                            className="w-1/2 bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-200  m-2 relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-medium text-orange-500 rounded-lg group group-hover:from-orange-400 group-hover:to-rose-400 hover:text-white focus:ring-4 focus:outline-none focus:ring-rose-200"
                                                             type="button"
                                                             onClick={() => setViewProfile(false)}
                                                         >
-                                                            Close
+                                                            <span className='w-full relative p-2 transition-all ease-in duration-75 bg-white hover:bg-gradient-to-r from-orange-400 to-rose-400 rounded-md group-hover:bg-opacity-0'>
+                                                                Close
+                                                            </span>
                                                         </button>
 
                                                         </div>
@@ -358,11 +360,13 @@ const ProfileView = ({
                                                         <div className="relative p-6 flex-auto mb-6">
                                                             <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Remove Picture</label>
                                                             <button
-                                                                className="h-10 w-100 px-5 text-yellow-400 duration-150 border-2 border-yellow-400 rounded-lg focus:shadow-outline hover:bg-yellow-400 hover:text-white"
+                                                                className="w-full bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-200  m-2 relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-medium text-orange-500 rounded-lg group group-hover:from-orange-400 group-hover:to-rose-400 hover:text-white focus:ring-4 focus:outline-none focus:ring-rose-200"
                                                                 type="button"
                                                                 onClick={() => setAvatar2('logo_profile_static_avatar.svg')}
                                                                 >
-                                                                    Remove Picture
+                                                                    <span className='w-full relative p-2 transition-all ease-in duration-75 bg-white hover:bg-gradient-to-r from-orange-400 to-rose-400 rounded-md group-hover:bg-opacity-0'>
+                                                                        Remove Picture
+                                                                    </span>
                                                                 </button>
                                                         </div>
 
@@ -372,19 +376,22 @@ const ProfileView = ({
                                                         {/*footer*/}
                                                         <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                                                         <button
-                                                            className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                                            className="w-1/2 m-2 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-100 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                                                             type="button"
                                                             onClick={() => setShowModal(false)}
                                                         >
                                                             Close
                                                         </button>
                                                         <button
-                                                            className="bg-yellow-400 text-white active:bg-yellow-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                                            className="w-1/2 bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-200  m-2 relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-medium text-orange-500 rounded-lg group group-hover:from-orange-400 group-hover:to-rose-400 hover:text-white focus:ring-4 focus:outline-none focus:ring-rose-200"
                                                             type="button"
 
                                                             onClick={() => {handleChangeImage(); setShowModal(false)}}
                                                         >
-                                                            Save Changes
+                                                            <span className='w-full relative p-2 transition-all ease-in duration-75 bg-white hover:bg-gradient-to-r from-orange-400 to-rose-400 rounded-md group-hover:bg-opacity-0'>
+                                                                Save Changes
+                                                            </span>
+                                                            
                                                         </button>
                                                         </div>
                                                     </div>
@@ -423,19 +430,22 @@ const ProfileView = ({
                                                             {/*footer*/}
                                                             <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                                                             <button
-                                                                className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                                                className="w-1/2 m-2 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-100 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                                                                 type="button"
                                                                 onClick={() => setShowChangeName(false)}
                                                             >
                                                                 Close
                                                             </button>
                                                             <button
-                                                                className="bg-yellow-400 text-white active:bg-yellow-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                                                className="w-1/2 bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-200  m-2 relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-medium text-orange-500 rounded-lg group group-hover:from-orange-400 group-hover:to-rose-400 hover:text-white focus:ring-4 focus:outline-none focus:ring-rose-200"
                                                                 type="button"
 
                                                                 onClick={() => {handleChangeName(newName); setShowChangeName(false)}}
                                                             >
-                                                                Save Changes
+                                                                <span className='w-full relative p-2 transition-all ease-in duration-75 bg-white hover:bg-gradient-to-r from-orange-400 to-rose-400 rounded-md group-hover:bg-opacity-0'>
+                                                                    Save Changes
+                                                                </span>
+                                                                
                                                             </button>
                                                             </div>
                                                         </div>
@@ -476,20 +486,23 @@ const ProfileView = ({
                                                             {/*footer*/}
                                                             <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                                                             <button
-                                                                className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                                                className="w-1/2 m-2 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-100 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                                                                 type="button"
                                                                 onClick={() => setAlertLeaveRoom(false)}
                                                             >
                                                                 Close
                                                             </button>
                                                             <button
-                                                                className="bg-yellow-400 text-white active:bg-yellow-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                                                className="w-1/2 bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-200  m-2 relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-medium text-orange-500 rounded-lg group group-hover:from-orange-400 group-hover:to-rose-400 hover:text-white focus:ring-4 focus:outline-none focus:ring-rose-200"
                                                                 type="button"
 
                                                                  onClick={() => {handleLeaveRoom(roomID);
                                                                  history.push('/room')}}
                                                             >
-                                                                Save Changes
+                                                                <span className='w-full relative p-2 transition-all ease-in duration-75 bg-white hover:bg-gradient-to-r from-orange-400 to-rose-400 rounded-md group-hover:bg-opacity-0'>
+                                                                    Save Changes            
+                                                                </span>
+                                                                
                                                             </button>
                                                             </div>
                                                         </div>
@@ -528,19 +541,22 @@ const ProfileView = ({
                                                             {/*footer*/}
                                                             <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                                                             <button
-                                                                className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                                                className="w-1/2 m-2 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-100 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                                                                 type="button"
                                                                 onClick={() => setInviteUser(false)}
                                                             >
                                                                 Close
                                                             </button>
                                                             <button
-                                                                className="bg-yellow-400 text-white active:bg-yellow-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                                                className="w-1/2 bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-200  m-2 relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-medium text-orange-500 rounded-lg group group-hover:from-orange-400 group-hover:to-rose-400 hover:text-white focus:ring-4 focus:outline-none focus:ring-rose-200"
                                                                 type="button"
 
                                                                 onClick={() => {handleInviteUser(userName, roomID); setInviteUser(false)}}
                                                             >
-                                                                Save Changes
+                                                                <span className='w-full relative p-2 transition-all ease-in duration-75 bg-white hover:bg-gradient-to-r from-orange-400 to-rose-400 rounded-md group-hover:bg-opacity-0'>
+                                                                    Save Changes
+                                                                </span>
+                                                                
                                                             </button>
                                                             </div>
                                                         </div>
@@ -563,7 +579,7 @@ const ProfileView = ({
                                                             {/*header*/}
                                                             <div className="mt-4 flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
                                                             <img className="mr-5 h-12 w-auto" src="icons8-tiger-96.png" alt="Workflow"></img>
-                                                            <h3 className="text-3xl font-semibold">
+                                                            <h3 className="mr-5 pr-5 text-3xl font-semibold">
                                                                 Kick User
                                                             </h3>
 
@@ -571,7 +587,7 @@ const ProfileView = ({
                                                             {/*body*/}
 
                                                             <div className="relative p-6 flex-auto">
-                                                                <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Enter the User Id you want to kick: </label>
+                                                                <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Enter the User Id that you want to kick from this room: </label>
                                                                 <input  className="w-100" type={'text'}  id={'nameText'} onChange={event => setUserNameKick(event.target.value)}></input>
 
                                                             </div>
@@ -586,19 +602,22 @@ const ProfileView = ({
                                                             {/*footer*/}
                                                             <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                                                             <button
-                                                                className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                                                className="w-1/2 m-2 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-100 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                                                                 type="button"
                                                                 onClick={() => setKickUser(false)}
                                                             >
                                                                 Close
                                                             </button>
                                                             <button
-                                                                className="bg-yellow-400 text-white active:bg-yellow-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                                                className="w-1/2 bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-200  m-2 relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-medium text-orange-500 rounded-lg group group-hover:from-orange-400 group-hover:to-rose-400 hover:text-white focus:ring-4 focus:outline-none focus:ring-rose-200"
                                                                 type="button"
 
                                                                 onClick={() => {handleKickUser(roomID, userNameKick, reason); setKickUser(false)}}
                                                             >
-                                                                Save Changes
+                                                                <span className='w-full relative p-2 transition-all ease-in duration-75 bg-white hover:bg-gradient-to-r from-orange-400 to-rose-400 rounded-md group-hover:bg-opacity-0'>
+                                                                  Save Changes
+                                                                </span>
+                                                                
                                                             </button>
                                                             </div>
                                                         </div>
@@ -620,7 +639,7 @@ const ProfileView = ({
                                                             {/*header*/}
                                                             <div className="mt-4 flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
                                                             <img className="mr-5 h-12 w-auto" src="icons8-tiger-96.png" alt="Workflow"></img>
-                                                            <h3 className="text-3xl font-semibold">
+                                                            <h3 className=" mr-5 pr-5 text-3xl font-semibold">
                                                                 Ban User
                                                             </h3>
 
@@ -628,7 +647,7 @@ const ProfileView = ({
                                                             {/*body*/}
 
                                                             <div className="relative p-6 flex-auto">
-                                                                <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Enter the User Id you want to band: </label>
+                                                                <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Enter the User Id who you want to band from this room:</label>
                                                                 <input  className="w-100" type={'text'}  id={'nameText'} onChange={event => setUserBan(event.target.value)}></input>
 
                                                             </div>
@@ -643,19 +662,22 @@ const ProfileView = ({
                                                             {/*footer*/}
                                                             <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                                                             <button
-                                                                className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                                                className="w-1/2 m-2 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-100 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                                                                 type="button"
                                                                 onClick={() => setBanUser(false)}
                                                             >
                                                                 Close
                                                             </button>
                                                             <button
-                                                                className="bg-yellow-400 text-white active:bg-yellow-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                                                className="w-1/2 bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-200  m-2 relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-medium text-orange-500 rounded-lg group group-hover:from-orange-400 group-hover:to-rose-400 hover:text-white focus:ring-4 focus:outline-none focus:ring-rose-200"
                                                                 type="button"
 
                                                                 onClick={() => {handleBanUser(roomID, userNameBan, reason); setBanUser(false)}}
                                                             >
-                                                                Save Changes
+                                                                <span className='w-full relative p-2 transition-all ease-in duration-75 bg-white hover:bg-gradient-to-r from-orange-400 to-rose-400 rounded-md group-hover:bg-opacity-0'>
+                                                                    Save Changes
+                                                                </span>
+                                                                
                                                             </button>
                                                             </div>
                                                         </div>
@@ -694,19 +716,22 @@ const ProfileView = ({
                                                             {/*footer*/}
                                                             <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                                                             <button
-                                                                className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                                                className="w-1/2 m-2 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-100 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                                                                 type="button"
                                                                 onClick={() => setUnbanUser(false)}
                                                             >
                                                                 Close
                                                             </button>
                                                             <button
-                                                                className="bg-yellow-400 text-white active:bg-yellow-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                                                className="w-1/2 bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-200  m-2 relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-medium text-orange-500 rounded-lg group group-hover:from-orange-400 group-hover:to-rose-400 hover:text-white focus:ring-4 focus:outline-none focus:ring-rose-200"
                                                                 type="button"
 
                                                                 onClick={() => {handleUnbanUser(roomID, unBanUserName); setUnbanUser(false)}}
                                                             >
-                                                                Save Changes
+                                                                <span className='w-full relative p-2 transition-all ease-in duration-75 bg-white hover:bg-gradient-to-r from-orange-400 to-rose-400 rounded-md group-hover:bg-opacity-0'>
+                                                                    Save Changes
+                                                                </span>
+                                                                
                                                             </button>
                                                             </div>
                                                         </div>
@@ -1036,7 +1061,7 @@ const ProfileView = ({
                                                                             <button className="flex items-center justify-between px-4 py-6 space-x-4 ">
                                                                                 <div className="flex items-center ">
                                                     
-                                                                                    <p className="text-md text-rose-400 dark:text-white ml-2 font-semibold border-b border-gray-200 ">
+                                                                                    <p className="text-md text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-rose-400 dark:text-white ml-2 font-semibold border-b border-gray-200">
                                                                                         Current Room
                                                                                     </p>
                                                                                 </div>
@@ -1054,7 +1079,7 @@ const ProfileView = ({
                                                                 <div className="flex items-center w-full md:w-1/2 space-x-4">
                                                                 <div className="w-1/2 ">
                                                                     <button className="shadow-md px-4 py-6 w-full bg-white dark:bg-gray-700 relative hover:scale-110 duration-300">
-                                                                        <p className="text-rose-400 text-md font-semibold">
+                                                                        <p className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-rose-400 text-md font-semibold">
                                                                             User ID
                                                                         </p>
                                                                         <p className="text-sm text-black dark:text-white font-bold ">
@@ -1064,7 +1089,7 @@ const ProfileView = ({
                                                                 </div>
                                                                 <div className="w-1/2">
                                                                     <div className="shadow-md px-4 py-6 w-full bg-white dark:bg-gray-700 relative hover:scale-110 duration-300">
-                                                                        <p className="text-rose-400 text-md font-semibold">
+                                                                        <p className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-rose-400 text-md font-semibold">
                                                                             People
                                                                         </p>
                                                                         <p className="text-lg text-black dark:text-white font-bold">
