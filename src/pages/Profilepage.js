@@ -162,7 +162,7 @@ const ProfileView = ({
     return (
         <>
             <main className="profile-page">
-                <section
+                {/* <section
                     className="relative block"
                     style={{ height: '450px' }}
                 >
@@ -194,7 +194,7 @@ const ProfileView = ({
                             ></polygon>
                         </svg>
                     </div>
-                </section>
+                </section> */}
                 {/* <section className="relative py-10 bg-white">
                     <div className="container mx-auto px-4">
                         <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg -mt-64">
