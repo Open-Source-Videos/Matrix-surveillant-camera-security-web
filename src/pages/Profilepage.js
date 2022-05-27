@@ -14,19 +14,19 @@ import {
     useHistory
 } from "react-router-dom";
 
-import {
-    ChevronDownIcon,
-    OfficeBuildingIcon,
-    DocumentAddIcon,
-    DocumentRemoveIcon,
-    ExclamationCircleIcon,
-    IdentificationIcon,
-    LogoutIcon,
-    ShieldCheckIcon,
-    EyeIcon,
-    PencilIcon,
-} from '@heroicons/react/outline';
-import { HomeIcon } from '@heroicons/react/solid';
+// import {
+//     ChevronDownIcon,
+//     OfficeBuildingIcon,
+//     DocumentAddIcon,
+//     DocumentRemoveIcon,
+//     ExclamationCircleIcon,
+//     IdentificationIcon,
+//     LogoutIcon,
+//     ShieldCheckIcon,
+//     EyeIcon,
+//     PencilIcon,
+// } from '@heroicons/react/outline';
+// import { HomeIcon } from '@heroicons/react/solid';
 
 // const bg_gradient = " bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-200";
 
@@ -146,11 +146,11 @@ const ProfileView = ({
                     </div>
 
                     <span className="absolute px-2 top-2 right-1">
-                        <HomeIcon
+                        {/* <HomeIcon
                             className="mx-1 h-7 w-7 text-rose-400"
                             aria-hidden="true"
                             stroke="currentColor" strokeWidth="2"
-                        />
+                        /> */}
                     </span>
                 </div>        
              </div> 
@@ -242,14 +242,14 @@ const ProfileView = ({
                                                         type="button"
                                                         onClick={() => setViewProfile(true)}
                                                         >
-                                                            {active ? (
+                                                            {/* {active ? (
                                                                 <EyeIcon 
                                                                     className="ml-1 mr-1 h-5 w-5 hover:text-white"
                                                                     aria-hidden="true"/>
                                                                 ) : (
                                                                 <EyeIcon 
                                                                     className="ml-1 mr-1 h-5 w-5 hover:text-white"/>
-                                                                )}
+                                                                )} */}
                                                         View Profile Picture
                                                         </button>
                                                     )}
@@ -263,7 +263,7 @@ const ProfileView = ({
                                                         type="button"
                                                         onClick={() => setShowModal(true)}
                                                         >
-                                                            {active ? (
+                                                            {/* {active ? (
                                                                 <PencilIcon
                                                                     className="ml-1 mr-1 h-5 w-5 hover:text-white"
                                                                     aria-hidden="true"
@@ -272,7 +272,7 @@ const ProfileView = ({
                                                                     <PencilIcon
                                                                         className="ml-1 mr-1 h-5 w-5 hover:text-white"
                                                                     />
-                                                                )}
+                                                                )} */}
                                                         Update Profile Picture
                                                         </button>
                                                     )}
@@ -805,10 +805,10 @@ const ProfileView = ({
                                                 type="button"
                                             >
                                                 Setting
-                                                <ChevronDownIcon
+                                                {/* <ChevronDownIcon
                                                     className="ml-2 -mr-1 h-5 w-5 text-violet-200 hover:text-violet-100"
                                                     aria-hidden="true"
-                                                />
+                                                /> */}
                                             </Menu.Button >
 
                                             <Transition
@@ -827,10 +827,10 @@ const ProfileView = ({
                                                                     type="button"
                                                                     onClick={() => setShowChangeName(true)}>
                                                                 <div className="text-left hover:text-white">
-                                                                <IdentificationIcon
+                                                                {/* <IdentificationIcon
                                                                     className="ml-1 mr-1 h-5 w-5 hover:text-white"
                                                                     aria-hidden="true"
-                                                                />
+                                                                /> */}
                                                                 </div>
                                                                 <span className="mx-4 text-sm font-normal">
                                                                     Change Name
@@ -843,10 +843,10 @@ const ProfileView = ({
                                                                     type="button"
                                                                     onClick={() => setInviteUser(true)}>
                                                                 <span className="text-left">
-                                                                <DocumentAddIcon
+                                                                {/* <DocumentAddIcon
                                                                     className="ml-1 mr-1 h-5 w-5 hover:text-white"
                                                                     aria-hidden="true"
-                                                                />
+                                                                /> */}
                                                                 </span>
                                                                 <span className="mx-4 text-sm font-normal">
                                                                     Invite User
@@ -858,10 +858,10 @@ const ProfileView = ({
                                                                     type="button"
                                                                     onClick={() => setKickUser(true)}>
                                                                 <span className="text-left">
-                                                                    <DocumentRemoveIcon
+                                                                    {/* <DocumentRemoveIcon
                                                                         className="ml-1 mr-1 h-5 w-5 hover:text-white"
                                                                         aria-hidden="true"
-                                                                    />
+                                                                    /> */}
                                                                 </span>
                                                                 <span className="mx-4 text-sm font-normal">
                                                                     Kick Users
@@ -873,10 +873,10 @@ const ProfileView = ({
                                                                     type="button"
                                                                     onClick={() => setBanUser(true)}>
                                                                 <span className="text-left">
-                                                                    <ExclamationCircleIcon
+                                                                    {/* <ExclamationCircleIcon
                                                                         className="ml-1 mr-1 h-5 w-5 hover:text-white"
                                                                         aria-hidden="true"
-                                                                    />
+                                                                    /> */}
                                                                 </span>
                                                                 <span className="mx-4 text-sm font-normal">
                                                                     Ban Users
@@ -888,10 +888,10 @@ const ProfileView = ({
                                                                     type="button"
                                                                     onClick={() => setUnbanUser(true)}>
                                                                 <span className="text-left">
-                                                                    <ShieldCheckIcon
+                                                                    {/* <ShieldCheckIcon
                                                                         className="ml-1 mr-1 h-5 w-5 hover:text-white"
                                                                         aria-hidden="true"
-                                                                    />
+                                                                    /> */}
                                                                 </span>
                                                                 <span className="mx-4 text-sm font-normal">
                                                                     Unban Users
@@ -903,10 +903,10 @@ const ProfileView = ({
                                                                     type="button"
                                                                     onClick={() => setAlertLeaveRoom(true)}>
                                                                 <span className="text-left">
-                                                                    <LogoutIcon
+                                                                    {/* <LogoutIcon
                                                                         className="ml-1 mr-1 h-5 w-5 hover:text-white"
                                                                         aria-hidden="true"
-                                                                    />
+                                                                    /> */}
                                                                 </span>
                                                                 <span className="mx-4 text-sm font-normal">
                                                                     Leave Room
@@ -953,10 +953,10 @@ const ProfileView = ({
                                                                     type="button"
                                                                     onClick={() => setShowChangeName(true)}>
                                                                 <div className="text-left hover:text-white">
-                                                                <IdentificationIcon
+                                                                {/* <IdentificationIcon
                                                                     className="ml-1 mr-1 h-5 w-5 hover:text-white"
                                                                     aria-hidden="true"
-                                                                />
+                                                                /> */}
                                                                 </div>
                                                                 <span className="mx-4 text-sm font-normal">
                                                                     Change Name
@@ -969,10 +969,10 @@ const ProfileView = ({
                                                                     type="button"
                                                                     onClick={() => setInviteUser(true)}>
                                                                 <span className="text-left">
-                                                                <DocumentAddIcon
+                                                                {/* <DocumentAddIcon
                                                                     className="ml-1 mr-1 h-5 w-5 hover:text-white"
                                                                     aria-hidden="true"
-                                                                />
+                                                                /> */}
                                                                 </span>
                                                                 <span className="mx-4 text-sm font-normal">
                                                                     Invite User
@@ -984,10 +984,10 @@ const ProfileView = ({
                                                                     type="button"
                                                                     onClick={() => setKickUser(true)}>
                                                                 <span className="text-left">
-                                                                    <DocumentRemoveIcon
+                                                                    {/* <DocumentRemoveIcon
                                                                         className="ml-1 mr-1 h-5 w-5 hover:text-white"
                                                                         aria-hidden="true"
-                                                                    />
+                                                                    /> */}
                                                                 </span>
                                                                 <span className="mx-4 text-sm font-normal">
                                                                     Kick Users
@@ -999,10 +999,10 @@ const ProfileView = ({
                                                                     type="button"
                                                                     onClick={() => setBanUser(true)}>
                                                                 <span className="text-left">
-                                                                    <ExclamationCircleIcon
+                                                                    {/* <ExclamationCircleIcon
                                                                         className="ml-1 mr-1 h-5 w-5 hover:text-white"
                                                                         aria-hidden="true"
-                                                                    />
+                                                                    /> */}
                                                                 </span>
                                                                 <span className="mx-4 text-sm font-normal">
                                                                     Ban Users
@@ -1014,10 +1014,10 @@ const ProfileView = ({
                                                                     type="button"
                                                                     onClick={() => setUnbanUser(true)}>
                                                                 <span className="text-left">
-                                                                    <ShieldCheckIcon
+                                                                    {/* <ShieldCheckIcon
                                                                         className="ml-1 mr-1 h-5 w-5 hover:text-white"
                                                                         aria-hidden="true"
-                                                                    />
+                                                                    /> */}
                                                                 </span>
                                                                 <span className="mx-4 text-sm font-normal">
                                                                     Unban Users
@@ -1029,10 +1029,10 @@ const ProfileView = ({
                                                                     type="button"
                                                                     onClick={() => setAlertLeaveRoom(true)}>
                                                                 <span className="text-left">
-                                                                    <LogoutIcon
+                                                                    {/* <LogoutIcon
                                                                         className="ml-1 mr-1 h-5 w-5 hover:text-white"
                                                                         aria-hidden="true"
-                                                                    />
+                                                                    /> */}
                                                                 </span>
                                                                 <span className="mx-4 text-sm font-normal">
                                                                     Leave Room
@@ -1115,10 +1115,10 @@ const ProfileView = ({
                                                             onClick={() => history.push('/room')}
                                                             className="w-1/7 justify-center inline-flex items-center px-3 py-2 border border-orange-300 rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
                                                         >
-                                                            <OfficeBuildingIcon
+                                                            {/* <OfficeBuildingIcon
                                                                 className="-ml-1 mr-2 h-5 w-5 text-white"
                                                                 aria-hidden="true"
-                                                            />
+                                                            /> */}
                                                             Change Room
                                                         </button>
                                         </div>
