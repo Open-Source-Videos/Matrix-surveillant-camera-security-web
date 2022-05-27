@@ -62,100 +62,100 @@ const ProfileView = ({
     const [reason, setReasonKick] = useState(null);
     
 
-    const {
-        setAvatar,
-        setDisplayName,
-        setAvatar2
-    } = useMatrixClient();
+    // const {
+    //     setAvatar,
+    //     setDisplayName,
+    //     setAvatar2
+    // } = useMatrixClient();
 
-    const history = useHistory();
+    // const history = useHistory();
 
-    const handleChangeImage = async (e) =>{
-        console.log('log =',e);
-        const reader = new FileReader();
-        var file = document.getElementById('imagetest').files[0];
-        console.log('file =',file);
-        console.log(reader);
-        reader.readAsArrayBuffer(file);
-        reader.addEventListener('load',(evt)=>{
-            setAvatar(file.name,evt.target.result);
-        });
+    // const handleChangeImage = async (e) =>{
+    //     console.log('log =',e);
+    //     const reader = new FileReader();
+    //     var file = document.getElementById('imagetest').files[0];
+    //     console.log('file =',file);
+    //     console.log(reader);
+    //     reader.readAsArrayBuffer(file);
+    //     reader.addEventListener('load',(evt)=>{
+    //         setAvatar(file.name,evt.target.result);
+    //     });
 
-    }
+    // }
 
-    const handleChangeName = async (e) => {
-        setDisplayName(e);
-    }
+    // const handleChangeName = async (e) => {
+    //     setDisplayName(e);
+    // }
 
-    const handleLeaveRoom = async (e) => {
-        leaveRoom(e);
-        forgetRoom(e);
-    }
+    // const handleLeaveRoom = async (e) => {
+    //     leaveRoom(e);
+    //     forgetRoom(e);
+    // }
 
-    const handleInviteUser = async (e, e2) => {
-        inviteUserToRoom(e, e2);
-    }
+    // const handleInviteUser = async (e, e2) => {
+    //     inviteUserToRoom(e, e2);
+    // }
 
-    const handleKickUser = async (e, e2, e3) => {
-        kickUserFromRoom(e, e2, e3);
-    }
+    // const handleKickUser = async (e, e2, e3) => {
+    //     kickUserFromRoom(e, e2, e3);
+    // }
 
-    const handleBanUser = async (e, e2, e3) => {
-        banUserFromRoom(e, e2, e3);
-    }
+    // const handleBanUser = async (e, e2, e3) => {
+    //     banUserFromRoom(e, e2, e3);
+    // }
 
-    const handleUnbanUser = async (e, e2) => {
-        unbanUserFromRoom(e, e2);
-    }
+    // const handleUnbanUser = async (e, e2) => {
+    //     unbanUserFromRoom(e, e2);
+    // }
 
-    const listMembers = (members) => {
-        const items = [];
-        for(let element of members){
-            items.push(          
+    // const listMembers = (members) => {
+    //     const items = [];
+    //     for(let element of members){
+    //         items.push(          
                 
-                    <li className="" key={element.name}>
-                        <button
-                            className="w-full rounded-t text-xs bg-gray-200 hover:bg-gradient-to-r from-orange-400 to-rose-400  hover:text-white py-2 px-4 block whitespace-no-wrap"
-                            type="button">
-                            {element.name}
-                        </button>
-                    </li>
+    //                 <li className="" key={element.name}>
+    //                     <button
+    //                         className="w-full rounded-t text-xs bg-gray-200 hover:bg-gradient-to-r from-orange-400 to-rose-400  hover:text-white py-2 px-4 block whitespace-no-wrap"
+    //                         type="button">
+    //                         {element.name}
+    //                     </button>
+    //                 </li>
                 
-            )
-        }   
-        return (
-            <ul className="absolute hidden text-gray-700 pt-1 group-hover:block">
-                {items}
-            </ul>
-        )     
-    }
+    //         )
+    //     }   
+    //     return (
+    //         <ul className="absolute hidden text-gray-700 pt-1 group-hover:block">
+    //             {items}
+    //         </ul>
+    //     )     
+    // }
 
 
-    const listItems = roomList.map((number, index) =>
-        <div className="w-full px-2" key={index}>
-            <div className="z=50 hover:z-50 shadow-md px-4 py-6 w-full bg-white relative hover:scale-110 duration-200">
-                <p className="p-2 text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-200 text-l w-max font-semibold border-b border-gray-200">
-                    {number.name}           
-                </p>
-                <div className="flex items-end my-4 ">
-                    <div className="group inline-block relative">
-                        <div className= {`"p-2 text-xs font-bold hover:text-rose-400"`} >
-                             People: {number.getMembers().length}  
-                        </div>
-                        {listMembers(number.getMembers())}
-                    </div>
+    // const listItems = roomList.map((number, index) =>
+    //     <div className="w-full px-2" key={index}>
+    //         <div className="z=50 hover:z-50 shadow-md px-4 py-6 w-full bg-white relative hover:scale-110 duration-200">
+    //             <p className="p-2 text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-200 text-l w-max font-semibold border-b border-gray-200">
+    //                 {number.name}           
+    //             </p>
+    //             <div className="flex items-end my-4 ">
+    //                 <div className="group inline-block relative">
+    //                     <div className= {`"p-2 text-xs font-bold hover:text-rose-400"`} >
+    //                          People: {number.getMembers().length}  
+    //                     </div>
+    //                     {listMembers(number.getMembers())}
+    //                 </div>
 
-                    <span className="absolute px-2 top-2 right-1">
-                        <HomeIcon
-                            className="mx-1 h-7 w-7 text-rose-400"
-                            aria-hidden="true"
-                            stroke="currentColor" strokeWidth="2"
-                        />
-                    </span>
-                </div>        
-             </div> 
-         </div>
-    );
+    //                 <span className="absolute px-2 top-2 right-1">
+    //                     <HomeIcon
+    //                         className="mx-1 h-7 w-7 text-rose-400"
+    //                         aria-hidden="true"
+    //                         stroke="currentColor" strokeWidth="2"
+    //                     />
+    //                 </span>
+    //             </div>        
+    //          </div> 
+    //      </div>
+    // );
 
    
 
