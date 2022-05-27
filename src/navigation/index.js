@@ -11,7 +11,7 @@ import Home from '../pages/Homepage';
 import Page404 from '../pages/Page404';
 import Page403 from '../pages/Page403';
 import { AuthContext } from '../context/auth';
-import Profile from '../pages/Profilepage';
+import Profile from '../pages/Profile';
 // import Setting from '../pages/Settingpage';
 import Requests from '../pages/Requests';
 import RoomPage from '../pages/Roompage';
