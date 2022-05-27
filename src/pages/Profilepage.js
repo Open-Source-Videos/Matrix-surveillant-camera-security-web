@@ -108,27 +108,27 @@ const ProfileView = ({
         unbanUserFromRoom(e, e2);
     }
 
-    // const listMembers = (members) => {
-    //     const items = [];
-    //     for(let element of members){
-    //         items.push(          
+    const listMembers = (members) => {
+        const items = [];
+        for(let element of members){
+            items.push(          
                 
-    //                 <li className="" key={element.name}>
-    //                     <button
-    //                         className="w-full rounded-t text-xs bg-gray-200 hover:bg-gradient-to-r from-orange-400 to-rose-400  hover:text-white py-2 px-4 block whitespace-no-wrap"
-    //                         type="button">
-    //                         {element.name}
-    //                     </button>
-    //                 </li>
+                    <li className="" key={element.name}>
+                        <button
+                            className="w-full rounded-t text-xs bg-gray-200 hover:bg-gradient-to-r from-orange-400 to-rose-400  hover:text-white py-2 px-4 block whitespace-no-wrap"
+                            type="button">
+                            {element.name}
+                        </button>
+                    </li>
                 
-    //         )
-    //     }   
-    //     return (
-    //         <ul className="absolute hidden text-gray-700 pt-1 group-hover:block">
-    //             {items}
-    //         </ul>
-    //     )     
-    // }
+            )
+        }   
+        return (
+            <ul className="absolute hidden text-gray-700 pt-1 group-hover:block">
+                {items}
+            </ul>
+        )     
+    }
 
 
     const listItems = roomList.map((number, index) =>
@@ -140,9 +140,9 @@ const ProfileView = ({
                 <div className="flex items-end my-4 ">
                     <div className="group inline-block relative">
                         <div className= {`"p-2 text-xs font-bold hover:text-rose-400"`} >
-                             {/* People: {number.getMembers().length}   */}
+                             People: {number.getMembers().length}  
                         </div>
-                        {/* {listMembers(number.getMembers())} */}
+                        {listMembers(number.getMembers())}
                     </div>
 
                     <span className="absolute px-2 top-2 right-1">
@@ -1161,7 +1161,7 @@ const Profile = () => {
         banUserFromRoom,
         unbanUserFromRoom,
         getRoomNameById,
-        // getListPeopleById,
+        getListPeopleById,
     } = useMatrixClient();
     const [yesLogin, setYesLogin] = useState(false);
     const [avatar, setAvatar] = useState(null);
@@ -1189,14 +1189,14 @@ const Profile = () => {
 							let user_ID = await getUserId();
 							let matrixRoom = await getMatrixRooms();
                             let room_name = await getRoomNameById(room_id);
-                            // let people_list = await getListPeopleById(room_id);
+                            let people_list = await getListPeopleById(room_id);
 
 							setUserId(user_ID);
 							setDisplayName(display_name);
 							setRoomID(room_id);
 							setRoomList(matrixRoom);
                             setRoomName(room_name);
-                            setPeopleList(10);
+                            setPeopleList(people_list);
 
 							if (profileAvatar === null || profileAvatar === '') {
 								setAvatar(null);
@@ -1221,7 +1221,7 @@ const Profile = () => {
         })();
 
 
-    }, [avatar, getAvatar, isLogin,getDisplayName, getMatrixRooms, getUserId, testLogin, getRoomNameById]);
+    }, [avatar, getAvatar, isLogin,getDisplayName, getMatrixRooms, getUserId, testLogin, getRoomNameById, getListPeopleById]);
 
     return (
         <>
