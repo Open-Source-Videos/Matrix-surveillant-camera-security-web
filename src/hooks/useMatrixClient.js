@@ -371,9 +371,9 @@ function useMatrixClient() {
             }
         });
 
-        // newClient.on('Room.receipt', async (event, room) => {});
+        newClient.on('Room.receipt', async (event, room) => {});
 
-        // newClient.on('Event.decrypted', async (e) => {
+        newClient.on('Event.decrypted', async (e) => {
             // try {
             //     if (e.clearEvent && e.sender && e.event.origin_server_ts) {
             //         console.log('message', e);
@@ -431,27 +431,27 @@ function useMatrixClient() {
             // } catch (e) {
             //     console.log('#error =', e);
             // }
-        // });
+        });
     };
 
-    // const verifyAllDevicesInRoom = async (room) => {
-    //     let members = (await room.getEncryptionTargetMembers()).map(
-    //         (x) => x['userId']
-    //     );
+    const verifyAllDevicesInRoom = async (room) => {
+        let members = (await room.getEncryptionTargetMembers()).map(
+            (x) => x['userId']
+        );
 
-    //     if (members !== null) {
+        if (members !== null) {
         
-    //         let memberkeys = await client.downloadKeys([members]);
+            let memberkeys = await client.downloadKeys([members]);
 
-    //         if (memberkeys) {
-    //             for (const userId of memberkeys) {
-    //                 for (const deviceId in memberkeys[userId]) {
-    //                     await client.setDeviceVerified(userId, deviceId);
-    //                 }
-    //             }
-    //         }
-    //     }
-    // };
+            if (memberkeys) {
+                for (const userId of memberkeys) {
+                    for (const deviceId in memberkeys[userId]) {
+                        await client.setDeviceVerified(userId, deviceId);
+                    }
+                }
+            }
+        }
+    };
 
     const getHistory = async (roomId) => {
         if (client) {
@@ -468,26 +468,26 @@ function useMatrixClient() {
         }
     };
 
-    // const getKeyByEvent = (e) => {
-    //     const allDeviceIDs = Object.keys(
-    //         client.crypto.deviceList.devices[e.sender.userId]
-    //     );
-    //     const keyList = [];
+    const getKeyByEvent = (e) => {
+        const allDeviceIDs = Object.keys(
+            client.crypto.deviceList.devices[e.sender.userId]
+        );
+        const keyList = [];
 
-    //     for (let i = 0; i < allDeviceIDs.length; i++) {
-    //         const deviceId = allDeviceIDs[i];
-    //         const ed25519 =
-    //             client.crypto.deviceList.devices[e.sender.userId][deviceId]
-    //                 .keys['ed25519:' + deviceId];
-    //         const curve25519 =
-    //             client.crypto.deviceList.devices[e.sender.userId][deviceId]
-    //                 .keys['curve25519:' + deviceId];
+        for (let i = 0; i < allDeviceIDs.length; i++) {
+            const deviceId = allDeviceIDs[i];
+            const ed25519 =
+                client.crypto.deviceList.devices[e.sender.userId][deviceId]
+                    .keys['ed25519:' + deviceId];
+            const curve25519 =
+                client.crypto.deviceList.devices[e.sender.userId][deviceId]
+                    .keys['curve25519:' + deviceId];
 
-    //         keyList.push({ deviceId, ed25519, curve25519 });
-    //     }
+            keyList.push({ deviceId, ed25519, curve25519 });
+        }
 
-    //     return keyList;
-    // };
+        return keyList;
+    };
 
     const isLogin = () => {
         return client !== null;
