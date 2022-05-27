@@ -1161,7 +1161,7 @@ const Profile = () => {
         banUserFromRoom,
         unbanUserFromRoom,
         getRoomNameById,
-        getListPeopleById,
+        // getListPeopleById,
     } = useMatrixClient();
     const [yesLogin, setYesLogin] = useState(false);
     const [avatar, setAvatar] = useState(null);
@@ -1189,14 +1189,14 @@ const Profile = () => {
 							let user_ID = await getUserId();
 							let matrixRoom = await getMatrixRooms();
                             let room_name = await getRoomNameById(room_id);
-                            let people_list = await getListPeopleById(room_id);
+                            // let people_list = await getListPeopleById(room_id);
 
 							setUserId(user_ID);
 							setDisplayName(display_name);
 							setRoomID(room_id);
 							setRoomList(matrixRoom);
                             setRoomName(room_name);
-                            setPeopleList(people_list);
+                            setPeopleList(10);
 
 							if (profileAvatar === null || profileAvatar === '') {
 								setAvatar(null);
@@ -1221,7 +1221,7 @@ const Profile = () => {
         })();
 
 
-    }, [avatar, getAvatar, isLogin,getDisplayName, getMatrixRooms, getUserId, testLogin, getRoomNameById, getListPeopleById]);
+    }, [avatar, getAvatar, isLogin,getDisplayName, getMatrixRooms, getUserId, testLogin, getRoomNameById]);
 
     return (
         <>
