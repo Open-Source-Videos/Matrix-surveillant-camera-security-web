@@ -1152,7 +1152,7 @@ const Profile = () => {
         getAvatar,
         testLogin,
         getDisplayName,
-        getRoomIdByName,
+        // getRoomIdByName,
         getUserId,
         getMatrixRooms,
         leaveRoom,
@@ -1162,7 +1162,7 @@ const Profile = () => {
         banUserFromRoom,
         unbanUserFromRoom,
         getRoomNameById,
-        getListPeopleById,
+        // getListPeopleById,
     } = useMatrixClient();
     const [yesLogin, setYesLogin] = useState(false);
     const [avatar, setAvatar] = useState(null);
@@ -1190,14 +1190,14 @@ const Profile = () => {
 							let user_ID = await getUserId();
 							let matrixRoom = await getMatrixRooms();
                             let room_name = await getRoomNameById(room_id);
-                            let people_list = await getListPeopleById(room_id);
+                            // let people_list = await getListPeopleById(room_id);
 
 							setUserId(user_ID);
 							setDisplayName(display_name);
 							setRoomID(room_id);
 							setRoomList(matrixRoom);
                             setRoomName(room_name);
-                            setPeopleList(people_list);
+                            // setPeopleList(people_list);
 
 							if (profileAvatar === null || profileAvatar === '') {
 								setAvatar(null);
@@ -1212,7 +1212,7 @@ const Profile = () => {
 							setRoomID(null);
 							setRoomList(null);
                             setRoomName(null);
-                            setPeopleList(null);
+                            // setPeopleList(null);
 						}
 					})();
 				};
@@ -1222,7 +1222,7 @@ const Profile = () => {
         })();
 
 
-    }, [avatar, getAvatar, isLogin,getDisplayName, getMatrixRooms, getRoomIdByName, getUserId, testLogin, getRoomNameById, getListPeopleById]);
+    }, [avatar, getAvatar, isLogin,getDisplayName, getMatrixRooms, getUserId, testLogin, getRoomNameById]);
 
     return (
         <>
@@ -1236,7 +1236,7 @@ const Profile = () => {
                             displayName={displayName}
                             roomID={roomID}
                             roomList={roomList}
-                            peopleList={peopleList}
+                            peopleList={null}
                             leaveRoom = {leaveRoom}
                             forgetRoom = {forgetRoom}
                             inviteUserToRoom={inviteUserToRoom}
@@ -1252,7 +1252,7 @@ const Profile = () => {
                             displayName={displayName}
                             roomID={roomID}
                             roomList={roomList}
-                            peopleList={peopleList}
+                            peopleList={null}
                             leaveRoom = {leaveRoom}
                             forgetRoom = {forgetRoom}
                             inviteUserToRoom={inviteUserToRoom}
