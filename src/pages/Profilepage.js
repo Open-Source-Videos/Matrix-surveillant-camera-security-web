@@ -31,19 +31,19 @@ import { HomeIcon } from '@heroicons/react/solid';
 // const bg_gradient = " bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-200";
 
 const ProfileView = ({
-    // avatar,
-    // userID,
-    // displayName,
-    // roomID,
-    // roomList,
-    // peopleList,
-    // leaveRoom,
-    // forgetRoom,
-    // inviteUserToRoom,
-    // kickUserFromRoom,
-    // banUserFromRoom,
-    // unbanUserFromRoom,
-    // roomName
+    avatar,
+    userID,
+    displayName,
+    roomID,
+    roomList,
+    peopleList,
+    leaveRoom,
+    forgetRoom,
+    inviteUserToRoom,
+    kickUserFromRoom,
+    banUserFromRoom,
+    unbanUserFromRoom,
+    roomName
 }) => {
     const [viewProfile, setViewProfile] = useState(false);
     const [showModal, setShowModal] = useState(false);
@@ -62,107 +62,107 @@ const ProfileView = ({
     const [reason, setReasonKick] = useState(null);
     
 
-    // const {
-    //     setAvatar,
-    //     setDisplayName,
-    //     setAvatar2
-    // } = useMatrixClient();
+    const {
+        setAvatar,
+        setDisplayName,
+        setAvatar2
+    } = useMatrixClient();
 
-    // const history = useHistory();
+    const history = useHistory();
 
-    // const handleChangeImage = async (e) =>{
-    //     console.log('log =',e);
-    //     const reader = new FileReader();
-    //     var file = document.getElementById('imagetest').files[0];
-    //     console.log('file =',file);
-    //     console.log(reader);
-    //     reader.readAsArrayBuffer(file);
-    //     reader.addEventListener('load',(evt)=>{
-    //         setAvatar(file.name,evt.target.result);
-    //     });
+    const handleChangeImage = async (e) =>{
+        console.log('log =',e);
+        const reader = new FileReader();
+        var file = document.getElementById('imagetest').files[0];
+        console.log('file =',file);
+        console.log(reader);
+        reader.readAsArrayBuffer(file);
+        reader.addEventListener('load',(evt)=>{
+            setAvatar(file.name,evt.target.result);
+        });
 
-    // }
+    }
 
-    // const handleChangeName = async (e) => {
-    //     setDisplayName(e);
-    // }
+    const handleChangeName = async (e) => {
+        setDisplayName(e);
+    }
 
-    // const handleLeaveRoom = async (e) => {
-    //     leaveRoom(e);
-    //     forgetRoom(e);
-    // }
+    const handleLeaveRoom = async (e) => {
+        leaveRoom(e);
+        forgetRoom(e);
+    }
 
-    // const handleInviteUser = async (e, e2) => {
-    //     inviteUserToRoom(e, e2);
-    // }
+    const handleInviteUser = async (e, e2) => {
+        inviteUserToRoom(e, e2);
+    }
 
-    // const handleKickUser = async (e, e2, e3) => {
-    //     kickUserFromRoom(e, e2, e3);
-    // }
+    const handleKickUser = async (e, e2, e3) => {
+        kickUserFromRoom(e, e2, e3);
+    }
 
-    // const handleBanUser = async (e, e2, e3) => {
-    //     banUserFromRoom(e, e2, e3);
-    // }
+    const handleBanUser = async (e, e2, e3) => {
+        banUserFromRoom(e, e2, e3);
+    }
 
-    // const handleUnbanUser = async (e, e2) => {
-    //     unbanUserFromRoom(e, e2);
-    // }
+    const handleUnbanUser = async (e, e2) => {
+        unbanUserFromRoom(e, e2);
+    }
 
-    // const listMembers = (members) => {
-    //     const items = [];
-    //     for(let element of members){
-    //         items.push(          
+    const listMembers = (members) => {
+        const items = [];
+        for(let element of members){
+            items.push(          
                 
-    //                 <li className="" key={element.name}>
-    //                     <button
-    //                         className="w-full rounded-t text-xs bg-gray-200 hover:bg-gradient-to-r from-orange-400 to-rose-400  hover:text-white py-2 px-4 block whitespace-no-wrap"
-    //                         type="button">
-    //                         {element.name}
-    //                     </button>
-    //                 </li>
+                    <li className="" key={element.name}>
+                        <button
+                            className="w-full rounded-t text-xs bg-gray-200 hover:bg-gradient-to-r from-orange-400 to-rose-400  hover:text-white py-2 px-4 block whitespace-no-wrap"
+                            type="button">
+                            {element.name}
+                        </button>
+                    </li>
                 
-    //         )
-    //     }   
-    //     return (
-    //         <ul className="absolute hidden text-gray-700 pt-1 group-hover:block">
-    //             {items}
-    //         </ul>
-    //     )     
-    // }
+            )
+        }   
+        return (
+            <ul className="absolute hidden text-gray-700 pt-1 group-hover:block">
+                {items}
+            </ul>
+        )     
+    }
 
 
-    // const listItems = roomList.map((number, index) =>
-    //     <div className="w-full px-2" key={index}>
-    //         <div className="z=50 hover:z-50 shadow-md px-4 py-6 w-full bg-white relative hover:scale-110 duration-200">
-    //             <p className="p-2 text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-200 text-l w-max font-semibold border-b border-gray-200">
-    //                 {number.name}           
-    //             </p>
-    //             <div className="flex items-end my-4 ">
-    //                 <div className="group inline-block relative">
-    //                     <div className= {`"p-2 text-xs font-bold hover:text-rose-400"`} >
-    //                          People: {number.getMembers().length}  
-    //                     </div>
-    //                     {listMembers(number.getMembers())}
-    //                 </div>
+    const listItems = roomList.map((number, index) =>
+        <div className="w-full px-2" key={index}>
+            <div className="z=50 hover:z-50 shadow-md px-4 py-6 w-full bg-white relative hover:scale-110 duration-200">
+                <p className="p-2 text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-200 text-l w-max font-semibold border-b border-gray-200">
+                    {number.name}           
+                </p>
+                <div className="flex items-end my-4 ">
+                    <div className="group inline-block relative">
+                        <div className= {`"p-2 text-xs font-bold hover:text-rose-400"`} >
+                             People: {number.getMembers().length}  
+                        </div>
+                        {listMembers(number.getMembers())}
+                    </div>
 
-    //                 <span className="absolute px-2 top-2 right-1">
-    //                     <HomeIcon
-    //                         className="mx-1 h-7 w-7 text-rose-400"
-    //                         aria-hidden="true"
-    //                         stroke="currentColor" strokeWidth="2"
-    //                     />
-    //                 </span>
-    //             </div>        
-    //          </div> 
-    //      </div>
-    // );
+                    <span className="absolute px-2 top-2 right-1">
+                        <HomeIcon
+                            className="mx-1 h-7 w-7 text-rose-400"
+                            aria-hidden="true"
+                            stroke="currentColor" strokeWidth="2"
+                        />
+                    </span>
+                </div>        
+             </div> 
+         </div>
+    );
 
    
 
     return (
         <>
             <main className="profile-page">
-                {/* <section
+                <section
                     className="relative block"
                     style={{ height: '450px' }}
                 >
@@ -194,8 +194,8 @@ const ProfileView = ({
                             ></polygon>
                         </svg>
                     </div>
-                </section> */}
-                {/* <section className="relative py-10 bg-white">
+                </section>
+                <section className="relative py-10 bg-white">
                     <div className="container mx-auto px-4">
                         <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg -mt-64">
                             <div className="px-6">
@@ -287,16 +287,16 @@ const ProfileView = ({
                                             <>
                                                 <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
                                                     <div className="relative w-auto my-6 mx-auto min-w-2xl max-w-4xl">
-                                                  
+                                                    {/*content*/}
                                                     <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-                                                        
+                                                        {/*header*/}
                                                         <div className="mt-4 flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                                                            
+                                                            {/* <img className="mr-5 h-12 w-auto" src="icons8-tiger-96.png" alt="Workflow"></img> */}
                                                             <h3 className="mx-auto text-3xl font-semibold">
                                                                 Profile Picture
                                                             </h3>
                                                         </div>
-                                                        
+                                                        {/*body*/}
 
                                                         <div className="relative m-auto ">
                                                             <img
@@ -308,7 +308,7 @@ const ProfileView = ({
 
 
 
-                                                       
+                                                        {/*footer*/}
                                                         <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                                                         <button
                                                             className="w-1/2 bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-200  m-2 relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-medium text-orange-500 rounded-lg group group-hover:from-orange-400 group-hover:to-rose-400 hover:text-white focus:ring-4 focus:outline-none focus:ring-rose-200"
@@ -333,11 +333,11 @@ const ProfileView = ({
                                             <>
                                                 <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
                                                     <div className="relative w-auto my-6 mx-auto max-w-3xl">
-                                                   
+                                                    {/*content*/}
                                                     <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-                                                      
+                                                        {/*header*/}
                                                         <div className="mt-4 flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                                                          
+                                                            {/* <img className="mr-5 h-12 w-auto" src="icons8-tiger-96.png" alt="Workflow"></img> */}
                                                             <h3 className="mx-auto pl-10 text-3xl font-semibold">
                                                                 Edit Avatar
                                                             </h3>
@@ -350,7 +350,7 @@ const ProfileView = ({
                                                                 </span>
                                                             </button>
                                                         </div>
-                                                    
+                                                        {/*body*/}
 
                                                         <div className="relative p-6 flex-auto">
                                                             <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900">Change Picture</label>
@@ -373,7 +373,7 @@ const ProfileView = ({
 
 
 
-                                                      
+                                                        {/*footer*/}
                                                         <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                                                         <button
                                                             className="w-1/2 m-2 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-100 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
@@ -408,17 +408,17 @@ const ProfileView = ({
                                                         className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
                                                     >
                                                         <div className="relative w-auto my-6 mx-auto max-w-3xl">
-                                                     
+                                                        {/*content*/}
                                                         <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-                                                        
+                                                            {/*header*/}
                                                             <div className="mt-4 flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                                                            
+                                                            {/* <img className="mr-5 h-12 w-auto" src="icons8-tiger-96.png" alt="Workflow"></img> */}
                                                             <h3 className="mx-auto text-3xl font-semibold">
                                                                 Change Name
                                                             </h3>
 
                                                         </div>
-                                                       
+                                                            {/*body*/}
 
                                                             <div className="relative p-6 flex-auto">
                                                                 <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900">Please enter the new user name that you want to change: </label>
@@ -427,7 +427,7 @@ const ProfileView = ({
                                                             </div>
 
 
-                                                       
+                                                            {/*footer*/}
                                                             <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                                                             <button
                                                                 className="w-1/2 m-2 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-100 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
@@ -462,17 +462,17 @@ const ProfileView = ({
                                                         className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
                                                     >
                                                         <div className="relative w-auto my-6 mx-auto max-w-3xl">
-                                               
+                                                        {/*content*/}
                                                         <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-                                            
+                                                            {/*header*/}
                                                             <div className="mt-4 flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                                                           
+                                                            {/* <img className="mr-5 h-12 w-auto" src="icons8-tiger-96.png" alt="Workflow"></img> */}
                                                             <h3 className="mx-auto text-3xl font-semibold">
                                                                 Leave Room
                                                             </h3>
 
                                                         </div>
-                                                       
+                                                            {/*body*/}
 
                                                             <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
                                                                 <strong className="font-bold">Alert! </strong>
@@ -483,7 +483,7 @@ const ProfileView = ({
                                                             </div>
 
 
-                                                           
+                                                            {/*footer*/}
                                                             <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                                                             <button
                                                                 className="w-1/2 m-2 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-100 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
@@ -519,17 +519,17 @@ const ProfileView = ({
                                                         className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
                                                     >
                                                         <div className="relative w-auto my-6 mx-auto max-w-3xl">
-                                                       
+                                                        {/*content*/}
                                                         <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-                                                          
+                                                            {/*header*/}
                                                             <div className="mt-4 flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                                                          
+                                                            {/* <img className="mr-5 h-12 w-auto" src="icons8-tiger-96.png" alt="Workflow"></img> */}
                                                             <h3 className="mx-auto text-3xl font-semibold">
                                                                 Invite User
                                                             </h3>
 
                                                         </div>
-                                                      
+                                                            {/*body*/}
 
                                                             <div className="relative p-6 flex-auto">
                                                                 <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900">Enter the User Id that you want to invite to room: </label>
@@ -538,7 +538,7 @@ const ProfileView = ({
                                                             </div>
 
 
-                                                        
+                                                            {/*footer*/}
                                                             <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                                                             <button
                                                                 className="w-1/2 m-2 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-100 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
@@ -574,17 +574,18 @@ const ProfileView = ({
                                                         className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
                                                     >
                                                         <div className="relative w-auto my-6 mx-auto max-w-3xl">
-                                            
+                                                        {/*content*/}
                                                         <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-                                           
+                                                            {/*header*/}
                                                             <div className="mt-4 flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                                                            
+                                                            {/* <img className="mr-5 h-12 w-auto" src="icons8-tiger-96.png" alt="Workflow"></img> */}
                                                             <h3 className="mx-auto text-3xl font-semibold">
                                                                 Kick User
                                                             </h3>
 
                                                         </div>
-                                                   
+                                                            {/*body*/}
+
                                                             <div className="relative p-6 flex-auto">
                                                                 <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900">Enter the User Id that you want to kick from this room: </label>
                                                                 <input  className="w-100" type={'text'}  id={'nameText'} onChange={event => setUserNameKick(event.target.value)}></input>
@@ -598,7 +599,7 @@ const ProfileView = ({
                                                             </div>
 
 
-                                                         
+                                                            {/*footer*/}
                                                             <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                                                             <button
                                                                 className="w-1/2 m-2 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-100 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
@@ -633,17 +634,17 @@ const ProfileView = ({
                                                         className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
                                                     >
                                                         <div className="relative w-auto my-6 mx-auto max-w-3xl">
-                                                   
+                                                        {/*content*/}
                                                         <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-                                                       
+                                                            {/*header*/}
                                                             <div className="mt-4 flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                                                           
+                                                            {/* <img className="mr-5 h-12 w-auto" src="icons8-tiger-96.png" alt="Workflow"></img> */}
                                                             <h3 className=" mx-auto  text-3xl font-semibold">
                                                                 Ban User
                                                             </h3>
 
                                                         </div>
-                                                          
+                                                            {/*body*/}
 
                                                             <div className="relative p-6 flex-auto">
                                                                 <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900">Enter the User Id who you want to band from this room:</label>
@@ -658,7 +659,7 @@ const ProfileView = ({
                                                             </div>
 
 
-                                                       
+                                                            {/*footer*/}
                                                             <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                                                             <button
                                                                 className="w-1/2 m-2 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-100 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
@@ -693,17 +694,17 @@ const ProfileView = ({
                                                         className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
                                                     >
                                                         <div className="relative w-auto my-6 mx-auto max-w-3xl">
-                                                   
+                                                        {/*content*/}
                                                         <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-                                                    
+                                                            {/*header*/}
                                                             <div className="mt-4 flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                                                          
+                                                            {/* <img className="mr-5 h-12 w-auto" src="icons8-tiger-96.png" alt="Workflow"></img> */}
                                                             <h3 className="mx-auto text-3xl font-semibold">
                                                                 Unban User
                                                             </h3>
 
                                                         </div>
-                                                    
+                                                            {/*body*/}
 
                                                             <div className="relative p-6 flex-auto">
                                                                 <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900">Enter the User Id to unban: </label>
@@ -712,7 +713,7 @@ const ProfileView = ({
                                                             </div>
 
 
-                                                        
+                                                            {/*footer*/}
                                                             <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                                                             <button
                                                                 className="w-1/2 m-2 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gradient-to-r from-orange-400 to-rose-400 hover:bg-orange-100 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
@@ -747,9 +748,9 @@ const ProfileView = ({
                                                         className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
                                                     >
                                                         <div className="relative w-auto my-6 mx-auto max-w-3xl">
-                                                   
+                                                        {/*content*/}
                                                         <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-                                                     
+                                                            {/*header*/}
                                                             <div className="mt-4 flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
                                                             <img className="mr-5 h-12 w-auto" src="icons8-tiger-96.png" alt="Workflow"></img>
                                                             <h3 className="text-3xl font-semibold">
@@ -757,7 +758,7 @@ const ProfileView = ({
                                                             </h3>
 
                                                         </div>
-                                                  
+                                                            {/*body*/}
 
                                                             <div className="relative p-6 flex-auto">
                                                                 <label htmlFor="nameText" className="block mb-2 text-sm font-medium text-gray-900 ">Enter your current password: </label>
@@ -770,7 +771,7 @@ const ProfileView = ({
                                                             </div>
 
 
-                                                 
+                                                            {/*footer*/}
                                                             <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                                                             <button
                                                                 className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
@@ -933,7 +934,7 @@ const ProfileView = ({
                                     <div className="flex items-start justify-between">
                                        
                                         <div className="flex flex-col w-full md:space-y-4">
-                                         
+                                            {/* <header className="w-full h-16 z-40 flex items-center justify-between"> */}
                                             <header>
                                                 <Menu as ="div" className="block lg:hidden ml-6">
             
@@ -1126,7 +1127,7 @@ const ProfileView = ({
                             </div>
                         </div>
                     </div>
-                </section> */}
+                </section>
 
 
 
@@ -1179,43 +1180,43 @@ const Profile = () => {
             }
             setTimeout(() => {
                 setYesLogin(isLogin());
-				// const get_avatar = () => {
-				// 	(async () => {
-				// 		try {
-				// 			let profileAvatar = await getAvatar();
-				// 			let display_name = await getDisplayName();
-				// 			let room_id = localStorage.getItem("currentRoomID");
-				// 			let user_ID = await getUserId();
-				// 			let matrixRoom = await getMatrixRooms();
-                //             let room_name = await getRoomNameById(room_id);
-                //             let people_list = await getListPeopleById(room_id);
+				const get_avatar = () => {
+					(async () => {
+						try {
+							let profileAvatar = await getAvatar();
+							let display_name = await getDisplayName();
+							let room_id = localStorage.getItem("currentRoomID");
+							let user_ID = await getUserId();
+							let matrixRoom = await getMatrixRooms();
+                            let room_name = await getRoomNameById(room_id);
+                            let people_list = await getListPeopleById(room_id);
 
-				// 			setUserId(user_ID);
-				// 			setDisplayName(display_name);
-				// 			setRoomID(room_id);
-				// 			setRoomList(matrixRoom);
-                //             setRoomName(room_name);
-                //             setPeopleList(people_list);
+							setUserId(user_ID);
+							setDisplayName(display_name);
+							setRoomID(room_id);
+							setRoomList(matrixRoom);
+                            setRoomName(room_name);
+                            setPeopleList(people_list);
 
-				// 			if (profileAvatar === null || profileAvatar === '') {
-				// 				setAvatar(null);
-				// 			} else {
-				// 				setAvatar(profileAvatar);
-				// 			}
-				// 		} catch (e) {
-				// 			console.log('error', e);
-				// 			setAvatar(null);
-				// 			setUserId(null);
-				// 			setDisplayName(null);
-				// 			setRoomID(null);
-				// 			setRoomList(null);
-                //             setRoomName(null);
-                //             setPeopleList(null);
-				// 		}
-				// 	})();
-				// };
+							if (profileAvatar === null || profileAvatar === '') {
+								setAvatar(null);
+							} else {
+								setAvatar(profileAvatar);
+							}
+						} catch (e) {
+							console.log('error', e);
+							setAvatar(null);
+							setUserId(null);
+							setDisplayName(null);
+							setRoomID(null);
+							setRoomList(null);
+                            setRoomName(null);
+                            setPeopleList(null);
+						}
+					})();
+				};
 
-				// get_avatar();
+				get_avatar();
             }, 500);
         })();
 
@@ -1229,35 +1230,35 @@ const Profile = () => {
                     <TopNavigationBar />
                     {avatar ? (
                         <ProfileView
-                            // avatar={avatar}
-                            // userID={userID}
-                            // displayName={displayName}
-                            // roomID={roomID}
-                            // roomList={roomList}
-                            // peopleList={peopleList}
-                            // leaveRoom = {leaveRoom}
-                            // forgetRoom = {forgetRoom}
-                            // inviteUserToRoom={inviteUserToRoom}
-                            // kickUserFromRoom={kickUserFromRoom}
-                            // banUserFromRoom={banUserFromRoom}
-                            // unbanUserFromRoom={unbanUserFromRoom}
-                            // roomName = {roomName}
+                            avatar={avatar}
+                            userID={userID}
+                            displayName={displayName}
+                            roomID={roomID}
+                            roomList={roomList}
+                            peopleList={peopleList}
+                            leaveRoom = {leaveRoom}
+                            forgetRoom = {forgetRoom}
+                            inviteUserToRoom={inviteUserToRoom}
+                            kickUserFromRoom={kickUserFromRoom}
+                            banUserFromRoom={banUserFromRoom}
+                            unbanUserFromRoom={unbanUserFromRoom}
+                            roomName = {roomName}
                         />
                     ) : (
                         <ProfileView
-                            // avatar={'logo_profile_static_avatar.svg'}
-                            // userID={userID}
-                            // displayName={displayName}
-                            // roomID={roomID}
-                            // roomList={roomList}
-                            // peopleList={peopleList}
-                            // leaveRoom = {leaveRoom}
-                            // forgetRoom = {forgetRoom}
-                            // inviteUserToRoom={inviteUserToRoom}
-                            // kickUserFromRoom={kickUserFromRoom}
-                            // banUserFromRoom={banUserFromRoom}
-                            // unbanUserFromRoom={unbanUserFromRoom}
-                            // roomName = {roomName}
+                            avatar={'logo_profile_static_avatar.svg'}
+                            userID={userID}
+                            displayName={displayName}
+                            roomID={roomID}
+                            roomList={roomList}
+                            peopleList={peopleList}
+                            leaveRoom = {leaveRoom}
+                            forgetRoom = {forgetRoom}
+                            inviteUserToRoom={inviteUserToRoom}
+                            kickUserFromRoom={kickUserFromRoom}
+                            banUserFromRoom={banUserFromRoom}
+                            unbanUserFromRoom={unbanUserFromRoom}
+                            roomName = {roomName}
                         />
                     )}
                 </div>
