@@ -1,8 +1,8 @@
 {
-  "homepage": "https://tuandinh140194.github.io/camera_security",
   "name": "capstone-frontend-web",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://TuanDinh140194.github.io/camera_security",
   "dependencies": {
     "@headlessui/react": "^1.6.0",
     "@heroicons/react": "^1.0.6",
