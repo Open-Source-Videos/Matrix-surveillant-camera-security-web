@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/camera_security/static/css/main.a9191c01.css",
+    "main.js": "/camera_security/static/js/main.1dd3d719.js",
+    "index.html": "/camera_security/index.html",
+    "main.a9191c01.css.map": "/camera_security/static/css/main.a9191c01.css.map",
+    "main.1dd3d719.js.map": "/camera_security/static/js/main.1dd3d719.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.a9191c01.css",
+    "static/js/main.1dd3d719.js"
+  ]
+}
