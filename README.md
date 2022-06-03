@@ -1,24 +1,14 @@
-# Open Source Videos Capstone Project 
+# Open Source Video Security Camera
 
-### Capstone Project for Portland State University 2022
+###  Portland State University Capstone Project 2022
 
 Project Link: https://securitycameracapstone.netlify.app \
 Camera Controller: https://github.com/Open-Source-Videos/Matrix-surveillance-camera-controller
 
-
 ## Project Overview
-This is a method to connect between motion detection security camera system and remote application using Matrix chatroom protocol. 
+We are creating a way to connect a motion-based security camera system to a remote application of our creation using the Matrix chatroom protocol. The reason why consumer security solutions do not always guarantee who has access to your data is that they do not always provide complete security. Consumer security camera systems often store images and videos on the servers of the company providing the system, sending video through their servers. You have no control over their security practices. With our solution, you can host the server yourself, and have end-to-end encryption giving you complete control over your data.
 
-Security companies do not ensure only the user has access to their security data.
-
-User controls the cameras and the server, complete with end-to-end encryption.
-
-Main components: cameras, camera hub, Matrix homeserver, web application
-
-## Target Audiences
-
-Anyone who wants to secure both their property and data such as Home owners, Business owners.
-Bottom line: full control over your data
+Our system has two main parts: the camera hub software, and the phone client. The camera hub uses MotionEye, an open-source solution to manage security cameras, and their recordings on a Linux-based system. The second part of the app let users be notified when there are motion detection events, and provide images and videos to their phone from the security cameras. The communication between the two takes place using a Matrix chatroom protocol. Users can choose to host the Matrix server themselves, or use any hosting services as they please.
 
 ## Functionality
 ### Camera Hub
