@@ -1,3 +1,8 @@
+//
+// Copyright (c) Open Source Video Team and contributors. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for details.
+//
+
 import React, { useState, useEffect } from 'react';
 import { useHistory, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';

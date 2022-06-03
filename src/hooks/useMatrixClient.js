@@ -1,3 +1,11 @@
+//
+// Copyright (c) Open Source Video Team and contributors. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for details.
+//
+
+/**
+ * This is a custom module to provide connection management to the Matrix server 
+ */
 import axios from 'axios';
 const ROOM_CRYPTO_CONFIG = { algorithm: 'm.megolm.v1.aes-sha2' };
 const handleLoginResult = (_isLogin, error, exportedDevice, accessToken) => {};
@@ -50,8 +58,6 @@ function useMatrixClient() {
         avatar = null;
     };
 
-
-
     const setOnLogInResult = (_onLogInResult) => {
         onLogInResult.push(_onLogInResult);
     };
@@ -78,7 +84,6 @@ function useMatrixClient() {
         }
     };
 
-
     const removeOnHavingNewMessage = (_onHavingNewMessage) => {
         const index = onHavingNewMessage.indexOf(_onHavingNewMessage);
         if (index > -1) {
@@ -97,27 +102,24 @@ function useMatrixClient() {
     const decryptFile = async (sender, room, content, time) => {
         try {
             if (onHavingNewMessage.length > 0 && content.body) {
-                
                 for (let __onHavingNewMessage of onHavingNewMessage) {
                     __onHavingNewMessage(sender, room, content.body, time);
                 }
             }
 
             if (typeof content.file !== 'undefined') {
-                
                 const response = await axios.get(
                     client.mxcUrlToHttp(content.file.url),
                     { responseType: 'arraybuffer' }
                 );
-                
-                
-                let decryptData = null; 
+
+                let decryptData = null;
 
                 decryptData = await decryptAttachment(
                     response.data,
                     content.file
                 );
-               
+
                 const blobURL = await window.URL.createObjectURL(
                     new Blob([decryptData]),
                     { type: content.info.mimetype }
@@ -136,15 +138,14 @@ function useMatrixClient() {
                                 },
                                 time
                             );
-                        }catch(e) {
-                            console.log('currentRoom.roomId 4',e)
+                        } catch (e) {
+                            console.log('currentRoom.roomId 4', e);
                         }
-
                     }
                 }
             }
         } catch (e) {
-            console.log('#error',e)
+            console.log('#error', e);
             localStorage.removeItem(loginKey);
             resetValues();
         }
@@ -247,9 +248,7 @@ function useMatrixClient() {
                     return;
                 }
             } catch (error) {
-
                 console.error('#### ', error);
-                
             }
         }
     };
@@ -280,9 +279,8 @@ function useMatrixClient() {
                         homeServer: newClient.baseUrl,
                     })
                 );
-                
+
                 if (onLogInResult.length > 0) {
-                 
                     //Return result
                     for (let __onLogInResult of onLogInResult) {
                         __onLogInResult(
@@ -294,7 +292,6 @@ function useMatrixClient() {
                     }
                 }
                 try {
-                   
                     for (let i = 0; i < roomList.length; i++) {
                         const members = roomList[i].getMembers();
                         for (let j = 0; j < members.length; j++) {
@@ -353,12 +350,10 @@ function useMatrixClient() {
                 member.userId !== (await newClient.getUserId())
             ) {
                 try {
-                 
                     const userKey = await client.downloadKeys([member.userId]);
-                 
+
                     if (userKey) {
                         for (const deviceId in userKey[member.userId]) {
-                 
                             await client.setDeviceVerified(
                                 member.userId,
                                 deviceId
@@ -440,7 +435,6 @@ function useMatrixClient() {
         );
 
         if (members !== null) {
-        
             let memberkeys = await client.downloadKeys([members]);
 
             if (memberkeys) {
@@ -494,7 +488,6 @@ function useMatrixClient() {
     };
 
     const testLogin = async () => {
-       
         if (isTesting === false && didLogin === false && savedData) {
             isTesting = true;
             let info = JSON.parse(savedData);
@@ -509,7 +502,6 @@ function useMatrixClient() {
                 isTesting = false;
                 return true;
             } else {
-               
                 localStorage.removeItem(loginKey);
                 isTesting = false;
                 return loginResult;
@@ -545,11 +537,9 @@ function useMatrixClient() {
                 info.exportedDevice,
                 info.accessToken
             );
-          
 
             if (loginResult) return;
             else {
-          
                 localStorage.removeItem(loginKey);
                 resetValues();
             }
@@ -567,7 +557,6 @@ function useMatrixClient() {
 
     const getAvatar = async () => {
         if (client) {
-           
             var profile = await client.getProfileInfo(
                 await client.getUserId(),
                 'avatar_url'
@@ -622,14 +611,14 @@ function useMatrixClient() {
         return null;
     };
 
-    const getListPeopleById = async(id) => {
+    const getListPeopleById = async (id) => {
         if (client) {
             const rooms = await client.getRooms();
             var people = [];
-            
+
             for (let i = 0; i < rooms.length; i++) {
                 if (rooms[i].roomId === id) {
-                    people =  rooms[i].getMembers();
+                    people = rooms[i].getMembers();
                 }
             }
             return people.length;
@@ -699,7 +688,6 @@ function useMatrixClient() {
 
     const sendMessageToRoom = async (roomId, message) => {
         try {
-            
             if (client) {
                 await client.sendEvent(
                     roomId,
@@ -836,7 +824,7 @@ function useMatrixClient() {
 
     const setAvatar2 = async (url) => {
         if (client) {
-             await client.setAvatarUrl(url);
+            await client.setAvatarUrl(url);
         }
     };
 
@@ -915,7 +903,7 @@ function useMatrixClient() {
         forgetRoom,
         removeOnLogInResult,
         removeOnHavingNewFile,
-        removeOnHavingNewMessage
+        removeOnHavingNewMessage,
     };
 }
 

@@ -1,3 +1,8 @@
+//
+// Copyright (c) Open Source Video Team and contributors. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for details.
+//
+
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 var timeOut;
