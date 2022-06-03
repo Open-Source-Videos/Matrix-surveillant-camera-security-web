@@ -907,6 +907,7 @@ function useMatrixClient() {
     };
 }
 
+//source: https://github.com/matrix-org/browser-encrypt-attachment/blob/master/index.js
 function decryptAttachment(data, info) {
     if (
         info === undefined ||
@@ -943,6 +944,7 @@ function decryptAttachment(data, info) {
         });
 }
 
+//source: https://github.com/matrix-org/browser-encrypt-attachment/blob/master/index.js
 function decodeBase64(base64) {
     // Pad the base64 up to the next multiple of 4.
     var paddedBase64 = base64 + '==='.slice(0, (4 - (base64.length % 4)) % 4);
