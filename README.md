@@ -13,6 +13,7 @@ Youtube:
 - [Project Overview](#project-overview)
 - [Screenshots](#screenshot)
 - [Functionality](#functionality)
+- [Technologies](#technologies)
 - [Setup](#setup)
 - [Status](#status)
 - [Credits](#credits)
@@ -29,7 +30,6 @@ Our system has two main parts: the camera hub software, and the phone client. Th
 
 ## Functionality
 ### Camera Hub:
-#### Features:
 - Use MotionEye as camera manager.
 - Take snapshots, and record video.
 - Upload recorded images and videos to the Matrix server.
@@ -40,14 +40,8 @@ Our system has two main parts: the camera hub software, and the phone client. Th
 - Has an install script to make setup easier, along with manual instructions.
 - Save configurations, so the hub will start back up upon an unexpected reboot.
 
-#### Dependencies
-- MotionEye
-- Matrix NIO
-- Cameras, Network, or Local
-
 ### Front End
 #### Features:
-
 - The authentication pages allow users to log in and log out.
 - The layout to create or delete the Matrix Room.
 - Showing the thumbnail as receiving the motion detect notifications from the camera.
@@ -57,13 +51,11 @@ Our system has two main parts: the camera hub software, and the phone client. Th
 - Changing avatar.
 - Banning or Unbanning users in a room.
 
-#### Dependencies:
-- Node JS
-- Matrix-react SDK
-- Matrix-JS SDK
-- React JS
-- TailwindCSS
-- Bootstrap
+## Technologies
+
+`HTLM`,`CSS`,`bootstrap`,`React`,`tailwindCSS`,`NodeJS`,`Matrix SDK`,`Marix-react SDK`
+
+`MotionEye`, `Matrix NIO`, `Raspberry Pi`
 
 ## Setup
 
