@@ -6,7 +6,7 @@ Project Link: https://securitycameracapstone.netlify.app
 
 ## Demo Link:
 
-Youtube: 
+Youtube: https://www.youtube.com/watch?v=v_Zcuo2PaQs
 
 ## Table of content:
 
